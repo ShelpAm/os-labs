@@ -1,0 +1,21 @@
+[
+{
+  "directory": "/home/shelpam/Documents/projects/os-labs",
+  "arguments": ["/usr/lib64/ccache/gcc", "-c", "-m64", "-g", "-O0", "-std=c++26", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/fcfs/linux/x86_64/debug/fcfs/main.cpp.o", "fcfs/main.cpp"],
+  "file": "fcfs/main.cpp"
+},
+{
+  "directory": "/home/shelpam/Documents/projects/os-labs",
+  "arguments": ["/usr/lib64/ccache/gcc", "-c", "-m64", "-g", "-O0", "-std=c++26", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/queue/linux/x86_64/debug/queue/main.cpp.o", "queue/main.cpp"],
+  "file": "queue/main.cpp"
+},
+{
+  "directory": "/home/shelpam/Documents/projects/os-labs",
+  "arguments": ["/usr/lib64/ccache/gcc", "-c", "-m64", "-g", "-O0", "-std=c++26", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/fast_io.test/linux/x86_64/debug/tests/fast_io.test.cpp.o", "tests/fast_io.test.cpp"],
+  "file": "tests/fast_io.test.cpp"
+},
+{
+  "directory": "/home/shelpam/Documents/projects/os-labs",
+  "arguments": ["/usr/lib64/ccache/gcc", "-c", "-m64", "-g", "-O0", "-std=c++26", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/fast-io-ext/linux/x86_64/debug/fast-io-ext/fixed.cpp.o", "fast-io-ext/fixed.cpp"],
+  "file": "fast-io-ext/fixed.cpp"
+}]
