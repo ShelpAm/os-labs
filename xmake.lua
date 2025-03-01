@@ -8,14 +8,24 @@ target("fast-io-ext")
 set_kind("headeronly")
 add_headerfiles("./fast-io-ext/fixed.hpp")
 
-target("queue")
+target("process")
+set_kind("static")
+add_files("./process/*.cpp")
+
+target("queue-cli")
 set_kind("binary")
-add_files("./queue/main.cpp")
+add_files("./queue-cli/main.cpp")
 
 target("fcfs")
 set_kind("binary")
 add_files("./fcfs/main.cpp")
 add_deps("fast-io-ext")
+
+target("spf")
+set_kind("binary")
+add_files("./spf/main.cpp", "./spf/spf-queue.cpp")
+add_deps("fast-io-ext")
+add_deps("process")
 
 target("fast_io.test")
 set_kind("binary")
