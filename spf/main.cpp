@@ -29,17 +29,17 @@ fast_io::vector<std::shared_ptr<Process>> input()
 
 void solve_spf(CPU &cpu, fast_io::vector<std::shared_ptr<Process>> const &jobs)
 {
-    auto *it{jobs.begin()};
-
+    auto it{jobs.cbegin()};
     SPF_queue ready;
 
-    while (true) {
-        // Simulate job events
-        // No any tasks left, ending the simulation
-        if (it == jobs.end() && ready.empty() &&
-            cpu.running_process() == nullptr) {
-            break;
-        }
+    auto any_jobs_left{[&it, &jobs, &ready, &cpu] {
+        return it != jobs.end() || !ready.empty() ||
+               cpu.running_process() != nullptr;
+    }};
+
+    // If no any tasks left, ends the simulation.
+    while (any_jobs_left()) {
+        // Check if any job is sent in current time.
         if (it != jobs.end() && cpu.now() == (*it)->arriving_time) {
             ready.enqueue(*it);
             ++it;
@@ -61,6 +61,6 @@ void solve_spf(CPU &cpu, fast_io::vector<std::shared_ptr<Process>> const &jobs)
 int main()
 {
     CPU cpu;
-    auto jobs{input()};
+    auto const jobs{input()};
     solve_spf(cpu, jobs);
 }

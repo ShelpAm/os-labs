@@ -11,21 +11,27 @@
 #include <stdexcept>
 
 struct Process {
-    explicit constexpr Process(fast_io::c_io_observer in)
+    struct Runtime_info {
+        constexpr auto
+        operator<=>(Runtime_info const &) const noexcept = default;
+
+        Time start_time;
+        Time finish_time;
+        int turnaround_time;            // 周转时间
+        double weighed_turnaround_time; // 带权周转时间
+
+        // Runtime info
+        int remaining_execution_time;
+    };
+
+    constexpr explicit Process(fast_io::c_io_observer in)
+        : id{}, arriving_time{},
+          execution_time{} // Silence initialization diagnostic
     {
-        int id;
-        fast_io::string name;
         fast_io::string arriving_time;
-        int execution_time;
-
         fast_io::scan(in, id, name, arriving_time, execution_time);
-
-        this->id = id;
-        this->name = name;
         this->arriving_time = arriving_time;
-        this->execution_time = execution_time;
-
-        this->remaining_execution_time = execution_time;
+        this->runtime_info.remaining_execution_time = execution_time;
     }
 
     constexpr Process(Process const &) = default;
@@ -34,16 +40,16 @@ struct Process {
     Process &operator=(Process &&) = default;
     ~Process() = default;
 
-    constexpr auto operator<=>(Process const &rhs) const noexcept = default;
+    constexpr auto operator<=>(Process const &) const noexcept = default;
 
     [[nodiscard]] constexpr bool started() const
     {
-        return remaining_execution_time != execution_time;
+        return runtime_info.remaining_execution_time != execution_time;
     }
 
     [[nodiscard]] constexpr bool finished() const
     {
-        return remaining_execution_time == 0;
+        return runtime_info.remaining_execution_time == 0;
     }
 
     constexpr void run_for(int minutes, CPU const &cpu)
@@ -54,16 +60,16 @@ struct Process {
         }
 
         if (!started()) {
-            start_time = cpu.now();
+            runtime_info.start_time = cpu.now();
         }
 
         // Running time shouldn't exceed remaining execution time.
-        minutes = std::min(minutes, remaining_execution_time);
+        minutes = std::min(minutes, runtime_info.remaining_execution_time);
 
-        remaining_execution_time -= minutes;
+        runtime_info.remaining_execution_time -= minutes;
 
         if (finished()) {
-            finish_time = cpu.now() + minutes;
+            runtime_info.finish_time = cpu.now() + minutes;
             calculate_process_stats();
         }
     }
@@ -75,20 +81,14 @@ struct Process {
     int execution_time;
 
     // Non-intrinsic properties
-    Time start_time;
-    Time finish_time;
-    int turnaround_time;            // 周转时间
-    double weighed_turnaround_time; // 带权周转时间
-
-    // Runtime info
-    int remaining_execution_time;
+    Runtime_info runtime_info{};
 
   private:
     constexpr void calculate_process_stats()
     {
-        turnaround_time = finish_time - arriving_time;
-        weighed_turnaround_time =
-            static_cast<double>(turnaround_time) / execution_time;
+        runtime_info.turnaround_time = runtime_info.finish_time - arriving_time;
+        runtime_info.weighed_turnaround_time =
+            static_cast<double>(runtime_info.turnaround_time) / execution_time;
     }
 };
 

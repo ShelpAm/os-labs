@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <compare>
 #include <fast_io_dsal/string.h>
 #include <fast_io_dsal/string_view.h>
@@ -20,6 +21,7 @@ struct Time {
     constexpr explicit Time(fast_io::string const &s)
     {
         auto const p{s.find_character(':')};
+        assert(p != fast_io::npos);
         auto const hour{to_int(s.subview_front(p))};
         auto const minute{to_int(s.subview(p + 1))};
         this->minute = hour * minutes_per_hour + minute;
