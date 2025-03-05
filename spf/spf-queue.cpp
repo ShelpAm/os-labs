@@ -7,12 +7,12 @@ void SPF_queue::enqueue(Process_type job)
         ++it;
     }
 
-    list_.insert(it, std::move(job));
+    list_.insert(it, job);
 }
 
 SPF_queue::Process_type SPF_queue::dequeue()
 {
-    auto ret{std::move(list_.front())};
+    auto ret{list_.front()};
     list_.pop_front();
     return ret;
 }
