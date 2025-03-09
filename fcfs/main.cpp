@@ -129,17 +129,17 @@ struct Process {
     constexpr void start_at(Time started_time)
     {
         start_time = started_time;
-        finish_time = start_time + execution_time;
-        turnaround_time = finish_time - arriving_time;
+        finish_time = start_time + total_execution_time;
+        turnaround_time = finish_time - arrival_time;
         weighed_turnaround_time =
-            static_cast<double>(turnaround_time) / execution_time;
+            static_cast<double>(turnaround_time) / total_execution_time;
     }
 
     // Intrinsic properties
     int id;
     fast_io::string name;
-    Time arriving_time;
-    int execution_time;
+    Time arrival_time;
+    int total_execution_time;
 
     // Non-intrinsic properties
     Time start_time;
@@ -168,15 +168,15 @@ int main()
         fast_io::scan(id, name, arriving_time, execution_time);
         Process p{.id = id,
                   .name{name},
-                  .arriving_time{arriving_time},
-                  .execution_time = execution_time};
+                  .arrival_time{arriving_time},
+                  .total_execution_time = execution_time};
         processes.push_back(p);
     }
 
-    std::ranges::sort(processes, {}, &Process::arriving_time);
+    std::ranges::sort(processes, {}, &Process::arrival_time);
 
     for (Time now{}; auto &p : processes) {
-        p.start_at(now < p.arriving_time ? p.arriving_time : now);
+        p.start_at(now < p.arrival_time ? p.arrival_time : now);
         now = p.finish_time;
     }
 
@@ -226,9 +226,9 @@ int main()
         offset_for_chinese +=
             -static_cast<int>(count_chinese_characters(p.name));
         align_next();
-        buffer.append(to_string(p.arriving_time));
+        buffer.append(to_string(p.arrival_time));
         align_next();
-        buffer.append(fast_io::to<fast_io::string>(p.execution_time));
+        buffer.append(fast_io::to<fast_io::string>(p.total_execution_time));
         align_next();
         buffer.append(to_string(p.start_time));
         align_next();

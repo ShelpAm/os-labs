@@ -1,17 +1,18 @@
 #pragma once
 
+#include <deque>
+#include <fast_io_dsal/list.h>
 #include <list>
 #include <memory>
 #include <process/process.hpp>
 
 class SPF_queue {
-    using Process_type = std::shared_ptr<Process>;
-
   public:
-    void enqueue(Process_type job);
-    Process_type dequeue();
+    void enqueue(Process *job);
+    Process *dequeue();
+    Process *front();
     [[nodiscard]] bool empty() const;
 
   private:
-    std::list<Process_type> list_;
+    fast_io::list<Process *> list_;
 };

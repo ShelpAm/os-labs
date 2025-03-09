@@ -1,18 +1,19 @@
 #include <spf/spf-queue.hpp>
 
-void SPF_queue::enqueue(Process_type job)
+void SPF_queue::enqueue(Process *job)
 {
     auto it{list_.begin()};
-    while (it != list_.end() && job->execution_time >= (*it)->execution_time) {
+    while (it != list_.end() &&
+           job->total_execution_time >= (*it)->total_execution_time) {
         ++it;
     }
 
     list_.insert(it, job);
 }
 
-SPF_queue::Process_type SPF_queue::dequeue()
+Process *SPF_queue::dequeue()
 {
-    auto ret{list_.front()};
+    Process *ret{list_.front()};
     list_.pop_front();
     return ret;
 }
@@ -20,4 +21,9 @@ SPF_queue::Process_type SPF_queue::dequeue()
 bool SPF_queue::empty() const
 {
     return list_.empty();
+}
+
+Process *SPF_queue::front()
+{
+    return list_.front();
 }

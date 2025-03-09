@@ -6,43 +6,24 @@
 #include <fast_io_dsal/vector.h>
 #include <memory>
 #include <process/process.hpp>
-#include <ranges>
 
-fast_io::vector<std::shared_ptr<Process>> input()
+void solve_spf(CPU &cpu, fast_io::vector<Process> &jobs)
 {
-    fast_io::print("Please input the number of processes: ");
-    int num_processes{};
-    fast_io::scan(num_processes);
-
-    fast_io::vector<std::shared_ptr<Process>> jobs;
-    for (int i{}; i != num_processes; ++i) {
-        fast_io::println("Please input info of the ", i + 1,
-                         "-th process (in an order of id, name, arriving time, "
-                         "and execution time):");
-        jobs.push_back(std::make_shared<Process>(fast_io::c_stdin()));
-    }
-
-    std::ranges::sort(jobs, {}, &Process::arriving_time);
-
-    return jobs;
-}
-
-void solve_spf(CPU &cpu, fast_io::vector<std::shared_ptr<Process>> const &jobs)
-{
-    auto it{jobs.cbegin()};
+    auto jobs_it{jobs.begin()};
     SPF_queue ready;
 
-    auto any_jobs_left{[&it, &jobs, &ready, &cpu] {
-        return it != jobs.end() || !ready.empty() ||
-               cpu.running_process() != nullptr;
+    auto all_jobs_done{[&jobs_it, &jobs, &ready, &cpu] {
+        return jobs_it == jobs.end() && ready.empty() &&
+               cpu.running_process() == nullptr;
     }};
 
     // If no any tasks left, ends the simulation.
-    while (any_jobs_left()) {
+    while (!all_jobs_done()) {
         // Check if any job is sent in current time.
-        if (it != jobs.end() && cpu.now() == (*it)->arriving_time) {
-            ready.enqueue(*it);
-            ++it;
+        while (jobs_it != jobs.end() &&
+               cpu.system_time() >= jobs_it->arrival_time) {
+            ready.enqueue(jobs_it);
+            ++jobs_it;
         }
 
         if (cpu.running_process() == nullptr && !ready.empty()) {
@@ -55,12 +36,13 @@ void solve_spf(CPU &cpu, fast_io::vector<std::shared_ptr<Process>> const &jobs)
         }
     }
 
+    fast_io::println("Simulation result:");
     output_processes_info(jobs);
 }
 
 int main()
 {
     CPU cpu;
-    auto const jobs{input()};
+    auto jobs{input_processes()};
     solve_spf(cpu, jobs);
 }

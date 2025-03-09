@@ -18,7 +18,7 @@ constexpr int to_int(fast_io::string_view s)
 struct Time {
     constexpr Time() = default;
 
-    constexpr explicit Time(fast_io::string const &s)
+    constexpr explicit Time(fast_io::string_view const &s)
     {
         auto const p{s.find_character(':')};
         assert(p != fast_io::npos);
@@ -27,16 +27,22 @@ struct Time {
         this->minute = hour * minutes_per_hour + minute;
     }
 
-    constexpr Time &operator=(fast_io::string const &s)
+    constexpr Time &operator=(fast_io::string_view const &s)
     {
         return *this = Time(s);
     }
 
-    constexpr auto operator<=>(Time const &rhs) const noexcept = default;
+    constexpr auto operator<=>(Time const &) const = default;
 
     constexpr Time &operator+=(int delta_minutes)
     {
         minute += delta_minutes;
+        return *this;
+    }
+
+    constexpr Time &operator-=(int delta_minutes)
+    {
+        minute -= delta_minutes;
         return *this;
     }
 
@@ -50,12 +56,23 @@ struct Time {
         return lhs.minute - rhs.minute;
     }
 
+    friend constexpr Time operator-(Time lhs, int delta_minutes)
+    {
+        return lhs -= delta_minutes;
+    }
+
     static constexpr auto minutes_per_hour{60};
-    int minute;
+    int minute{-1};
 };
 
-constexpr fast_io::string to_string(Time const &t)
+// When t.minute is -1, returns `defaulted`.
+constexpr fast_io::string to_string(Time const &t,
+                                    fast_io::string_view defaulted = "")
 {
+    if (t.minute == -1) {
+        return fast_io::string(defaulted);
+    }
+
     auto hour{fast_io::to<fast_io::string>(t.minute / Time::minutes_per_hour)};
     auto minute{
         fast_io::to<fast_io::string>(t.minute % Time::minutes_per_hour)};
