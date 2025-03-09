@@ -4,6 +4,7 @@
 #include <process/time.hpp>
 
 #include <compare>
+#include <cstddef>
 #include <fast-io-ext/fixed.hpp>
 #include <fast_io.h>
 #include <fast_io_dsal/span.h>
@@ -16,8 +17,6 @@
 
 struct Process {
     struct Runtime_info {
-        constexpr auto operator<=>(Runtime_info const &) const = default;
-
         Time start_time;
         Time finish_time;
         int turnaround;            // 周转时间
@@ -27,6 +26,8 @@ struct Process {
         // executed_time + remaining_time == execution_time
         int execution_time{};
         int remaining_time;
+
+        constexpr auto operator<=>(Runtime_info const &) const = default;
     };
 
     // Intrinsic properties
@@ -118,18 +119,26 @@ void output_processes_info(Range &&_processes, Projection &&_projection = {})
         std::forward<Range>(_processes) |
         std::views::transform(std::forward<Projection>(_projection))};
 
-    fast_io::vector<fast_io::string_view> const items{"ID",
-                                                      "Name",
-                                                      "Arrival time",
-                                                      "Total execution time",
-                                                      "Start time",
-                                                      "Finish time",
-                                                      "Turnaround time",
-                                                      "Weighed turnaround time",
-                                                      "Execution time"};
-    std::string const padding(8, ' ');
+    static fast_io::vector<fast_io::string_view> const items{
+        "ID",
+        "Name",
+        "Arrival time",
+        "Total execution time",
+        "Start time",
+        "Finish time",
+        "Turnaround time",
+        "Weighed turnaround time",
+        "Execution time"};
+    // Generate mapping from `items`.
+    static std::map<fast_io::string_view, std::size_t> const index_of_item{[] {
+        std::map<fast_io::string_view, std::size_t> index_of_item;
+        for (int i{}; auto const &item : items) {
+            index_of_item[item] = i++;
+        }
+        return index_of_item;
+    }()};
+    std::string const padding(6, ' ');
     fast_io::vector<std::size_t> offsets;
-    std::map<fast_io::string, std::size_t> offset_table;
     // item1<3 spaces>item2<3 spaces>...
     fast_io::string heading;
     for (std::size_t offset{}; auto const &item : items) {
@@ -137,12 +146,11 @@ void output_processes_info(Range &&_processes, Projection &&_projection = {})
         part.append(fast_io::mnp::os_c_str(padding.c_str()));
         heading.append(part);
         offsets.push_back(offset);
-        offset_table[fast_io::string(item)] = offset;
         offset += part.size();
     }
-    fast_io::println(heading);
-    for (auto const &p : processes) {
-        fast_io::string buffer;
+
+    fast_io::vector<fast_io::string> lines(processes.size());
+    for (auto [p, buffer] : std::views::zip(processes, lines)) {
         int items_i{};
         int offset_for_chinese{};
 
@@ -161,22 +169,34 @@ void output_processes_info(Range &&_processes, Projection &&_projection = {})
             buffer.append(s);
         }};
 
-        // Build the line
-        add_next_item(fast_io::to<fast_io::string>(p.id));
-        add_next_item(p.name);
-        offset_for_chinese +=
-            -static_cast<int>(count_chinese_characters(p.name));
-        add_next_item(to_string(p.arrival_time));
-        add_next_item(fast_io::to<fast_io::string>(p.total_execution_time));
-        add_next_item(to_string(p.runtime_info.start_time, "Not started"));
-        add_next_item(to_string(p.runtime_info.finish_time, "Not finished"));
-        add_next_item(fast_io::to<fast_io::string>(p.runtime_info.turnaround));
-        add_next_item(
-            fast_io_ext::mnp::fixed(p.runtime_info.weighed_turnaround, 2));
-        add_next_item(
-            fast_io::to<fast_io::string>(p.runtime_info.execution_time));
+        // Prepare info of lines
+        std::map<fast_io::string_view, fast_io::string> map;
+        {
+            using fast_io::string;
+            using fast_io::to;
+            map["ID"] = to<string>(p.id);
+            map["Name"] = p.name;
+            map["Arrival time"] = to_string(p.arrival_time);
+            map["Total execution time"] = to<string>(p.total_execution_time);
+            map["Start time"] = to_string(p.runtime_info.start_time);
+            map["Finish time"] = to_string(p.runtime_info.finish_time);
+            map["Turnaround time"] = to<string>(p.runtime_info.turnaround);
+            map["Weighed turnaround time"] =
+                fast_io_ext::mnp::fixed(p.runtime_info.weighed_turnaround, 2);
+            map["Execution time"] = to<string>(p.runtime_info.execution_time);
+        }
 
-        fast_io::println(buffer);
+        // Build the line
+        for (auto const &item : items) {
+            add_next_item(map[item]);
+            offset_for_chinese +=
+                -static_cast<int>(count_chinese_characters(map[item]));
+        }
+    }
+
+    fast_io::println(heading);
+    for (auto const &line : lines) {
+        fast_io::println(line);
     }
 
     double average_turnaround_time{};
@@ -191,14 +211,14 @@ void output_processes_info(Range &&_processes, Projection &&_projection = {})
     fast_io::println(
         "Average turnaround time of the system: ",
         std::string(
-            offset_table[fast_io::string("Turnaround time")] -
+            offsets[index_of_item.at("Turnaround time")] -
                 fast_io::string_view("Average turnaround time of the system: ")
                     .size(),
             ' '),
         fast_io_ext::mnp::fixed(average_turnaround_time, 2));
     fast_io::println(
         "Average weighed turnaround time of the system: ",
-        std::string(offset_table[fast_io::string("Weighed turnaround time")] -
+        std::string(offsets[index_of_item.at("Weighed turnaround time")] -
                         fast_io::string_view(
                             "Average weighed turnaround time of the system: ")
                             .size(),
