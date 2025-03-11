@@ -1,0 +1,160 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #333;
+    font-weight: 600;
+}
+
+.menu {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.menu label {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.menu select, .menu button {
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.menu button {
+    background-color: #007aff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.menu button:hover {
+    background-color: #0062cc;
+}
+
+.process-list {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f8f8;
+    font-weight: 600;
+}
+
+.simulation {
+    text-align: center;
+}
+
+.queue-section {
+    margin: 20px 0;
+}
+
+.queue {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    min-height: 60px;
+    flex-wrap: wrap;
+}
+
+.process {
+    background-color: #007aff;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    width: 120px; /* Wider for more info */
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.process.enter {
+    animation: enter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.process.exit {
+    animation: exit 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes enter {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes exit {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+}
+
+#current-time {
+    font-weight: 600;
+    color: #ff2d55;
+}
+
+/* Color coding for different queues */
+#not-ready-queue .process {
+    background-color: #6c757d; /* Gray for not ready */
+}
+
+#finished-queue .process {
+    background-color: #28a745; /* Green for finished */
+}
+
+.menu input[type="range"] {
+    width: 150px; /* Wide enough for smooth sliding */
+    margin: 0 10px; /* Spacing around the slider */
+    vertical-align: middle; /* Align with label and button */
+}
+
+.menu label[for="speed"] {
+    margin-right: 10px; /* Space between label and slider */
+}
+
+#speed-value {
+    font-weight: 600;
+    color: #007aff; /* Matches button color for emphasis */
+}
