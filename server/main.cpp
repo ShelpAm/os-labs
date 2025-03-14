@@ -137,7 +137,9 @@ int main()
                         "application/json");
     });
 
-    svr.listen(host, port);
+    if (!svr.listen(host, port)) {
+        fast_io::println("Failed to bind to ", host, ":", port, ", exiting.");
+    }
 
     return 0;
 }
