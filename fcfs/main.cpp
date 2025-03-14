@@ -1,11 +1,11 @@
 #include <algorithm>
 #include <fast-io-ext/fixed.hpp>
 #include <fast_io.h>
-#include <fast_io_dsal/string.h>
-#include <fast_io_dsal/string_view.h>
-#include <fast_io_dsal/vector.h>
 #include <map>
 #include <ranges>
+#include <string>
+#include <string_view>
+#include <vector>
 
 // FROM AI, because I'm lack of UTF-8 knowledges...
 // Function to count Chinese characters in a UTF-8 encoded std::string
@@ -61,7 +61,7 @@ std::size_t count_chinese_characters(std::string_view str)
     return chinese_count;
 }
 
-constexpr int to_int(fast_io::string_view s)
+constexpr int to_int(std::string_view s)
 {
     constexpr auto base{10};
     int result{};
@@ -74,15 +74,15 @@ constexpr int to_int(fast_io::string_view s)
 struct Time {
     constexpr Time() = default;
 
-    constexpr explicit Time(fast_io::string const &s)
+    constexpr explicit Time(std::string const &s)
     {
-        auto const p{s.find_character(':')};
-        auto const hour{to_int(s.subview_front(p))};
-        auto const minute{to_int(s.subview(p + 1))};
+        auto const p{s.find(':')};
+        auto const hour{to_int(s.substr(0, p))};
+        auto const minute{to_int(s.substr(p + 1))};
         this->minutes_ = hour * minutes_per_hour + minute;
     }
 
-    constexpr Time &operator=(fast_io::string const &s)
+    constexpr Time &operator=(std::string const &s)
     {
         return *this = Time(s);
     }
@@ -156,19 +156,19 @@ int main()
     int num_processes{};
     fast_io::scan(num_processes);
 
-    fast_io::vector<Process> processes;
+    std::vector<Process> processes;
     for (int i{}; i != num_processes; ++i) {
         fast_io::println("Please input info of the ", i + 1,
                          "-th process (in an order of id, name, arriving time, "
                          "and consumed time): ");
 
         int id;
-        fast_io::string name;
-        fast_io::string arriving_time;
+        std::string name;
+        std::string arriving_time;
         int execution_time;
         fast_io::scan(id, name, arriving_time, execution_time);
         Process p{.id = id,
-                  .name{fast_io::to<std::string>(name)},
+                  .name{name},
                   .arrival_time{arriving_time},
                   .total_execution_time = execution_time};
         processes.push_back(p);
@@ -182,25 +182,25 @@ int main()
     }
 
     fast_io::println("Simulation result:");
-    fast_io::vector<fast_io::string_view> items{"ID",
-                                                "Name",
-                                                "Arriving time",
-                                                "Execution time",
-                                                "Start time",
-                                                "Finish time",
-                                                "Turnaround time",
-                                                "Weighed turnaround time"};
+    std::vector<std::string_view> items{"ID",
+                                        "Name",
+                                        "Arriving time",
+                                        "Execution time",
+                                        "Start time",
+                                        "Finish time",
+                                        "Turnaround time",
+                                        "Weighed turnaround time"};
     std::string const padding(10, ' ');
-    fast_io::vector<std::size_t> offsets;
-    std::map<fast_io::string, std::size_t> offset_table;
+    std::vector<std::size_t> offsets;
+    std::map<std::string, std::size_t> offset_table;
     // item1<3 spaces>item2<3 spaces>...
-    fast_io::string heading;
+    std::string heading;
     for (std::size_t offset{}; auto const &item : items) {
-        fast_io::string part{item};
-        part.append(fast_io::mnp::os_c_str(padding.c_str()));
-        heading.append(part);
+        std::string part{item};
+        part.append(padding);
+        heading += part;
         offsets.push_back(offset);
-        offset_table[fast_io::string(item)] = offset;
+        offset_table[std::string(item)] = offset;
         offset += part.size();
     }
     fast_io::println(heading);
@@ -254,16 +254,16 @@ int main()
     fast_io::println(
         "Average turnaround time of the system: ",
         std::string(
-            offset_table[fast_io::string("Turnaround time")] -
-                fast_io::string_view("Average turnaround time of the system: ")
+            offset_table[std::string("Turnaround time")] -
+                std::string_view("Average turnaround time of the system: ")
                     .size(),
             ' '),
         average_turnaround_time);
     // std::printf("%.2f\n", average_turnaround_time);
     fast_io::println(
         "Average weighed turnaround time of the system: ",
-        std::string(offset_table[fast_io::string("Weighed turnaround time")] -
-                        fast_io::string_view(
+        std::string(offset_table[std::string("Weighed turnaround time")] -
+                        std::string_view(
                             "Average weighed turnaround time of the system: ")
                             .size(),
                     ' '),
