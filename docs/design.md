@@ -1,5 +1,7 @@
 # Design Document
 
+This file describes the design of the program.
+
 ## Requirements for AI
 
 Please build a web page for me. Here are the requirements:
@@ -10,3 +12,7 @@ Please build a web page for me. Here are the requirements:
 4. In the procedure of simulation, it should render each frame of the status of ready queue.
 
  And the last one process finished stopped to move to "finished queue". Also, the animation should indicates the path, not only fad-in/out.
+
+## Communication
+
+## 
