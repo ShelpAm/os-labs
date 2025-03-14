@@ -8,7 +8,6 @@ set_toolchains("llvm")
 set_runtimes("c++_static")
 
 add_requires("nlohmann_json")
-add_requires("restinio")
 add_requires("cpp-httplib")
 
 
@@ -55,6 +54,5 @@ target("server")
 set_kind("binary")
 add_files("./server/main.cpp")
 add_packages("nlohmann_json")
-add_packages("restinio")
 add_packages("cpp-httplib")
 add_deps("process")
