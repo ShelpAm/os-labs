@@ -1,18 +1,18 @@
 [
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/priority-scheduling/linux/x86_64/debug/priority-scheduling/main.cpp.o", "priority-scheduling/main.cpp"],
-  "file": "priority-scheduling/main.cpp"
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-fPIC", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/process/linux/x86_64/debug/process/time.cpp.o", "process/time.cpp"],
+  "file": "process/time.cpp"
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-DRESTINIO_EXTERNAL_EXPECTED_LITE", "-DRESTINIO_EXTERNAL_OPTIONAL_LITE", "-DRESTINIO_EXTERNAL_STRING_VIEW_LITE", "-DRESTINIO_EXTERNAL_VARIANT_LITE", "-isystem", "/home/shelpam/.xmake/packages/r/restinio/0.6.19/427f72f6242540b8913729010a1eb061/include", "-isystem", "/home/shelpam/.xmake/packages/a/asio/1.32.0/534f961af8274a53a3ee065d110c24f3/include", "-isystem", "/home/shelpam/.xmake/packages/h/http_parser/v2.9.4/dcf8ee3115d748c0aa13616c6ef70d35/include", "-isystem", "/home/shelpam/.xmake/packages/f/fmt/11.0.2/1175585744404c1c8068b9307f8d678a/include", "-isystem", "/home/shelpam/.xmake/packages/e/expected-lite/v0.8.0/15c0283df2be48aba42a735417cbdfb4/include", "-isystem", "/home/shelpam/.xmake/packages/o/optional-lite/2023.05.11/bd0dec7da87b4b6182476bb2b6a85158/include", "-isystem", "/home/shelpam/.xmake/packages/s/string-view-lite/v1.8.0/d8e198872b0d4ce7b9f8f91f2945e378/include", "-isystem", "/home/shelpam/.xmake/packages/v/variant-lite/2022.12.03/45ce2e37ec1442baa3fa1677fd71a987/include", "-isystem", "/home/shelpam/.xmake/packages/c/cpp-httplib/v0.18.1/1f8d76e1f0664e7598cadc5e0ad91e81/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/server/linux/x86_64/debug/server/main.cpp.o", "server/main.cpp"],
-  "file": "server/main.cpp"
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-fPIC", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/process/linux/x86_64/debug/process/cpu.cpp.o", "process/cpu.cpp"],
+  "file": "process/cpu.cpp"
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/fast_io.test/linux/x86_64/debug/tests/fast_io.test.cpp.o", "tests/fast_io.test.cpp"],
-  "file": "tests/fast_io.test.cpp"
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-fPIC", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/process/linux/x86_64/debug/process/process.cpp.o", "process/process.cpp"],
+  "file": "process/process.cpp"
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
@@ -26,13 +26,18 @@
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/queue-cli/linux/x86_64/debug/queue-cli/main.cpp.o", "queue-cli/main.cpp"],
-  "file": "queue-cli/main.cpp"
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/round-robin/linux/x86_64/debug/round-robin/main.cpp.o", "round-robin/main.cpp"],
+  "file": "round-robin/main.cpp"
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/round-robin/linux/x86_64/debug/round-robin/main.cpp.o", "round-robin/main.cpp"],
-  "file": "round-robin/main.cpp"
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/fast_io.test/linux/x86_64/debug/tests/fast_io.test.cpp.o", "tests/fast_io.test.cpp"],
+  "file": "tests/fast_io.test.cpp"
+},
+{
+  "directory": "/home/shelpam/Documents/projects/os-labs",
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/c/cpp-httplib/v0.18.1/1f8d76e1f0664e7598cadc5e0ad91e81/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/server/linux/x86_64/debug/server/main.cpp.o", "server/main.cpp"],
+  "file": "server/main.cpp"
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
@@ -41,16 +46,11 @@
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-fPIC", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/process/linux/x86_64/debug/process/time.cpp.o", "process/time.cpp"],
-  "file": "process/time.cpp"
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-o", "build/.objs/queue-cli/linux/x86_64/debug/queue-cli/main.cpp.o", "queue-cli/main.cpp"],
+  "file": "queue-cli/main.cpp"
 },
 {
   "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-fPIC", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/process/linux/x86_64/debug/process/cpu.cpp.o", "process/cpu.cpp"],
-  "file": "process/cpu.cpp"
-},
-{
-  "directory": "/home/shelpam/Documents/projects/os-labs",
-  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-fPIC", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/process/linux/x86_64/debug/process/process.cpp.o", "process/process.cpp"],
-  "file": "process/process.cpp"
+  "arguments": ["/usr/bin/clang", "-c", "-Qunused-arguments", "-m64", "-g", "-O0", "-std=c++26", "-stdlib=libc++", "-cxx-isystem/usr/include/c++/v1", "-I.", "-Ithird-party/fast_io/include", "-isystem", "/home/shelpam/.xmake/packages/n/nlohmann_json/v3.11.3/b4e38c4916bd42c39063f144e29030df/include", "-o", "build/.objs/priority-scheduling/linux/x86_64/debug/priority-scheduling/main.cpp.o", "priority-scheduling/main.cpp"],
+  "file": "priority-scheduling/main.cpp"
 }]

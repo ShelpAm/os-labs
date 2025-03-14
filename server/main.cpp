@@ -3,7 +3,6 @@
 #include <process/process.hpp>
 #include <queue>
 #include <ranges>
-#include <restinio/all.hpp>
 
 #include <httplib.h>
 
@@ -108,7 +107,7 @@ int main()
         fast_io::println("Response: ", res.body);
     });
     svr.set_exception_handler(
-        [](Request const &req, Response &res, std::exception_ptr ep) {
+        [](Request const &req, Response &res, std::exception_ptr const &ep) {
             std::string error;
             try {
                 std::rethrow_exception(ep);
@@ -117,7 +116,7 @@ int main()
                 error = e.what();
                 fast_io::println("Error: ", fast_io::mnp::os_c_str(e.what()));
             }
-            res.set_content(error, "text/html");
+            res.set_content(error, "text/plain");
             res.status = httplib::StatusCode::InternalServerError_500;
         });
     auto ret = svr.set_mount_point("/", "./web/public/");
@@ -125,45 +124,20 @@ int main()
         res.set_content("Hello World!", "text/plain");
     });
     svr.Post("/api/solve", [](Request const &req, Response &res) {
-        auto j = nlohmann::json::parse(req.body);
+        auto data = nlohmann::json::parse(req.body);
         CPU cpu;
         std::vector<Process> jobs;
-        for (auto const &p : j["processes"]) {
-            Process proc(p["id"].get<int>(), p["name"],
-                         Time(p["arrival_time"].get<int>()),
-                         p["total_execution_time"].get<int>());
-            proc.priority = p["priority"];
-            jobs.push_back(proc);
+        for (auto const &j : data["processes"]) {
+            Process p(j["id"].get<int>(), j["name"],
+                      Time(j["arrival_time"].get<int>()),
+                      j["total_execution_time"].get<int>());
+            jobs.push_back(p);
         }
-        output_processes_info(jobs);
         res.set_content(solve_priority_scheduling(cpu, jobs),
                         "application/json");
     });
 
     svr.listen(host, port);
 
-    // restinio::run(
-    //     restinio::on_this_thread().port(port).address(host).request_handler(
-    //         [](restinio::request_handle_t const &req) {
-    //             auto solver = req->header().get_field_or("solver", "fuck");
-    //             assert(solver != "fuck");
-    //             fast_io::println(req->body());
-    //             auto j = nlohmann::json::parse(req->body());
-    //             fast_io::println(j.dump());
-    //             std::vector<Process> ps;
-    //             for (auto const &p : j) {
-    //                 ps.push_back(Process(1206, p["name"],
-    //                                      p["arrival_time"].get<std::string>(),
-    //                                      p["total_execution_time"].get<int>()));
-    //             }
-    //             output_processes_info(ps);
-    //             CPU cpu;
-    //
-    //             return req->create_response()
-    //                 .append_header(restinio::http_field::content_type,
-    //                                "application/json")
-    //                 .set_body(solve_priority_scheduling(cpu, ps))
-    //                 .done();
-    //         }));
     return 0;
 }

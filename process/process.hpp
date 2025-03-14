@@ -92,11 +92,9 @@ struct Process {
     constexpr int run_for(int minutes, CPU const &cpu)
     {
         if (finished()) {
-            throw std::logic_error(
-                fast_io::concat_fast_io(
-                    "cannot run this process, it has been finished ", name, " ",
-                    runtime_info.execution_time)
-                    .c_str());
+            throw std::logic_error(std::format(
+                "cannot run this process, it has been finished. {} {}", name,
+                runtime_info.execution_time));
         }
 
         if (!started()) {
@@ -106,8 +104,6 @@ struct Process {
         // Running time shouldn't exceed remaining execution time.
         minutes = std::min(minutes, runtime_info.remaining_time);
 
-        // fast_io::debug_println("Process ", id, " ", name,
-        //                        " is now running (for ", minutes, "min)");
         runtime_info.execution_time += minutes;
         runtime_info.remaining_time -= minutes;
         assert(runtime_info.execution_time + runtime_info.remaining_time ==
