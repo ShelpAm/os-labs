@@ -35,6 +35,10 @@
                         <th>Arrival</th>
                         <th>Total Time</th>
                         <th>Priority</th>
+                        <th>Start Time</th>
+                        <th>Finish Time</th>
+                        <th>Execution Time</th>
+                        <th>Remaining Time</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -45,20 +49,17 @@
             <h2>Simulation State</h2>
             <p>Current Time: <span id="current-time">0</span></p>
 
-            <!-- Not Yet Ready second -->
             <div class="queue-section" id="not-ready-section">
                 <h3>Not Yet Ready</h3>
                 <div id="not-ready-queue" class="queue"></div>
             </div>
 
-            <!-- Ready Queue first -->
             <div class="queue-section" id="ready-section">
                 <h3>Ready Queue</h3>
                 <div id="ready-queue" class="queue"></div>
             </div>
 
 
-            <!-- Finished last -->
             <div class="queue-section" id="finished-section">
                 <h3>Finished</h3>
                 <div id="finished-queue" class="queue"></div>
@@ -66,6 +67,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="script.js"></script>
 </body>
 

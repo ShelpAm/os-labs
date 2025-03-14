@@ -119,7 +119,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
     // Render a queue with animations
     function renderQueue(queueDiv, currentQueue, prevQueue) {
-        // queueDiv.innerHTML = ''
+        queueDiv.innerHTML = '';
         var _a = getQueueChanges(prevQueue, currentQueue), entering = _a.entering, exiting = _a.exiting;
         // Slow here, but flexible and generic.
         exiting.forEach(function (pid) {
@@ -133,19 +133,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         });
         currentQueue.forEach(function (id) {
             var processDiv = Array.from(queueDiv.children).find(function (div) { return div.dataset.id === id.toString(); });
-            if (!processDiv) {
-                var div_1 = document.createElement('div');
-                if (!process_by_id.has(id)) {
-                    throw new Error('id isn\'t in process_by_id');
-                }
-                div_1.innerHTML = "".concat(id, " (").concat((process_by_id).get(id).runtime_info.remaining_time, ")");
-                div_1.className = 'process';
-                div_1.dataset.id = id.toString();
-                queueDiv.appendChild(div_1);
-                if (entering.includes(id)) {
-                    requestAnimationFrame(function () { return div_1.classList.add('enter'); });
-                }
+            //
+            // if (!processDiv) {
+            var div = document.createElement('div');
+            if (!process_by_id.has(id)) {
+                throw new Error('id isn\'t in process_by_id');
             }
+            div.innerHTML = "".concat(id, " (").concat((process_by_id).get(id).runtime_info.remaining_time, ")");
+            div.className = 'process';
+            div.dataset.id = id.toString();
+            console.log("Appending child to queueDiv: ", div);
+            queueDiv.appendChild(div);
+            // Array.some
+            if (entering.some(function (p) { return p === id; })) {
+                requestAnimationFrame(function () { return div.classList.add('enter'); });
+            }
+            // }
             // processDiv.style.order = index;
         });
     }
