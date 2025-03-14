@@ -2,8 +2,6 @@
 
 #include <process/time.hpp>
 
-#include <memory>
-
 struct Process;
 
 class CPU {
@@ -17,7 +15,7 @@ class CPU {
     void set_running(Process *process) noexcept;
 
   private:
-    Time system_time_{};
+    Time system_time_;
     Process *running_process_{};
     int slice_execution_time_{};
 };

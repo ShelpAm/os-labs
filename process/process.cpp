@@ -1,8 +1,10 @@
 #include <process/process.hpp>
 
+#include <nlohmann/json.hpp>
+
 // FROM AI, because I'm lack of UTF-8 knowledges...
 // Function to count Chinese characters in a UTF-8 encoded std::string
-std::size_t count_chinese_characters(fast_io::string const &str)
+std::size_t count_chinese_characters(std::string_view str)
 {
     size_t chinese_count = 0;
     size_t i = 0;
@@ -66,6 +68,25 @@ fast_io::vector<Process> input_processes()
                          "-th process (in an order of id, name, arriving time, "
                          "and execution time):");
         jobs.push_back(Process(fast_io::c_stdin()));
+    }
+
+    { // Load priorities from ./tests/config.json
+        fast_io::native_file_loader f("./tests/config.json");
+        fast_io::string_view s(std::from_range, f);
+        auto const j(nlohmann::json::parse(s));
+        auto const priorities{j["priorities"].get<fast_io::vector<int>>()};
+        for (auto [job, priority] : std::views::zip(jobs, priorities)) {
+            job.priority = priority;
+        }
+
+        // auto &&cao{j.at("jobs").get<fast_io::vector<Process>>()};
+        // output_processes_info(cao);
+
+        // output_processes_info(j.at("jobs").get<fast_io::vector<Process>>());
+
+        // auto v = fast_io::vector<Process>();
+        // output_processes_info(v);
+        // output_processes_info(fast_io::vector<Process>());
     }
 
     std::ranges::sort(jobs, {}, &Process::arrival_time);

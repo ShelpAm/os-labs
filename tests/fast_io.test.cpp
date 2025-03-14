@@ -15,7 +15,7 @@ int main()
         " sgdjasdopgjdasgpojadsgpoadjsgpoadsjgopjaghdsoighasdioghadsoi")};
     fast_io::println(s);
 
-    auto const fixed{fast_io_ext::mnp::fixed(d, 1)};
+    // auto const fixed{fast_io_ext::mnp::fixed(d, 1)};
 
     // auto width{fast_io::mnp::width(d, 1)};
     // fast_io ::println(fixed);

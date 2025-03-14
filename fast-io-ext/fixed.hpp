@@ -29,7 +29,9 @@ namespace fast_io_ext {
 
 namespace manipulators {
 
-inline fast_io::string fixed(std::floating_point auto t, std::size_t precision)
+[[deprecated("Don't use fast_io data structures, use "
+             "std::format(\"{:.<precision>f}\", <t>)")]] inline fast_io::string
+fixed(std::floating_point auto t, std::size_t precision)
 {
     auto const s{fast_io::to<fast_io::string>(round(t, precision))};
     if (auto const dot_pos{s.find_character('.')}; dot_pos != fast_io::npos) {

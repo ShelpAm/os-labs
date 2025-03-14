@@ -1,0 +1,41 @@
+{
+    "num_jobs": 5,
+    "jobs": [
+        {
+            "id": 1001,
+            "name": "杨扬骁1",
+            "arrival_time": "9:40",
+            "total_execution_time": 20,
+            "priority": 1
+        },
+        {
+            "id": 1004,
+            "name": "杨扬骁2",
+            "arrival_time": "10:10",
+            "total_execution_time": 10,
+            "priority": 4
+        },
+        {
+            "id": 1005,
+            "name": "杨扬骁3",
+            "arrival_time": "10:05",
+            "total_execution_time": 30,
+            "priority": 3
+        },
+        {
+            "id": 1002,
+            "name": "杨扬骁4",
+            "arrival_time": "9:55",
+            "total_execution_time": 15,
+            "priority": 3
+        },
+        {
+            "id": 1003,
+            "name": "杨扬骁5",
+            "arrival_time": "9:45",
+            "total_execution_time": 25,
+            "priority": 2
+        }
+    ],
+    "priorities": [1, 4, 3, 3, 2]
+}

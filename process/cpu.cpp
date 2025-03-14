@@ -11,7 +11,7 @@ void CPU::run_for(int minutes)
         // fast_io::debug_println("CPU is running nothing for ", minutes,
         //                        " minutes");
     }
-    system_time_.minute += minutes;
+    system_time_.minutes_ += minutes;
 }
 
 void CPU::set_running(Process *process) noexcept

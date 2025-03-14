@@ -9,7 +9,7 @@
 
 // FROM AI, because I'm lack of UTF-8 knowledges...
 // Function to count Chinese characters in a UTF-8 encoded std::string
-std::size_t count_chinese_characters(fast_io::string const &str)
+std::size_t count_chinese_characters(std::string_view str)
 {
     size_t chinese_count = 0;
     size_t i = 0;
@@ -79,7 +79,7 @@ struct Time {
         auto const p{s.find_character(':')};
         auto const hour{to_int(s.subview_front(p))};
         auto const minute{to_int(s.subview(p + 1))};
-        this->minute = hour * minutes_per_hour + minute;
+        this->minutes_ = hour * minutes_per_hour + minute;
     }
 
     constexpr Time &operator=(fast_io::string const &s)
@@ -91,7 +91,7 @@ struct Time {
 
     constexpr Time &operator+=(int delta_minutes)
     {
-        minute += delta_minutes;
+        minutes_ += delta_minutes;
         return *this;
     }
 
@@ -102,18 +102,19 @@ struct Time {
 
     friend constexpr int operator-(Time const &lhs, Time const &rhs)
     {
-        return lhs.minute - rhs.minute;
+        return lhs.minutes_ - rhs.minutes_;
     }
 
     static constexpr auto minutes_per_hour{60};
-    int minute;
+    int minutes_;
 };
 
 constexpr fast_io::string to_string(Time const &t)
 {
-    auto hour{fast_io::to<fast_io::string>(t.minute / Time::minutes_per_hour)};
+    auto hour{
+        fast_io::to<fast_io::string>(t.minutes_ / Time::minutes_per_hour)};
     auto minute{
-        fast_io::to<fast_io::string>(t.minute % Time::minutes_per_hour)};
+        fast_io::to<fast_io::string>(t.minutes_ % Time::minutes_per_hour)};
     if (hour.size() == 1) {
         hour = fast_io::concat_fast_io(fast_io::mnp::chvw('0'), hour);
     }
@@ -137,7 +138,7 @@ struct Process {
 
     // Intrinsic properties
     int id;
-    fast_io::string name;
+    std::string name;
     Time arrival_time;
     int total_execution_time;
 
@@ -167,7 +168,7 @@ int main()
         int execution_time;
         fast_io::scan(id, name, arriving_time, execution_time);
         Process p{.id = id,
-                  .name{name},
+                  .name{fast_io::to<std::string>(name)},
                   .arrival_time{arriving_time},
                   .total_execution_time = execution_time};
         processes.push_back(p);
@@ -222,7 +223,7 @@ int main()
         align_next();
         buffer.append(fast_io::to<fast_io::string>(p.id));
         align_next();
-        buffer.append(p.name);
+        buffer.append(fast_io::to<fast_io::string>(p.name));
         offset_for_chinese +=
             -static_cast<int>(count_chinese_characters(p.name));
         align_next();
