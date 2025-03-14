@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 (function() {
     // DOM elements
     const algorithmSelect = document.getElementById('algorithm') as HTMLSelectElement;

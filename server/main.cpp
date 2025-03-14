@@ -99,7 +99,7 @@ int main()
     using httplib::Request, httplib::Response;
 
     constexpr std::string host{"localhost"};
-    constexpr auto port{8080};
+    constexpr auto port{8081};
 
     httplib::Server svr;
     svr.set_logger([](Request const &req, Response const &res) {
