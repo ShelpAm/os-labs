@@ -98,7 +98,7 @@ int main()
 {
     using httplib::Request, httplib::Response;
 
-    constexpr std::string host{"localhost"};
+    constexpr std::string host{"0.0.0.0"};
     constexpr auto port{8081};
 
     httplib::Server svr;
