@@ -74,8 +74,6 @@ struct Process {
         this->runtime_info.remaining_time = total_execution_time;
     }
 
-    constexpr auto operator<=>(Process const &) const = default;
-
     [[nodiscard]] constexpr bool started() const noexcept
     {
         return runtime_info.execution_time != 0;
