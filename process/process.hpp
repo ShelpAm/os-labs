@@ -1,7 +1,6 @@
 #pragma once
 
 #include <process/cpu.hpp>
-#include <process/detail/fast-io-to-json.hpp>
 #include <process/time.hpp>
 
 #include <compare>
@@ -26,6 +25,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(Status, {
 struct Process {
     using Id = int;
 
+    // Non-intrinsic properties
     struct Runtime_info {
         Time start_time;
         Time finish_time;
@@ -48,13 +48,11 @@ struct Process {
     std::string name;
     Time arrival_time;
     int total_execution_time{};
-    int priority{};
-
-    // Non-intrinsic properties
     Runtime_info runtime_info{};
+    nlohmann::json extra;
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Process, id, name, arrival_time,
-                                   total_execution_time, priority, runtime_info)
+                                   total_execution_time, runtime_info, extra)
 
     [[deprecated("Only for nlohmann/json, don't use it")]] constexpr Process() =
         default;
@@ -88,13 +86,25 @@ struct Process {
         return runtime_info.execution_time == total_execution_time;
     }
 
+    [[nodiscard]] int priority() const
+    {
+        if (!extra.contains("priority")) {
+            throw std::runtime_error("priority is missing in \"extra\" table");
+        }
+        return extra["priority"];
+    }
+
+    void set_priority(int priority)
+    {
+        extra["priority"] = priority;
+    }
+
     // Returns: actual running time of current running process.
     constexpr int run_for(int minutes, CPU const &cpu)
     {
         if (finished()) {
             throw std::logic_error(std::format(
-                "cannot run this process, it has been finished. {} {}", name,
-                runtime_info.execution_time));
+                "cannot run this process ({}), it has been finished", name));
         }
 
         if (!started()) {
@@ -127,7 +137,7 @@ struct Process {
     }
 };
 
-std::size_t count_chinese_characters(std::string_view str);
+std::size_t count_chinese_characters(std::string_view s);
 
 fast_io::vector<Process> input_processes();
 
@@ -200,7 +210,7 @@ void output_processes_info(Range &&_processes, Projection &&_proj = {})
             map["Name"] = p.name;
             map["Arrival time"] = to_string(p.arrival_time);
             map["Total execution time"] = to_string(p.total_execution_time);
-            map["Priority"] = to_string(p.priority);
+            map["Priority"] = to_string(p.priority());
             map["Start time"] =
                 to_string(p.runtime_info.start_time, "Not started");
             map["Finish time"] =

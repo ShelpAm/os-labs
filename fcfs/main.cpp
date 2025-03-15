@@ -9,14 +9,14 @@
 
 // FROM AI, because I'm lack of UTF-8 knowledges...
 // Function to count Chinese characters in a UTF-8 encoded std::string
-std::size_t count_chinese_characters(std::string_view str)
+std::size_t count_chinese_characters(std::string_view s)
 {
     size_t chinese_count = 0;
     size_t i = 0;
 
-    while (i < str.size()) {
+    while (i < s.size()) {
         // Determine the number of bytes in the current UTF-8 character
-        auto first_byte = static_cast<uint8_t>(str[i]);
+        auto first_byte = static_cast<uint8_t>(s[i]);
         size_t char_len = 0;
 
         if ((first_byte & 0x80) == 0) { // 1-byte character (ASCII)
@@ -41,7 +41,7 @@ std::size_t count_chinese_characters(std::string_view str)
         uint32_t code_point = 0;
         for (size_t j = 0; j < char_len; ++j) {
             code_point <<= 6;
-            code_point |= static_cast<uint8_t>(str[i + j]) & 0x3F;
+            code_point |= static_cast<uint8_t>(s[i + j]) & 0x3F;
         }
 
         // Check if the code point is a Chinese character

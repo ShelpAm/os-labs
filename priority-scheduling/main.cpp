@@ -8,7 +8,7 @@
 struct By_priority {
     constexpr bool operator()(Process const *lhs, Process const *rhs) const
     {
-        return lhs->priority < rhs->priority;
+        return lhs->priority() < rhs->priority();
     }
 };
 

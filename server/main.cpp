@@ -1,10 +1,9 @@
 #include <fast_io.h>
+#include <httplib.h>
 #include <nlohmann/json.hpp>
 #include <process/process.hpp>
 #include <queue>
 #include <ranges>
-
-#include <httplib.h>
 
 struct Frame {
     int system_time;
@@ -18,9 +17,9 @@ struct Frame {
 };
 
 struct By_priority {
-    constexpr bool operator()(Process const *lhs, Process const *rhs) const
+    bool operator()(Process const *lhs, Process const *rhs) const
     {
-        return lhs->priority < rhs->priority;
+        return lhs->priority() < rhs->priority();
     }
 };
 
@@ -131,6 +130,7 @@ int main()
             Process p(j["id"].get<int>(), j["name"],
                       Time(j["arrival_time"].get<int>()),
                       j["total_execution_time"].get<int>());
+            p.extra["priority"] = j["extra"]["priority"].get<int>();
             jobs.push_back(p);
         }
         res.set_content(solve_priority_scheduling(cpu, jobs),

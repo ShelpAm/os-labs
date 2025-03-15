@@ -1,6 +1,22 @@
-"use strict";
-
 (function() {
+    function make_process_table_row(p: Process): HTMLTableRowElement {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td style="width: 60px;"><input for="id" type="number" value="${p.id}" class="process-column" /></td>
+            <td style="width: 100px;"><input for="name" type="text" value="${p.name}" class="process-column" /></td>
+            <td style="width: 80px;"><input for="arrival_time" type="number" value="${p.arrival_time}" class="process-column" /></td>
+            <td style="width: 80px;"><input for="total_execution_time" type="number" value="${p.total_execution_time}" class="process-column" /></td>
+            <td style="width: 60px;"><input for="priority" type="number" value="${p.extra.priority ?? '-'}" class="process-column" /></td>
+            <td style="width: 80px;">${p.runtime_info.start_time ?? '-'}</td>
+            <td style="width: 80px;">${p.runtime_info.finish_time ?? '-'}</td>
+            <td style="width: 80px;">${p.runtime_info.execution_time ?? '-'}</td>
+            <td style="width: 80px;">${p.runtime_info.remaining_time ?? '-'}</td>
+            <td style="width: 80px;">${p.runtime_info.turnaround ?? '-'}</td>
+            <td style="width: 100px;">${p.runtime_info.weighted_turnaround ?? '-'}</td>
+        `;
+        return row;
+    }
+
     // DOM elements
     const algorithmSelect = document.getElementById('algorithm') as HTMLSelectElement;
     const speedInput = document.getElementById('speed') as HTMLInputElement;
@@ -11,6 +27,7 @@
     const notReadyQueueDiv = document.getElementById('not-ready-queue') as HTMLDivElement;
     const finishedQueueDiv = document.getElementById('finished-queue') as HTMLDivElement;
     const currentTimeSpan = document.getElementById('current-time') as HTMLSpanElement;
+    const new_row_btn = document.getElementById('new-row') as HTMLButtonElement;
 
     enum Status {
         not_started,
@@ -24,15 +41,17 @@
         name: string,
         arrival_time: number,
         total_execution_time: number,
-        priority: number,
         runtime_info: {
-            start_time: number,
-            finish_time: number,
-            execution_time: number,
-            remaining_time: number,
-            turnaround: number,
-            weighted_turnaround: number,
-            status: Status
+            start_time?: number,
+            finish_time?: number,
+            execution_time?: number,
+            remaining_time?: number,
+            turnaround?: number,
+            weighted_turnaround?: number,
+            status?: Status
+        },
+        extra: {
+            priority?: number,
         },
     }
 
@@ -60,20 +79,7 @@
     }
 
     // Fetch simulation data from API
-    async function fetch_frames(algorithm: string): Promise<Array<Frame>> {
-        const processesData = [{
-            id: 1206,
-            name: 'zyx',
-            arrival_time: 3,
-            total_execution_time: 5,
-            priority: 1,
-        }, {
-            id: 817,
-            name: 'yyx',
-            arrival_time: 5,
-            total_execution_time: 1,
-            priority: 3,
-        }]
+    async function fetch_frames(processesData: any, algorithm: string): Promise<Array<Frame>> {
         try {
             const response = await axios.post(API_URL, { processes: processesData }, {
                 headers: { 'Content-Type': 'application/json' }
@@ -97,18 +103,7 @@
     function render_processes_list(processes: Array<Process>) {
         initialTableBody.innerHTML = '';
         processes.forEach(p => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-            <td>${p.id}</td>
-            <td>${p.name}</td>
-            <td>${p.arrival_time}</td>
-            <td>${p.total_execution_time}</td>
-            <td>${p.priority !== undefined ? p.priority : '-'}</td>
-            <td>${p.runtime_info.start_time !== undefined ? p.runtime_info.start_time : '-'}</td>
-            <td>${p.runtime_info.finish_time !== undefined ? p.runtime_info.finish_time : '-'}</td>
-            <td>${p.runtime_info.execution_time !== undefined ? p.runtime_info.execution_time : '-'}</td>
-            <td>${p.runtime_info.remaining_time !== undefined ? p.runtime_info.remaining_time : '-'}</td>
-        `;
+            const row = make_process_table_row(p)
             initialTableBody.appendChild(row);
         });
     }
@@ -125,26 +120,29 @@
                 throw new Error("Exiting div not found"); // Or handle it differently
             }
             exitingDiv.classList.add('exit');
-            exitingDiv.remove();
-            // setTimeout(() => exitingDiv.remove(), 400);
+            // exitingDiv.remove();
+            setTimeout(() => exitingDiv.remove(), 400);
         });
 
         currentQueue.forEach(id => {
+            const process = process_by_id.get(id) as Process;
             let processDiv = Array.from(queueDiv.children).find(div => (div as HTMLDivElement).dataset.id === id.toString());
+            let div: HTMLDivElement;
             if (!processDiv) {
-                let div = document.createElement('div');
+                div = document.createElement('div');
                 if (!process_by_id.has(id)) {
-                    throw new Error('id isn\'t in process_by_id');
+                    throw new Error('id doesn\'t exist in process_by_id');
                 }
-                div.innerHTML = `${id} (${((process_by_id).get(id) as Process).runtime_info.remaining_time})`;
+                div.innerHTML = `${id} (${((process_by_id).get(id) as Process).runtime_info.remaining_time ?? '-'})`;
                 div.className = 'process';
                 div.dataset.id = id.toString();
                 queueDiv.appendChild(div);
                 if (entering.includes(id)) {
                     requestAnimationFrame(() => div.classList.add('enter'));
                 }
+            } else {
+                processDiv.innerHTML = `${id} (${process.runtime_info.remaining_time ?? '-'})`;
             }
-            // processDiv.style.order = index;
         });
     }
 
@@ -181,6 +179,7 @@
 
                 console.log("Current frame: ", i);
                 console.log("Current processes: ", frames[i].processes);
+                console.log("process_by_id: ", process_by_id);
 
                 if (i == 0) {
                     render_frame(frames[i]);
@@ -195,12 +194,44 @@
         }, intervalDuration);
     }
 
+    function get_processes_from_list(table: HTMLTableElement) {
+        return Array.from(table.querySelectorAll("tbody tr")).map(row => {
+            let cells = row.children;
+
+            const p: Process = {
+                id: parseInt((cells[0].querySelector("input") as HTMLInputElement).value, 10),
+                name: (cells[1].querySelector("input") as HTMLInputElement).value,
+                arrival_time: parseInt((cells[2].querySelector("input") as HTMLInputElement).value, 10),
+                total_execution_time: parseInt((cells[3].querySelector("input") as HTMLInputElement).value, 10),
+                runtime_info: {}, // Empty runtime_info as per your example
+                extra: { priority: parseInt((cells[4].querySelector("input") as HTMLInputElement).value, 10) },
+            };
+
+            return p;
+        });
+    }
+
     // Initialize simulation (fetch data and render first frame)
     async function start_simulation() {
         console.log("Initializing simulation data.")
         const algorithm = algorithmSelect.value;
 
-        let frames = await fetch_frames(algorithm);
+
+        function has_duplicate_ids(processes: Array<Process>) {
+            const seen = new Set<number>();
+            return processes.some(p => {
+                if (seen.has(p.id)) return true; // Duplicate found
+                seen.add(p.id);
+                return false;
+            });
+        }
+        const processes_data = get_processes_from_list(initialTableBody);
+        if (has_duplicate_ids(processes_data)) {
+            alert('Duplicate IDs found! You should make every id of processes unique.');
+            return;
+        }
+
+        let frames = await fetch_frames(processes_data, algorithm);
         console.log("Frames: ", frames);
         if (frames.length === 0) return;
 
@@ -230,5 +261,41 @@
         updateSpeed(); // Adjust speed without resetting
     });
 
+    const example_processes: Array<Process> = [
+        {
+            id: 1001,
+            name: 'Love in the Dark',
+            arrival_time: 2,
+            total_execution_time: 3,
+            runtime_info: {},
+            extra: { priority: 2, },
+        },
+        {
+            id: 1206,
+            name: 'zyx',
+            arrival_time: 3,
+            total_execution_time: 5,
+            runtime_info: {},
+            extra: { priority: 1, },
+        },
+        {
+            id: 817,
+            name: 'yyx',
+            arrival_time: 5,
+            total_execution_time: 1,
+            runtime_info: {},
+            extra: { priority: 3, },
+        },
+    ];
+
+    example_processes.forEach(p => {
+        initialTableBody.appendChild(make_process_table_row(p)); // Add an example to the list
+    });
+
+    new_row_btn.addEventListener('click', () => {
+        initialTableBody.appendChild(make_process_table_row(example_processes[0]))
+    });
+
+    // render_processes_list([example_proc]); // Initialize the list
 })();
 

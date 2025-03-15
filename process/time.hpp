@@ -9,7 +9,7 @@
 
 // params:
 // s: string-like
-constexpr int to_int(auto s)
+constexpr int to_int(auto const &s)
 {
     constexpr auto base{10};
     int result{};

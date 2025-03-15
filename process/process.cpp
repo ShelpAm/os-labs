@@ -76,7 +76,7 @@ fast_io::vector<Process> input_processes()
         auto const j(nlohmann::json::parse(s));
         auto const priorities{j["priorities"].get<fast_io::vector<int>>()};
         for (auto [job, priority] : std::views::zip(jobs, priorities)) {
-            job.priority = priority;
+            job.set_priority(priority);
         }
 
         // auto &&cao{j.at("jobs").get<fast_io::vector<Process>>()};

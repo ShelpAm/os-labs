@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     background: white;
     padding: 20px;
@@ -14,7 +14,9 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     text-align: center;
     color: #333;
     font-weight: 600;
@@ -30,7 +32,8 @@ h1, h2, h3 {
     margin-right: 10px;
 }
 
-.menu select, .menu button {
+.menu select,
+.menu button {
     padding: 8px 12px;
     font-size: 16px;
     border-radius: 8px;
@@ -59,7 +62,8 @@ table {
     margin-top: 10px;
 }
 
-th, td {
+th,
+td {
     padding: 8px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -91,7 +95,8 @@ th {
     color: white;
     padding: 12px;
     border-radius: 8px;
-    width: 120px; /* Wider for more info */
+    width: 120px;
+    /* Wider for more info */
     text-align: center;
     font-weight: 500;
     position: relative;
@@ -113,6 +118,7 @@ th {
         opacity: 0;
         transform: scale(0.8) translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: scale(1) translateY(0);
@@ -124,6 +130,7 @@ th {
         opacity: 1;
         transform: scale(1) translateY(0);
     }
+
     to {
         opacity: 0;
         transform: scale(0.8) translateY(-20px);
@@ -137,24 +144,50 @@ th {
 
 /* Color coding for different queues */
 #not-ready-queue .process {
-    background-color: #6c757d; /* Gray for not ready */
+    background-color: #6c757d;
+    /* Gray for not ready */
 }
 
 #finished-queue .process {
-    background-color: #28a745; /* Green for finished */
+    background-color: #28a745;
+    /* Green for finished */
 }
 
 .menu input[type="range"] {
-    width: 150px; /* Wide enough for smooth sliding */
-    margin: 0 10px; /* Spacing around the slider */
-    vertical-align: middle; /* Align with label and button */
+    width: 150px;
+    /* Wide enough for smooth sliding */
+    margin: 0 10px;
+    /* Spacing around the slider */
+    vertical-align: middle;
+    /* Align with label and button */
 }
 
 .menu label[for="speed"] {
-    margin-right: 10px; /* Space between label and slider */
+    margin-right: 10px;
+    /* Space between label and slider */
 }
 
 #speed-value {
     font-weight: 600;
-    color: #007aff; /* Matches button color for emphasis */
+    color: #007aff;
+    /* Matches button color for emphasis */
+}
+
+#new-row {
+    background-color: #007aff;
+    color: white;
+    cursor: pointer;
+    padding: 4px 12px;
+    margin: 8px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+}
+
+.process-column {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: none;
+    text-align: center;
 }

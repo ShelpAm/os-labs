@@ -39,10 +39,13 @@
                         <th>Finish Time</th>
                         <th>Execution Time</th>
                         <th>Remaining Time</th>
+                        <th>Turnaround</th>
+                        <th>Weighted Turnaround</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
+            <button id="new-row">New</button>
         </div>
 
         <div class="simulation">
@@ -59,7 +62,6 @@
                 <div id="ready-queue" class="queue"></div>
             </div>
 
-
             <div class="queue-section" id="finished-section">
                 <h3>Finished</h3>
                 <div id="finished-queue" class="queue"></div>
@@ -67,8 +69,9 @@
         </div>
     </div>
 
+    <div class="root"></div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 
 </html>

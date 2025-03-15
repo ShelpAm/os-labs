@@ -36,6 +36,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 (function () {
+    function make_process_table_row(p) {
+        var _a, _b, _c, _d, _e, _f, _g;
+        var row = document.createElement('tr');
+        row.innerHTML = "\n            <td style=\"width: 60px;\"><input for=\"id\" type=\"number\" value=\"".concat(p.id, "\" class=\"process-column\" /></td>\n            <td style=\"width: 100px;\"><input for=\"name\" type=\"text\" value=\"").concat(p.name, "\" class=\"process-column\" /></td>\n            <td style=\"width: 80px;\"><input for=\"arrival_time\" type=\"number\" value=\"").concat(p.arrival_time, "\" class=\"process-column\" /></td>\n            <td style=\"width: 80px;\"><input for=\"total_execution_time\" type=\"number\" value=\"").concat(p.total_execution_time, "\" class=\"process-column\" /></td>\n            <td style=\"width: 60px;\"><input for=\"priority\" type=\"number\" value=\"").concat((_a = p.extra.priority) !== null && _a !== void 0 ? _a : '-', "\" class=\"process-column\" /></td>\n            <td style=\"width: 80px;\">").concat((_b = p.runtime_info.start_time) !== null && _b !== void 0 ? _b : '-', "</td>\n            <td style=\"width: 80px;\">").concat((_c = p.runtime_info.finish_time) !== null && _c !== void 0 ? _c : '-', "</td>\n            <td style=\"width: 80px;\">").concat((_d = p.runtime_info.execution_time) !== null && _d !== void 0 ? _d : '-', "</td>\n            <td style=\"width: 80px;\">").concat((_e = p.runtime_info.remaining_time) !== null && _e !== void 0 ? _e : '-', "</td>\n            <td style=\"width: 80px;\">").concat((_f = p.runtime_info.turnaround) !== null && _f !== void 0 ? _f : '-', "</td>\n            <td style=\"width: 100px;\">").concat((_g = p.runtime_info.weighted_turnaround) !== null && _g !== void 0 ? _g : '-', "</td>\n        ");
+        return row;
+    }
     // DOM elements
     var algorithmSelect = document.getElementById('algorithm');
     var speedInput = document.getElementById('speed');
@@ -46,6 +52,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var notReadyQueueDiv = document.getElementById('not-ready-queue');
     var finishedQueueDiv = document.getElementById('finished-queue');
     var currentTimeSpan = document.getElementById('current-time');
+    var new_row_btn = document.getElementById('new-row');
     var Status;
     (function (Status) {
         Status[Status["not_started"] = 0] = "not_started";
@@ -64,41 +71,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         speedValueSpan.textContent = "".concat(speedValue.toFixed(1), "x");
     }
     // Fetch simulation data from API
-    function fetch_frames(algorithm) {
+    function fetch_frames(processesData, algorithm) {
         return __awaiter(this, void 0, void 0, function () {
-            var processesData, response, data, error_1;
+            var response, data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        processesData = [{
-                                id: 1206,
-                                name: 'zyx',
-                                arrival_time: 3,
-                                total_execution_time: 5,
-                                priority: 1,
-                            }, {
-                                id: 817,
-                                name: 'yyx',
-                                arrival_time: 5,
-                                total_execution_time: 1,
-                                priority: 3,
-                            }];
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, axios.post(API_URL, { processes: processesData }, {
                                 headers: { 'Content-Type': 'application/json' }
                             })];
-                    case 2:
+                    case 1:
                         response = _a.sent();
                         data = response.data;
                         return [2 /*return*/, data.frames];
-                    case 3:
+                    case 2:
                         error_1 = _a.sent();
                         console.error('Error fetching simulation data:', error_1.response.data);
                         alert('Failed to load simulation data. Check console for details.');
                         return [2 /*return*/, []];
-                    case 4: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -112,8 +104,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function render_processes_list(processes) {
         initialTableBody.innerHTML = '';
         processes.forEach(function (p) {
-            var row = document.createElement('tr');
-            row.innerHTML = "\n            <td>".concat(p.id, "</td>\n            <td>").concat(p.name, "</td>\n            <td>").concat(p.arrival_time, "</td>\n            <td>").concat(p.total_execution_time, "</td>\n            <td>").concat(p.priority !== undefined ? p.priority : '-', "</td>\n            <td>").concat(p.runtime_info.start_time !== undefined ? p.runtime_info.start_time : '-', "</td>\n            <td>").concat(p.runtime_info.finish_time !== undefined ? p.runtime_info.finish_time : '-', "</td>\n            <td>").concat(p.runtime_info.execution_time !== undefined ? p.runtime_info.execution_time : '-', "</td>\n            <td>").concat(p.runtime_info.remaining_time !== undefined ? p.runtime_info.remaining_time : '-', "</td>\n        ");
+            var row = make_process_table_row(p);
             initialTableBody.appendChild(row);
         });
     }
@@ -128,25 +119,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 throw new Error("Exiting div not found"); // Or handle it differently
             }
             exitingDiv.classList.add('exit');
-            exitingDiv.remove();
-            // setTimeout(() => exitingDiv.remove(), 400);
+            // exitingDiv.remove();
+            setTimeout(function () { return exitingDiv.remove(); }, 400);
         });
         currentQueue.forEach(function (id) {
+            var _a, _b;
+            var process = process_by_id.get(id);
             var processDiv = Array.from(queueDiv.children).find(function (div) { return div.dataset.id === id.toString(); });
+            var div;
             if (!processDiv) {
-                var div_1 = document.createElement('div');
+                div = document.createElement('div');
                 if (!process_by_id.has(id)) {
-                    throw new Error('id isn\'t in process_by_id');
+                    throw new Error('id doesn\'t exist in process_by_id');
                 }
-                div_1.innerHTML = "".concat(id, " (").concat((process_by_id).get(id).runtime_info.remaining_time, ")");
-                div_1.className = 'process';
-                div_1.dataset.id = id.toString();
-                queueDiv.appendChild(div_1);
+                div.innerHTML = "".concat(id, " (").concat((_a = (process_by_id).get(id).runtime_info.remaining_time) !== null && _a !== void 0 ? _a : '-', ")");
+                div.className = 'process';
+                div.dataset.id = id.toString();
+                queueDiv.appendChild(div);
                 if (entering.includes(id)) {
-                    requestAnimationFrame(function () { return div_1.classList.add('enter'); });
+                    requestAnimationFrame(function () { return div.classList.add('enter'); });
                 }
             }
-            // processDiv.style.order = index;
+            else {
+                processDiv.innerHTML = "".concat(id, " (").concat((_b = process.runtime_info.remaining_time) !== null && _b !== void 0 ? _b : '-', ")");
+            }
         });
     }
     // Render a single frame
@@ -180,6 +176,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 });
                 console.log("Current frame: ", i);
                 console.log("Current processes: ", frames[i].processes);
+                console.log("process_by_id: ", process_by_id);
                 if (i == 0) {
                     render_frame(frames[i]);
                 }
@@ -194,16 +191,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             ++i;
         }, intervalDuration);
     }
+    function get_processes_from_list(table) {
+        return Array.from(table.querySelectorAll("tbody tr")).map(function (row) {
+            var cells = row.children;
+            var p = {
+                id: parseInt(cells[0].querySelector("input").value, 10),
+                name: cells[1].querySelector("input").value,
+                arrival_time: parseInt(cells[2].querySelector("input").value, 10),
+                total_execution_time: parseInt(cells[3].querySelector("input").value, 10),
+                runtime_info: {}, // Empty runtime_info as per your example
+                extra: { priority: parseInt(cells[4].querySelector("input").value, 10) },
+            };
+            return p;
+        });
+    }
     // Initialize simulation (fetch data and render first frame)
     function start_simulation() {
         return __awaiter(this, void 0, void 0, function () {
-            var algorithm, frames;
+            function has_duplicate_ids(processes) {
+                var seen = new Set();
+                return processes.some(function (p) {
+                    if (seen.has(p.id))
+                        return true; // Duplicate found
+                    seen.add(p.id);
+                    return false;
+                });
+            }
+            var algorithm, processes_data, frames;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log("Initializing simulation data.");
                         algorithm = algorithmSelect.value;
-                        return [4 /*yield*/, fetch_frames(algorithm)];
+                        processes_data = get_processes_from_list(initialTableBody);
+                        if (has_duplicate_ids(processes_data)) {
+                            alert('Duplicate IDs found! You should make every id of processes unique.');
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, fetch_frames(processes_data, algorithm)];
                     case 1:
                         frames = _a.sent();
                         console.log("Frames: ", frames);
@@ -233,4 +258,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         updateSpeedDisplay();
         updateSpeed(); // Adjust speed without resetting
     });
+    var example_processes = [
+        {
+            id: 1001,
+            name: 'Love in the Dark',
+            arrival_time: 2,
+            total_execution_time: 3,
+            runtime_info: {},
+            extra: { priority: 2, },
+        },
+        {
+            id: 1206,
+            name: 'zyx',
+            arrival_time: 3,
+            total_execution_time: 5,
+            runtime_info: {},
+            extra: { priority: 1, },
+        },
+        {
+            id: 817,
+            name: 'yyx',
+            arrival_time: 5,
+            total_execution_time: 1,
+            runtime_info: {},
+            extra: { priority: 3, },
+        },
+    ];
+    example_processes.forEach(function (p) {
+        initialTableBody.appendChild(make_process_table_row(p)); // Add an example to the list
+    });
+    new_row_btn.addEventListener('click', function () {
+        initialTableBody.appendChild(make_process_table_row(example_processes[0]));
+    });
+    // render_processes_list([example_proc]); // Initialize the list
 })();
