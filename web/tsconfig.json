@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
-        "target": "es5",           // Output JS compatible with older browsers
-        "lib": ["dom", "es2016"],  // Include Map and DOM APIs
-        "outDir": "public/",   // Where compiled JS goes
-        "strict": true,            // Enforce strict typing
-        "module": "commonjs"       // Adjust if using modules (e.g., "esnext" for browsers)
+        "allowSyntheticDefaultImports": true,
+        "lib": ["dom", "es2020"], // DOM APIs and Map
+        "module": "esnext",        // ES Modules for <script type="module">
+        "outDir": "public/",      // Output in public/
+        "strict": true,           // Type safety
+        "target": "es6"          // Modern browsers
     },
-    "include": ["public/**/*"],     // Compile all .ts files in public/
+    "include": ["public/**/*"],
     "exclude": []
 }

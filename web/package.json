@@ -2,11 +2,7 @@
     "name": "scheduling-simulator",
     "version": "1.0.0",
     "description": "Process scheduling simulator",
-    "main": "server.js",
-    "scripts": {
-        "start": "node server.js"
-    },
-    "dependencies": {
-        "express": "^4.18.2"
+    "devDependencies": {
+        "@types/axios": "^0.9.36"
     }
 }
