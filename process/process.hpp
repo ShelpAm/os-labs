@@ -1,6 +1,7 @@
 #pragma once
 
 #include <process/cpu.hpp>
+#include <process/detail/std-optional-to-json.hpp>
 #include <process/time.hpp>
 
 #include <compare>
@@ -32,8 +33,8 @@ struct Process {
         // executed_time + remaining_time == execution_time
         int execution_time{};
         int remaining_time;
-        int turnaround;             // 周转时间
-        double weighted_turnaround; // 带权周转时间
+        std::optional<int> turnaround;             // 周转时间
+        std::optional<double> weighted_turnaround; // 带权周转时间
         Status status;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Runtime_info, start_time, finish_time,
@@ -105,8 +106,9 @@ struct Process {
                 "cannot run this process ({}), it has been finished", name));
         }
 
-        if (!started()) {
+        if (!started()) { // Run for the first time
             runtime_info.start_time = cpu.system_time();
+            runtime_info.status = Status::running;
         }
 
         // Running time shouldn't exceed remaining execution time.
@@ -119,6 +121,7 @@ struct Process {
 
         if (finished()) {
             runtime_info.finish_time = cpu.system_time() + minutes;
+            runtime_info.status = Status::finished;
             calculate_process_stats();
         }
 
@@ -129,9 +132,9 @@ struct Process {
     constexpr void calculate_process_stats()
     {
         runtime_info.turnaround = runtime_info.finish_time - arrival_time;
-
-        runtime_info.weighted_turnaround = runtime_info.turnaround;
-        runtime_info.weighted_turnaround /= total_execution_time;
+        runtime_info.weighted_turnaround =
+            static_cast<double>(runtime_info.turnaround.value()) /
+            total_execution_time;
     }
 };
 
@@ -213,9 +216,9 @@ void output_processes_info(Range &&_processes, Projection &&_proj = {})
                 to_string(p.runtime_info.start_time, "Not started");
             map["Finish time"] =
                 to_string(p.runtime_info.finish_time, "Not finished");
-            map["Turnaround time"] = to_string(p.runtime_info.turnaround);
+            map["Turnaround time"] = to_string(*p.runtime_info.turnaround);
             map["Weighted turnaround time"] =
-                std::format("{:.2f}", p.runtime_info.weighted_turnaround);
+                std::format("{:.2f}", *p.runtime_info.weighted_turnaround);
             map["Execution time"] = to_string(p.runtime_info.execution_time);
         }
 
@@ -235,8 +238,8 @@ void output_processes_info(Range &&_processes, Projection &&_proj = {})
     double average_turnaround{};
     double average_weighted_turnaround{};
     for (auto const &p : processes) {
-        average_turnaround += p.runtime_info.turnaround;
-        average_weighted_turnaround += p.runtime_info.weighted_turnaround;
+        average_turnaround += *p.runtime_info.turnaround;
+        average_weighted_turnaround += *p.runtime_info.weighted_turnaround;
     }
     average_turnaround /= static_cast<double>(processes.size());
     average_weighted_turnaround /= static_cast<double>(processes.size());

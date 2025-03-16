@@ -25,6 +25,14 @@ function Process_table_row(p) {
         `;
     return row;
 }
+function Process_div(p) {
+    var _a;
+    const div = document.createElement('div');
+    div.innerHTML = `${p.id} (${(_a = p.runtime_info.remaining_time) !== null && _a !== void 0 ? _a : '-'})`;
+    div.className = 'process';
+    div.dataset.id = p.id.toString();
+    return div;
+}
 // DOM elements
 const algorithmSelect = document.getElementById('algorithm');
 const speedInput = document.getElementById('speed');
@@ -78,9 +86,48 @@ function render_processes_list(processes) {
     });
 }
 // Render a queue with animations
+// method: Clear and redraw the quque.
 function renderQueue(queueDiv, currentQueue, prevQueue) {
-    // queueDiv.innerHTML = ''
     const { entering, exiting } = getQueueChanges(prevQueue, currentQueue);
+    currentQueue.forEach(pid => {
+        if (!process_by_id.has(pid)) {
+            throw new Error('id doesn\'t exist in process_by_id');
+        }
+        const processDiv = Array.from(queueDiv.children).find(div => div.dataset.id === pid.toString());
+        const process = process_by_id.get(pid);
+        // Create or update
+        if (!processDiv) {
+            const div = Process_div(process);
+            queueDiv.appendChild(div);
+            if (entering.includes(pid)) {
+                requestAnimationFrame(() => div.classList.add('enter'));
+            }
+        }
+        else {
+            processDiv.innerHTML = Process_div(process).innerHTML;
+        }
+    });
+    function sort_process_queue(div, compare) {
+        // Convert HTMLCollection to array
+        const childrenArray = Array.from(div.children);
+        // Sort by textContent
+        childrenArray.sort((lhs, rhs) => {
+            const l = lhs;
+            const pl = process_by_id.get(Number(l.dataset.id));
+            const r = rhs;
+            const pr = process_by_id.get(Number(r.dataset.id));
+            return compare(pl, pr);
+        });
+        // Clear and re-append
+        div.replaceChildren();
+        childrenArray.forEach(child => div.appendChild(child));
+    }
+    sort_process_queue(queueDiv, (lhs, rhs) => {
+        if (lhs.extra.priority == undefined || rhs.extra.priority == undefined) {
+            throw new Error('priority doesn\'t exist in process');
+        }
+        return lhs.extra.priority - rhs.extra.priority;
+    });
     // Slow here, but flexible and generic.
     exiting.forEach(pid => {
         const exitingDiv = Array.from(queueDiv.children).find(div => div.dataset.id === pid.toString());
@@ -91,28 +138,6 @@ function renderQueue(queueDiv, currentQueue, prevQueue) {
         // exitingDiv.remove();
         setTimeout(() => exitingDiv.remove(), 400);
     });
-    currentQueue.forEach(id => {
-        var _a, _b;
-        const process = process_by_id.get(id);
-        let processDiv = Array.from(queueDiv.children).find(div => div.dataset.id === id.toString());
-        let div;
-        if (!processDiv) {
-            div = document.createElement('div');
-            if (!process_by_id.has(id)) {
-                throw new Error('id doesn\'t exist in process_by_id');
-            }
-            div.innerHTML = `${id} (${(_a = (process_by_id).get(id).runtime_info.remaining_time) !== null && _a !== void 0 ? _a : '-'})`;
-            div.className = 'process';
-            div.dataset.id = id.toString();
-            queueDiv.appendChild(div);
-            if (entering.includes(id)) {
-                requestAnimationFrame(() => div.classList.add('enter'));
-            }
-        }
-        else {
-            processDiv.innerHTML = `${id} (${(_b = process.runtime_info.remaining_time) !== null && _b !== void 0 ? _b : '-'})`;
-        }
-    });
 }
 // Render a single frame
 function render_frame(cur, prev = { not_ready_queue: [], ready_queue: [], finish_queue: [] }) {
@@ -120,8 +145,8 @@ function render_frame(cur, prev = { not_ready_queue: [], ready_queue: [], finish
     console.log("Rendering frame: ", cur);
     render_processes_list(cur.processes);
     currentTimeSpan.textContent = cur.system_time.toString();
-    renderQueue(readyQueueDiv, cur.ready_queue, (_a = prev.ready_queue) !== null && _a !== void 0 ? _a : []);
-    renderQueue(notReadyQueueDiv, cur.not_ready_queue, (_b = prev.not_ready_queue) !== null && _b !== void 0 ? _b : []);
+    renderQueue(notReadyQueueDiv, cur.not_ready_queue, (_a = prev.not_ready_queue) !== null && _a !== void 0 ? _a : []);
+    renderQueue(readyQueueDiv, cur.ready_queue, (_b = prev.ready_queue) !== null && _b !== void 0 ? _b : []);
     renderQueue(finishedQueueDiv, cur.finish_queue, (_c = prev.finish_queue) !== null && _c !== void 0 ? _c : []);
 }
 let intervalId;
@@ -138,18 +163,22 @@ function start_animation(frames) {
     let i = 0;
     intervalId = setInterval(() => {
         if (i < frames.length) {
-            process_by_id.clear();
-            frames[i].processes.forEach((p) => {
-                process_by_id.set(p.id, p);
-            });
-            console.log("Current frame: ", i);
-            console.log("Current processes: ", frames[i].processes);
-            console.log("process_by_id: ", process_by_id);
-            if (i == 0) {
-                render_frame(frames[i]);
+            try {
+                process_by_id.clear();
+                frames[i].processes.forEach((p) => {
+                    process_by_id.set(p.id, p);
+                });
+                console.log("Current frame: ", i);
+                if (i == 0) {
+                    render_frame(frames[i]);
+                }
+                else {
+                    render_frame(frames[i], frames[i - 1]);
+                }
             }
-            else {
-                render_frame(frames[i], frames[i - 1]);
+            catch (error) {
+                console.log('Error:', error);
+                clearInterval(intervalId);
             }
         }
         else {

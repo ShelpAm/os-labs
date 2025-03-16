@@ -18,6 +18,14 @@ function Process_table_row(p: Process): HTMLTableRowElement {
     return row;
 }
 
+function Process_div(p: Process): HTMLDivElement {
+    const div = document.createElement('div');
+    div.innerHTML = `${p.id} (${p.runtime_info.remaining_time ?? '-'})`;
+    div.className = 'process';
+    div.dataset.id = p.id.toString();
+    return div;
+}
+
 // DOM elements
 const algorithmSelect = document.getElementById('algorithm') as HTMLSelectElement;
 const speedInput = document.getElementById('speed') as HTMLInputElement;
@@ -76,9 +84,51 @@ function render_processes_list(processes: Array<Process>) {
 }
 
 // Render a queue with animations
+// method: Clear and redraw the quque.
 function renderQueue(queueDiv: HTMLDivElement, currentQueue: Array<number>, prevQueue: Array<number>) {
-    // queueDiv.innerHTML = ''
     const { entering, exiting } = getQueueChanges(prevQueue, currentQueue);
+
+    currentQueue.forEach(pid => {
+        if (!process_by_id.has(pid)) {
+            throw new Error('id doesn\'t exist in process_by_id');
+        }
+        const processDiv = Array.from(queueDiv.children).find(div => (div as HTMLDivElement).dataset.id === pid.toString());
+        const process = process_by_id.get(pid) as Process;
+        // Create or update
+        if (!processDiv) {
+            const div = Process_div(process);
+            queueDiv.appendChild(div);
+            if (entering.includes(pid)) {
+                requestAnimationFrame(() => div.classList.add('enter'));
+            }
+        } else {
+            processDiv.innerHTML = Process_div(process).innerHTML;
+        }
+    });
+
+    function sort_process_queue(div: HTMLDivElement, compare: ((lhs: Process, rhs: Process) => number)): void {
+        // Convert HTMLCollection to array
+        const childrenArray: Element[] = Array.from(div.children);
+
+        // Sort by textContent
+        childrenArray.sort((lhs, rhs) => {
+            const l = lhs as HTMLDivElement;
+            const pl = process_by_id.get(Number(l.dataset.id as string)) as Process;
+            const r = rhs as HTMLDivElement;
+            const pr = process_by_id.get(Number(r.dataset.id as string)) as Process;
+            return compare(pl, pr);
+        });
+
+        // Clear and re-append
+        div.replaceChildren();
+        childrenArray.forEach(child => div.appendChild(child));
+    }
+    sort_process_queue(queueDiv, (lhs, rhs) => {
+        if (lhs.extra.priority == undefined || rhs.extra.priority == undefined) {
+            throw new Error('priority doesn\'t exist in process');
+        }
+        return lhs.extra.priority - rhs.extra.priority;
+    });
 
     // Slow here, but flexible and generic.
     exiting.forEach(pid => {
@@ -90,27 +140,6 @@ function renderQueue(queueDiv: HTMLDivElement, currentQueue: Array<number>, prev
         // exitingDiv.remove();
         setTimeout(() => exitingDiv.remove(), 400);
     });
-
-    currentQueue.forEach(id => {
-        const process = process_by_id.get(id) as Process;
-        let processDiv = Array.from(queueDiv.children).find(div => (div as HTMLDivElement).dataset.id === id.toString());
-        let div: HTMLDivElement;
-        if (!processDiv) {
-            div = document.createElement('div');
-            if (!process_by_id.has(id)) {
-                throw new Error('id doesn\'t exist in process_by_id');
-            }
-            div.innerHTML = `${id} (${((process_by_id).get(id) as Process).runtime_info.remaining_time ?? '-'})`;
-            div.className = 'process';
-            div.dataset.id = id.toString();
-            queueDiv.appendChild(div);
-            if (entering.includes(id)) {
-                requestAnimationFrame(() => div.classList.add('enter'));
-            }
-        } else {
-            processDiv.innerHTML = `${id} (${process.runtime_info.remaining_time ?? '-'})`;
-        }
-    });
 }
 
 // Render a single frame
@@ -118,8 +147,8 @@ function render_frame(cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], 
     console.log("Rendering frame: ", cur)
     render_processes_list(cur.processes)
     currentTimeSpan.textContent = cur.system_time.toString();
-    renderQueue(readyQueueDiv, cur.ready_queue, prev.ready_queue ?? []);
     renderQueue(notReadyQueueDiv, cur.not_ready_queue, prev.not_ready_queue ?? []);
+    renderQueue(readyQueueDiv, cur.ready_queue, prev.ready_queue ?? []);
     renderQueue(finishedQueueDiv, cur.finish_queue, prev.finish_queue ?? []);
 }
 
@@ -139,19 +168,21 @@ function start_animation(frames: Array<Frame>) {
     let i = 0;
     intervalId = setInterval(() => {
         if (i < frames.length) {
-            process_by_id.clear();
-            frames[i].processes.forEach((p) => {
-                process_by_id.set(p.id, p);
-            });
+            try {
+                process_by_id.clear();
+                frames[i].processes.forEach((p) => {
+                    process_by_id.set(p.id, p);
+                });
 
-            console.log("Current frame: ", i);
-            console.log("Current processes: ", frames[i].processes);
-            console.log("process_by_id: ", process_by_id);
-
-            if (i == 0) {
-                render_frame(frames[i]);
-            } else {
-                render_frame(frames[i], frames[i - 1]);
+                console.log("Current frame: ", i);
+                if (i == 0) {
+                    render_frame(frames[i]);
+                } else {
+                    render_frame(frames[i], frames[i - 1]);
+                }
+            } catch (error: any) {
+                console.log('Error:', error);
+                clearInterval(intervalId);
             }
         } else {
             console.log("Animation finished. Stopping.")

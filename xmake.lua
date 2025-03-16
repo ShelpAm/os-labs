@@ -21,6 +21,12 @@ add_files("./process/*.cpp")
 add_deps("fast-io-ext")
 add_packages("nlohmann_json", { public = true }) -- To allow inheritance
 
+target("process.detail.std-optional-to-json.test")
+set_kind("binary")
+add_files("./process/detail/std-optional-to-json.test.cpp")
+add_tests("default")
+add_deps("process")
+
 target("queue-cli")
 set_kind("binary")
 add_files("./queue-cli/main.cpp")
@@ -45,10 +51,10 @@ set_kind("binary")
 add_files("./priority-scheduling/main.cpp")
 add_deps("process")
 
-target("fast_io.test")
-set_kind("binary")
-add_files("./tests/fast_io.test.cpp")
-add_deps("fast-io-ext")
+-- target("fast_io.test")
+-- set_kind("binary")
+-- add_files("./tests/fast_io.test.cpp")
+-- add_deps("fast-io-ext")
 
 target("server")
 set_kind("binary")

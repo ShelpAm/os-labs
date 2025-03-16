@@ -51,20 +51,24 @@ std::string solve_priority_scheduling(CPU &cpu, std::vector<Process> &jobs)
                cpu.running_process() == nullptr;
     }};
 
-    // If no any tasks left, ends the simulation.
-    while (!all_jobs_done()) {
-        // Check if any job is sent in current time.
+    // Check if any job is sent in current time.
+    auto drive_time_events{[&]() {
         while (jobs_it != jobs.end() &&
                cpu.system_time() >= jobs_it->arrival_time) {
             ready.push(&*jobs_it);
             ++jobs_it;
         }
+    }};
 
+    drive_time_events(); // Drive initial events
+    // If no any tasks left, ends the simulation.
+    while (!all_jobs_done()) {
         if (cpu.running_process() == nullptr && !ready.empty()) {
             cpu.set_running(ready.top());
             ready.pop();
         }
         cpu.run_for(1);
+        drive_time_events();
         if (cpu.running_process() != nullptr &&
             cpu.running_process()->finished()) {
             finish_queue.push_back(cpu.running_process()->id);
@@ -150,6 +154,7 @@ int main()
         res.set_content(result, "application/json");
     });
 
+    fast_io::println("Starting server on ", host, ":", port);
     if (!svr.listen(host, port)) {
         fast_io::println("Failed to bind to ", host, ":", port, ", exiting.");
     }

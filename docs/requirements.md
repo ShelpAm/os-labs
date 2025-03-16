@@ -28,7 +28,7 @@
             "remaining_time": "minutes",
             "turnaround": "int",
             "weighted_turnaround": "double",
-            "status": "enum"
+            "status": "Status"
         },
         "extra": {
             "User defined variable": "User defined value",
