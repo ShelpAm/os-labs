@@ -12,53 +12,53 @@
 
 ### Communication JSON structures
 
+- Algorithms
+    - **priority-scheduling**: 
 - Process (for example):
-```json
-{
-    "id": "int",
-    "name": "string",
-    "arrival_time": "minutes",
-    "total_execution_time": "int",
-    "runtime_info": {
-        "start_time": "minutes",
-        "finish_time": "minutes",
-        "execution_time": "minutes",
-        "remaining_time": "minutes",
-        "turnaround": "int",
-        "weighted_turnaround": "double",
-        "status": "enum"
-    },
-    "extra": {
-        "User defined variable": "User defined value",
-        ...
+    ```json
+    {
+        "id": "int",
+        "name": "string",
+        "arrival_time": "minutes",
+        "total_execution_time": "int",
+        "runtime_info": {
+            "start_time": "minutes",
+            "finish_time": "minutes",
+            "execution_time": "minutes",
+            "remaining_time": "minutes",
+            "turnaround": "int",
+            "weighted_turnaround": "double",
+            "status": "enum"
+        },
+        "extra": {
+            "User defined variable": "User defined value",
+            ...
+        }
     }
-}
-```
-
+    ```
 - A state frame:
-```json
-{
-    "system_time": "minutes",
-    "processes": [Process_1, Process_2, ..., Process_n],
-    "not_ready_queue": [id_1, id_2, ..., id_m],
-    "ready_queue": "Array of processes id",
-    "finish_queue": "Array of processes id"
-}
-```
-
+    ```json
+    {
+        "system_time": "minutes",
+        "processes": [Process_1, Process_2, ..., Process_n],
+        "not_ready_queue": [id_1, id_2, ..., id_m],
+        "ready_queue": "Array of processes id",
+        "finish_queue": "Array of processes id"
+    }
+    ```
 - Query (initial processes states):
-```json
-{
-    "processes": [Process_1_without_runtime_info, Process_2_without_runtime_info, ..., Process_n_without_runtime_info]
-}
-```
-
+    ```json
+    {
+        "algorithm": "algorithm_name",
+        "processes": [Process_1_without_runtime_info, Process_2_without_runtime_info, ..., Process_n_without_runtime_info]
+    }
+    ```
 - Response (State frames):
-```json
-{
-    "frames": [frame_1, frame_2, ..., frame_n]
-}
-```
+    ```json
+    {
+        "frames": [frame_1, frame_2, ..., frame_n]
+    }
+    ```
 
 ### Process-specific specifications
 

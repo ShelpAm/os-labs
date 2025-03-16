@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "lib": ["dom", "es2020"], // DOM APIs and Map
         "module": "esnext",        // ES Modules for <script type="module">
         "outDir": "public/",      // Output in public/

@@ -93,6 +93,17 @@ std::string solve_priority_scheduling(CPU &cpu, std::vector<Process> &jobs)
     return j.dump();
 }
 
+std::string route_algorithm(std::string_view algorithm,
+                            std::vector<Process> &jobs)
+{
+    CPU cpu;
+    if (algorithm == "priority_scheduding") {
+        return solve_priority_scheduling(cpu, jobs);
+    }
+    throw std::runtime_error(
+        std::format("{} hasn't been implemented", algorithm));
+}
+
 int main()
 {
     using httplib::Request, httplib::Response;
@@ -124,17 +135,19 @@ int main()
     });
     svr.Post("/api/solve", [](Request const &req, Response &res) {
         auto data = nlohmann::json::parse(req.body);
-        CPU cpu;
+
+        std::string const algorithm{data["algorithm"]};
         std::vector<Process> jobs;
         for (auto const &j : data["processes"]) {
             Process p(j["id"].get<int>(), j["name"],
                       Time(j["arrival_time"].get<int>()),
                       j["total_execution_time"].get<int>());
-            p.extra["priority"] = j["extra"]["priority"].get<int>();
+            p.extra = j["extra"];
             jobs.push_back(p);
         }
-        res.set_content(solve_priority_scheduling(cpu, jobs),
-                        "application/json");
+
+        auto const result{route_algorithm(algorithm, jobs)};
+        res.set_content(result, "application/json");
     });
 
     if (!svr.listen(host, port)) {
