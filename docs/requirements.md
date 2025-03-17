@@ -41,7 +41,8 @@
     {
         "system_time": "minutes",
         "processes": [Process_1, Process_2, ..., Process_n],
-        "not_ready_queue": [id_1, id_2, ..., id_m],
+        "running_process": "Process",
+        "not_ready_queue": ["id_1", "id_2", "...", "id_m"],
         "ready_queue": "Array of processes id",
         "finish_queue": "Array of processes id"
     }

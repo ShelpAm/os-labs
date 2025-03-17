@@ -8,12 +8,14 @@
 struct Frame {
     int system_time;
     std::vector<Process> processes;
+    std::optional<Process> running_process;
     std::vector<Process::Id> not_ready_queue;
     std::vector<Process::Id> ready_queue;
     std::vector<Process::Id> finish_queue;
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Frame, system_time, processes,
-                                   not_ready_queue, ready_queue, finish_queue)
+                                   running_process, not_ready_queue,
+                                   ready_queue, finish_queue)
 };
 
 struct By_priority {
@@ -28,9 +30,9 @@ std::vector<Process::Id> to_vector(
     std::priority_queue<Process *, std::vector<Process *>, By_priority> ready)
 {
     std::vector<Process::Id> ready_queue;
-    if (running != nullptr) {
-        ready_queue.push_back(running->id);
-    }
+    // if (running != nullptr) {
+    //     ready_queue.push_back(running->id);
+    // }
     while (!ready.empty()) {
         ready_queue.push_back(ready.top()->id);
         ready.pop();
@@ -66,6 +68,24 @@ std::string solve_priority_scheduling(CPU &cpu, std::vector<Process> &jobs)
         if (cpu.running_process() == nullptr && !ready.empty()) {
             cpu.set_running(ready.top());
             ready.pop();
+
+            // Here needs a frame when some change happens for running_process
+            { // Copied from next block of code, change as needed.
+                auto const not_ready_queue{
+                    std::vector(jobs_it, jobs.end()) |
+                    std::views::transform([](auto const &e) { return e.id; }) |
+                    std::ranges::to<std::vector>()};
+                frames.push_back(
+                    {.system_time = cpu.system_time().minutes(),
+                     .processes = jobs,
+                     .running_process =
+                         cpu.running_process() != nullptr
+                             ? std::optional<Process>(*cpu.running_process())
+                             : std::nullopt,
+                     .not_ready_queue = not_ready_queue,
+                     .ready_queue = to_vector(cpu.running_process(), ready),
+                     .finish_queue = finish_queue});
+            }
         }
         cpu.run_for(1);
         drive_time_events();
@@ -83,6 +103,10 @@ std::string solve_priority_scheduling(CPU &cpu, std::vector<Process> &jobs)
             frames.push_back(
                 {.system_time = cpu.system_time().minutes(),
                  .processes = jobs,
+                 .running_process =
+                     cpu.running_process() != nullptr
+                         ? std::optional<Process>(*cpu.running_process())
+                         : std::nullopt,
                  .not_ready_queue = not_ready_queue,
                  .ready_queue = to_vector(cpu.running_process(), ready),
                  .finish_queue = finish_queue});

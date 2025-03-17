@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
-        "lib": ["dom", "es2020"], // DOM APIs and Map
+        "lib": ["dom", "esnext"], // DOM APIs and Map
         "module": "esnext",        // ES Modules for <script type="module">
-        "outDir": "public/",      // Output in public/
+        "outDir": "./public/",      // Output in public/
+        "rootDir": "./public/src",
         "strict": true,           // Type safety
-        "target": "es6"          // Modern browsers
+        "target": "esnext"          // Modern browsers
     },
     "include": ["public/**/*"],
     "exclude": []

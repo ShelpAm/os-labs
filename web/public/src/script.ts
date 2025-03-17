@@ -1,29 +1,25 @@
-import { Frame, Process } from 'interfaces';
+import { Frame, Process } from './interfaces.js';
+import { Process_table_row, Process_div } from './components.js';
 
-function Process_table_row(p: Process): HTMLTableRowElement {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-            <td style="width: 60px;"><input for="id" type="number" value="${p.id}" class="process-column" /></td>
-            <td style="width: 100px;"><input for="name" type="text" value="${p.name}" class="process-column" /></td>
-            <td style="width: 80px;"><input for="arrival_time" type="number" value="${p.arrival_time}" class="process-column" /></td>
-            <td style="width: 80px;"><input for="total_execution_time" type="number" value="${p.total_execution_time}" class="process-column" /></td>
-            <td style="width: 60px;"><input for="priority" type="number" value="${p.extra.priority ?? '-'}" class="process-column" /></td>
-            <td style="width: 80px;">${p.runtime_info.start_time ?? '-'}</td>
-            <td style="width: 80px;">${p.runtime_info.finish_time ?? '-'}</td>
-            <td style="width: 80px;">${p.runtime_info.execution_time ?? '-'}</td>
-            <td style="width: 80px;">${p.runtime_info.remaining_time ?? '-'}</td>
-            <td style="width: 80px;">${p.runtime_info.turnaround ?? '-'}</td>
-            <td style="width: 100px;">${p.runtime_info.weighted_turnaround ?? '-'}</td>
-        `;
-    return row;
-}
+function sort_process_queue(div: HTMLDivElement, compare: ((lhs: Process, rhs: Process) => number)): void {
+    console.log('pre', div);
+    // Convert HTMLCollection to array
+    const childrenArray: Element[] = Array.from(div.children);
+    console.log('childrenArray', childrenArray);
 
-function Process_div(p: Process): HTMLDivElement {
-    const div = document.createElement('div');
-    div.innerHTML = `${p.id} (${p.runtime_info.remaining_time ?? '-'})`;
-    div.className = 'process';
-    div.dataset.id = p.id.toString();
-    return div;
+    // Sort by textContent
+    childrenArray.sort((lhs, rhs) => {
+        const l = lhs as HTMLDivElement;
+        const pl = process_by_id.get(Number(l.dataset.id as string)) as Process;
+        const r = rhs as HTMLDivElement;
+        const pr = process_by_id.get(Number(r.dataset.id as string)) as Process;
+        return compare(pl, pr);
+    });
+
+    // Clear and re-append
+    div.replaceChildren();
+    childrenArray.forEach(child => div.appendChild(child));
+    console.log('post', div);
 }
 
 // DOM elements
@@ -32,11 +28,11 @@ const speedInput = document.getElementById('speed') as HTMLInputElement;
 const speedValueSpan = document.getElementById('speed-value') as HTMLSpanElement;
 const startButton = document.getElementById('start-btn') as HTMLButtonElement;
 const initialTableBody = document.querySelector('#initial-table tbody') as HTMLTableElement;
-const readyQueueDiv = document.getElementById('ready-queue') as HTMLDivElement;
 const notReadyQueueDiv = document.getElementById('not-ready-queue') as HTMLDivElement;
+const readyQueueDiv = document.getElementById('ready-queue') as HTMLDivElement;
+const running_process_div = document.getElementById('running-process') as HTMLDivElement;
 const finishedQueueDiv = document.getElementById('finished-queue') as HTMLDivElement;
 const currentTimeSpan = document.getElementById('current-time') as HTMLSpanElement;
-const new_row_btn = document.getElementById('new-row') as HTMLButtonElement;
 
 
 // Simulation state
@@ -72,7 +68,8 @@ async function fetch_frames(processesData: Array<Process>, algorithm: string): P
 function getQueueChanges(prevQueue: Array<number>, nextQueue: Array<number>) {
     const entering = nextQueue.filter(p => !prevQueue.includes(p));
     const exiting = prevQueue.filter(p => !nextQueue.includes(p));
-    return { entering, exiting };
+    const living = nextQueue.filter(p => prevQueue.includes(p));
+    return { entering, living, exiting };
 }
 
 function render_processes_list(processes: Array<Process>) {
@@ -85,8 +82,8 @@ function render_processes_list(processes: Array<Process>) {
 
 // Render a queue with animations
 // method: Clear and redraw the quque.
-function renderQueue(queueDiv: HTMLDivElement, currentQueue: Array<number>, prevQueue: Array<number>) {
-    const { entering, exiting } = getQueueChanges(prevQueue, currentQueue);
+function renderQueue(queueDiv: HTMLDivElement, currentQueue: Array<number>, prevQueue: Array<number>, sort_by_priority = false) {
+    const { entering, living, exiting } = getQueueChanges(prevQueue, currentQueue);
 
     currentQueue.forEach(pid => {
         if (!process_by_id.has(pid)) {
@@ -98,37 +95,34 @@ function renderQueue(queueDiv: HTMLDivElement, currentQueue: Array<number>, prev
         if (!processDiv) {
             const div = Process_div(process);
             queueDiv.appendChild(div);
-            if (entering.includes(pid)) {
-                requestAnimationFrame(() => div.classList.add('enter'));
-            }
+            // if (entering.includes(pid)) {
+            //     requestAnimationFrame(() => div.classList.add('enter'));
+            // }
         } else {
             processDiv.innerHTML = Process_div(process).innerHTML;
         }
     });
 
-    function sort_process_queue(div: HTMLDivElement, compare: ((lhs: Process, rhs: Process) => number)): void {
-        // Convert HTMLCollection to array
-        const childrenArray: Element[] = Array.from(div.children);
-
-        // Sort by textContent
-        childrenArray.sort((lhs, rhs) => {
-            const l = lhs as HTMLDivElement;
-            const pl = process_by_id.get(Number(l.dataset.id as string)) as Process;
-            const r = rhs as HTMLDivElement;
-            const pr = process_by_id.get(Number(r.dataset.id as string)) as Process;
-            return compare(pl, pr);
-        });
-
-        // Clear and re-append
-        div.replaceChildren();
-        childrenArray.forEach(child => div.appendChild(child));
-    }
-    sort_process_queue(queueDiv, (lhs, rhs) => {
-        if (lhs.extra.priority == undefined || rhs.extra.priority == undefined) {
-            throw new Error('priority doesn\'t exist in process');
-        }
-        return lhs.extra.priority - rhs.extra.priority;
+    entering.forEach(pid => {
+        const div = Array.from(queueDiv.children).find(child => (child as HTMLDivElement).dataset.id === pid.toString()) as HTMLDivElement;
+        requestAnimationFrame(() => div.classList.add('enter'));
     });
+
+    living.forEach(pid => {
+        const div = Array.from(queueDiv.children).find(child => (child as HTMLDivElement).dataset.id === pid.toString()) as HTMLDivElement;
+        div.classList.remove('enter');
+        requestAnimationFrame(() => div.classList.add('living'));
+    });
+
+    if (sort_by_priority) {
+        console.log(entering, exiting);
+        sort_process_queue(queueDiv, (lhs, rhs) => {
+            if (lhs.extra.priority == undefined || rhs.extra.priority == undefined) {
+                throw new Error('priority doesn\'t exist in process');
+            }
+            return lhs.extra.priority - rhs.extra.priority;
+        });
+    }
 
     // Slow here, but flexible and generic.
     exiting.forEach(pid => {
@@ -148,8 +142,9 @@ function render_frame(cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], 
     render_processes_list(cur.processes)
     currentTimeSpan.textContent = cur.system_time.toString();
     renderQueue(notReadyQueueDiv, cur.not_ready_queue, prev.not_ready_queue ?? []);
-    renderQueue(readyQueueDiv, cur.ready_queue, prev.ready_queue ?? []);
+    renderQueue(readyQueueDiv, cur.ready_queue, prev.ready_queue ?? [], true);
     renderQueue(finishedQueueDiv, cur.finish_queue, prev.finish_queue ?? []);
+    renderQueue(running_process_div, cur.running_process ? [cur.running_process.id] : [], prev.running_process ? [prev.running_process.id] : []);
 }
 
 let intervalId: number;
@@ -258,41 +253,3 @@ speedInput.addEventListener('input', () => {
     updateSpeedDisplay();
     updateSpeed(); // Adjust speed without resetting
 });
-
-const example_processes: Array<Process> = [
-    {
-        id: 1001,
-        name: 'Love in the Dark',
-        arrival_time: 2,
-        total_execution_time: 3,
-        runtime_info: {},
-        extra: { priority: 2, },
-    },
-    {
-        id: 1206,
-        name: 'zyx',
-        arrival_time: 3,
-        total_execution_time: 5,
-        runtime_info: {},
-        extra: { priority: 1, },
-    },
-    {
-        id: 817,
-        name: 'yyx',
-        arrival_time: 5,
-        total_execution_time: 1,
-        runtime_info: {},
-        extra: { priority: 3, },
-    },
-];
-
-example_processes.forEach(p => {
-    initialTableBody.appendChild(Process_table_row(p)); // Add an example to the list
-});
-
-new_row_btn.addEventListener('click', () => {
-    initialTableBody.appendChild(Process_table_row(example_processes[0]))
-});
-
-// render_processes_list([example_proc]); // Initialize the list
-

@@ -57,9 +57,19 @@
                 <div id="not-ready-queue" class="queue"></div>
             </div>
 
-            <div class="queue-section" id="ready-section">
-                <h3>Ready Queue</h3>
-                <div id="ready-queue" class="queue"></div>
+            <div class="queue-section inliner" id="ready-section">
+                <div style="align-self: flex-start;">
+                    <h3>Running Process</h3>
+                    <div id="running-process" class="queue"></div>
+                </div>
+                <div style="display: flex;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%); /* Centers it horizontally */
+                flex-direction: column; align-content: start; margin: auto;">
+                    <h3>Ready Queue</h3>
+                    <div id="ready-queue" class="queue"></div>
+                </div>
             </div>
 
             <div class="queue-section" id="finished-section">
@@ -72,6 +82,7 @@
     <div class="root"></div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="script.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 
 </html>

@@ -27,6 +27,7 @@ export interface Process {
 export interface Frame {
     system_time: number,
     processes: Array<Process>,
+    running_process?: Process,
     not_ready_queue: Array<number>,
     ready_queue: Array<number>,
     finish_queue: Array<number>,

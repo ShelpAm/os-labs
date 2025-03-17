@@ -109,6 +109,11 @@ th {
     animation: enter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
+.process.living {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
 .process.exit {
     animation: exit 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
@@ -190,4 +195,12 @@ th {
     font-size: 16px;
     border: none;
     text-align: center;
+}
+
+.inliner {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
+    /* justify-content: center; */
 }
