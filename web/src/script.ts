@@ -208,7 +208,7 @@ function get_processes_from_list(table: HTMLTableElement) {
 async function start_simulation() {
     console.log("Initializing simulation data.")
     const algorithm = algorithmSelect.value;
-
+    console.log(algorithm);
 
     function has_duplicate_ids(processes: Array<Process>) {
         const seen = new Set<number>();
@@ -229,8 +229,10 @@ async function start_simulation() {
     if (frames.length === 0) return;
 
     // Initialize global variables
-    readyQueueDiv.innerHTML = '';
+    currentTimeSpan.innerHTML = '0';
     notReadyQueueDiv.innerHTML = '';
+    readyQueueDiv.innerHTML = '';
+    running_process_div.innerHTML = '';
     finishedQueueDiv.innerHTML = '';
     start_animation(frames); // Start the animation after initialization
 }

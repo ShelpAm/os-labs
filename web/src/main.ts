@@ -36,7 +36,13 @@ example_processes.forEach(p => {
 });
 
 new_row_btn.addEventListener('click', () => {
-    initialTableBody.appendChild(Process_table_row(example_processes[0]))
+    const item = example_processes[0];
+    const children = initialTableBody.children;
+    const last_table_row = children.item(children.length - 1) as HTMLDivElement;
+    const id_table_col = last_table_row.children.item(0) as HTMLTableColElement;
+    const id_input = id_table_col.children.item(0) as HTMLInputElement;
+    item.id = Number(id_input.value) + 1;
+    initialTableBody.appendChild(Process_table_row(item))
 });
 
 // render_processes_list([example_proc]); // Initialize the list

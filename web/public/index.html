@@ -16,7 +16,7 @@
             <label for="algorithm">Select Algorithm:</label>
             <select id="algorithm">
                 <option value="fcfs">First-Come, First-Served (FCFS)</option>
-                <option value="sjf">Shortest Job First (SJF)</option>
+                <option value="short_process_first">Shortest Process First (SPF)</option>
                 <option value="rr">Round Robin (RR)</option>
                 <option value="priority_scheduding">Priority Scheduling</option>
             </select>
@@ -26,7 +26,13 @@
         </div>
 
         <div class="process-list">
-            <h2>Initial Processes</h2>
+            <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <button id="new-row">New</button>
+                </div>
+                <h2>Initial Processes</h2>
+                <button id="new-row" style="visibility: hidden;">New</button>
+            </div>
             <table id="initial-table">
                 <thead>
                     <tr>
@@ -45,8 +51,31 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <button id="new-row">New</button>
         </div>
+        <!-- <div class="process-list"> -->
+        <!--     <div style="display: flex; "> -->
+        <!--         <button id="new-row">New</button> -->
+        <!--         <h2>Initial Processes</h2> -->
+        <!--     </div> -->
+        <!--     <table id="initial-table"> -->
+        <!--         <thead> -->
+        <!--             <tr> -->
+        <!--                 <th>ID</th> -->
+        <!--                 <th>Name</th> -->
+        <!--                 <th>Arrival</th> -->
+        <!--                 <th>Total Time</th> -->
+        <!--                 <th>Priority</th> -->
+        <!--                 <th>Start Time</th> -->
+        <!--                 <th>Finish Time</th> -->
+        <!--                 <th>Execution Time</th> -->
+        <!--                 <th>Remaining Time</th> -->
+        <!--                 <th>Turnaround</th> -->
+        <!--                 <th>Weighted Turnaround</th> -->
+        <!--             </tr> -->
+        <!--         </thead> -->
+        <!--         <tbody></tbody> -->
+        <!--     </table> -->
+        <!-- </div> -->
 
         <div class="simulation">
             <h2>Simulation State</h2>

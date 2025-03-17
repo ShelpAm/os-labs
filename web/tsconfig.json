@@ -3,10 +3,10 @@
         "lib": ["dom", "esnext"], // DOM APIs and Map
         "module": "esnext",        // ES Modules for <script type="module">
         "outDir": "./public/",      // Output in public/
-        "rootDir": "./public/src",
+        "rootDir": "./src/",
         "strict": true,           // Type safety
         "target": "esnext"          // Modern browsers
     },
-    "include": ["public/**/*"],
+    "include": ["src/**/*"],
     "exclude": []
 }
