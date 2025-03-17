@@ -22,12 +22,13 @@ void solve_spf(CPU &cpu, fast_io::vector<Process> &jobs)
         // Check if any job is sent in current time.
         while (jobs_it != jobs.end() &&
                cpu.system_time() >= jobs_it->arrival_time) {
-            ready.enqueue(jobs_it);
+            ready.push(jobs_it);
             ++jobs_it;
         }
 
         if (cpu.running_process() == nullptr && !ready.empty()) {
-            cpu.set_running(ready.dequeue());
+            cpu.set_running(ready.front());
+            ready.pop();
         }
         cpu.run_for(1);
         if (cpu.running_process() != nullptr &&

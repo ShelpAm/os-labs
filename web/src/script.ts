@@ -2,10 +2,8 @@ import { Frame, Process } from './interfaces.js';
 import { Process_table_row, Process_div } from './components.js';
 
 function sort_process_queue(div: HTMLDivElement, compare: ((lhs: Process, rhs: Process) => number)): void {
-    console.log('pre', div);
     // Convert HTMLCollection to array
     const childrenArray: Element[] = Array.from(div.children);
-    console.log('childrenArray', childrenArray);
 
     // Sort by textContent
     childrenArray.sort((lhs, rhs) => {
@@ -19,7 +17,6 @@ function sort_process_queue(div: HTMLDivElement, compare: ((lhs: Process, rhs: P
     // Clear and re-append
     div.replaceChildren();
     childrenArray.forEach(child => div.appendChild(child));
-    console.log('post', div);
 }
 
 // DOM elements

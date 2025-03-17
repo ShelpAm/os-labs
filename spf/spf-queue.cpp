@@ -1,6 +1,6 @@
 #include <spf/spf-queue.hpp>
 
-void SPF_queue::enqueue(Process *job)
+void SPF_queue::push(Process *job)
 {
     auto it{list_.begin()};
     while (it != list_.end() &&
@@ -11,11 +11,9 @@ void SPF_queue::enqueue(Process *job)
     list_.insert(it, job);
 }
 
-Process *SPF_queue::dequeue()
+void SPF_queue::pop()
 {
-    Process *ret{list_.front()};
     list_.pop_front();
-    return ret;
 }
 
 bool SPF_queue::empty() const
@@ -26,4 +24,16 @@ bool SPF_queue::empty() const
 Process *SPF_queue::front()
 {
     return list_.front();
+}
+
+std::vector<Process::Id> to_vector(SPF_queue q)
+{
+    std::vector<Process::Id> result;
+
+    while (!q.empty()) {
+        result.push_back(q.front()->id);
+        q.pop();
+    }
+
+    return result;
 }

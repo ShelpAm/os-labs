@@ -58,7 +58,7 @@ add_deps("process")
 
 target("server")
 set_kind("binary")
-add_files("./server/main.cpp")
+add_files("./server/main.cpp", "./spf/spf-queue.cpp")
 add_packages("nlohmann_json")
 add_packages("cpp-httplib")
 add_deps("process")

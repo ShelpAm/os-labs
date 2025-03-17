@@ -1,9 +1,7 @@
 import { Process_table_row, Process_div } from './components.js';
 function sort_process_queue(div, compare) {
-    console.log('pre', div);
     // Convert HTMLCollection to array
     const childrenArray = Array.from(div.children);
-    console.log('childrenArray', childrenArray);
     // Sort by textContent
     childrenArray.sort((lhs, rhs) => {
         const l = lhs;
@@ -15,7 +13,6 @@ function sort_process_queue(div, compare) {
     // Clear and re-append
     div.replaceChildren();
     childrenArray.forEach(child => div.appendChild(child));
-    console.log('post', div);
 }
 // DOM elements
 const algorithmSelect = document.getElementById('algorithm');

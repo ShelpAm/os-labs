@@ -1,10 +1,9 @@
 // Shortest process first
 
-#include <deque>
 #include <fast_io.h>
-#include <fast_io_dsal/vector.h>
 #include <memory>
 #include <process/process.hpp>
+#include <queue>
 
 void solve_round_robin(CPU &cpu, fast_io::vector<Process> &jobs, int quantum)
 {

@@ -1,18 +1,20 @@
 #pragma once
 
 #include <deque>
-#include <fast_io_dsal/list.h>
 #include <list>
 #include <memory>
 #include <process/process.hpp>
+#include <vector>
 
 class SPF_queue {
   public:
-    void enqueue(Process *job);
-    Process *dequeue();
+    void push(Process *job);
+    void pop();
     Process *front();
     [[nodiscard]] bool empty() const;
 
   private:
-    fast_io::list<Process *> list_;
+    std::list<Process *> list_;
 };
+
+std::vector<Process::Id> to_vector(SPF_queue q);
