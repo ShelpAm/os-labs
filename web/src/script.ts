@@ -221,7 +221,7 @@ async function start_simulation() {
         return;
     }
 
-    let frames = await fetch_frames(processes_data, algorithm);
+    const frames = await fetch_frames(processes_data, algorithm);
     console.log("Frames: ", frames);
     if (frames.length === 0) return;
 
