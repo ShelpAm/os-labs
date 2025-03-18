@@ -16,7 +16,7 @@ set_kind("headeronly")
 add_headerfiles("./fast-io-ext/fixed.hpp", { public = true })
 
 target("process")
-set_kind("shared")
+set_kind("static")
 add_files("./process/*.cpp")
 add_deps("fast-io-ext")
 add_packages("nlohmann_json", { public = true }) -- To allow inheritance
@@ -56,12 +56,18 @@ add_deps("process")
 -- add_files("./tests/fast_io.test.cpp")
 -- add_deps("fast-io-ext")
 
+target("process-scheduling")
+set_kind("static")
+add_files("./server/algorithms/proces-scheduling.cpp")
+add_deps("process", { public = true })
+
 target("server")
 set_kind("binary")
 add_files("./server/main.cpp", "./spf/spf-queue.cpp")
 add_packages("nlohmann_json")
 add_packages("cpp-httplib")
 add_deps("process")
+add_deps("process-scheduling")
 
 target("tests.test_process.test")
 set_kind("binary")
