@@ -13,10 +13,10 @@
                 "remaining_time": 0,
                 "turnaround": 20,
                 "weighted_turnaround": 1.00,
-                "status": "Status"
+                "status": "finished"
             },
             "extra": {
-                "User defined variable": "User defined value"
+                "priority": 1
             }
         },
         {
@@ -31,10 +31,10 @@
                 "remaining_time": 0,
                 "turnaround": 70,
                 "weighted_turnaround": 7.00,
-                "status": "Status"
+                "status": "finished"
             },
             "extra": {
-                "User defined variable": "User defined value"
+                "priority": 1
             }
         },
         {
@@ -49,10 +49,10 @@
                 "remaining_time": 0,
                 "turnaround": 65,
                 "weighted_turnaround": 2.17,
-                "status": "Status"
+                "status": "finished"
             },
             "extra": {
-                "User defined variable": "User defined value"
+                "priority": 1
             }
         },
         {
@@ -67,10 +67,10 @@
                 "remaining_time": 0,
                 "turnaround": 45,
                 "weighted_turnaround": 3.00,
-                "status": "Status"
+                "status": "finished"
             },
             "extra": {
-                "User defined variable": "User defined value"
+                "priority": 1
             }
         },
         {
@@ -85,10 +85,10 @@
                 "remaining_time": 0,
                 "turnaround": 40,
                 "weighted_turnaround": 1.60,
-                "status": "Status"
+                "status": "finished"
             },
             "extra": {
-                "User defined variable": "User defined value"
+                "priority": 1
             }
         }
     ]
