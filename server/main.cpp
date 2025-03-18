@@ -13,6 +13,13 @@ struct By_priority {
     }
 };
 
+struct By_arrival_time {
+    bool operator()(Process const *lhs, Process const *rhs) const
+    {
+        return lhs->arrival_time < rhs->arrival_time;
+    }
+};
+
 std::vector<Process::Id> to_vector(
     std::priority_queue<Process *, std::vector<Process *>, By_priority> ready)
 {
@@ -146,6 +153,8 @@ std::string solve_first_come_fisrt_serve(CPU cpu, std::vector<Process> jobs)
 {
     std::vector<Frame> frames;
 
+    std::ranges::sort(jobs, {}, &Process::arrival_time);
+
     auto jobs_it{jobs.begin()};
     std::queue<Process *> ready;
     std::vector<Process::Id> finish_queue;
@@ -166,6 +175,8 @@ std::string solve_short_process_first(CPU cpu, std::vector<Process> jobs)
 {
     std::vector<Frame> frames;
 
+    std::ranges::sort(jobs, {}, &Process::arrival_time);
+
     auto jobs_it{jobs.begin()};
     SPF_queue ready;
     std::vector<Process::Id> finish_queue;
@@ -185,6 +196,8 @@ std::string solve_short_process_first(CPU cpu, std::vector<Process> jobs)
 std::string solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
 {
     std::vector<Frame> frames;
+
+    std::ranges::sort(jobs, {}, &Process::arrival_time);
 
     auto jobs_it{jobs.begin()};
     std::queue<Process *> ready;
@@ -216,6 +229,8 @@ std::string solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
 std::string solve_priority_scheduling(CPU cpu, std::vector<Process> jobs)
 {
     std::vector<Frame> frames;
+
+    std::ranges::sort(jobs, {}, &Process::arrival_time);
 
     auto jobs_it{jobs.begin()};
     Priority_scheduling_queue ready;

@@ -1,5 +1,6 @@
-build/
-.cache
-node_modules/
-.vscode/
-.xmake
+/build/
+/.cache
+/.vscode/
+/web/node_modules/
+/web/dist/
+/.xmake
