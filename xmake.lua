@@ -61,7 +61,7 @@ set_kind("static")
 add_files("./server/algorithms/proces-scheduling.cpp")
 add_deps("process", { public = true })
 
-target("server")
+target("server-cli")
 set_kind("binary")
 add_files("./server/main.cpp", "./spf/spf-queue.cpp")
 add_packages("nlohmann_json")
