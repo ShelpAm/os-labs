@@ -2,7 +2,7 @@
     "compilerOptions": {
         "lib": ["dom", "esnext"], // DOM APIs and Map
         "module": "esnext",        // ES Modules for <script type="module">
-        "outDir": "./public/",      // Output in public/
+        "outDir": "./dist/",      // Output in public/
         "rootDir": "./src/",
         "strict": true,           // Type safety
         "target": "esnext"          // Modern browsers

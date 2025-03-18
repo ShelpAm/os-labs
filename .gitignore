@@ -1,4 +1,5 @@
-build/
-.cache
-node_modules/
-.xmake
+/build/
+/.cache
+/web/node_modules/
+/web/dist/
+/.xmake
