@@ -1,0 +1,60 @@
+CompileFlags:                     # Tweak the parse settings
+  Add: [-std=c++26, -Werror -Wall -Wextra -Wpedantic -Wmisleading-indentation -Wunused
+    -Wuninitialized -Wshadow -Wconversion]
+  # Add: [-Wall, -Wextra, -std=c++26, -stdlib=libc++]
+  Remove: []
+  # Compiler: g++
+  Compiler: clang++             # Change argv[0] of compile flags to `clang++`
+
+Index:
+  Background: Build     # Disable slow background indexing of these files.
+  StandardLibrary: No
+
+Diagnostics:
+  ClangTidy:
+    Add:
+      - bugprone-*
+      - cppcoreguidelines-*
+      - google-readability-*
+      - performance-*
+      - portability-*
+      - modernize-*
+      - readability-*
+    Remove:
+      - bugprone-easily-swappable-parameters
+      - readability-identifier-length
+      # - cppcoreguidelines-pro-bounds-constant-array-index
+      # - readability-qualified-auto
+      # - readability-isolate-declaration
+      - cppcoreguidelines-init-variables
+      # - cppcoreguidelines-avoid-const-or-ref-data-members
+      - cppcoreguidelines-avoid-do-while
+      # - cppcoreguidelines-macro-usage
+      - modernize-use-std-print
+      - modernize-use-trailing-return-type
+      # - cppcoreguidelines-avoid-magic-numbers
+      # - readability-magic-numbers
+    CheckOptions:
+      readability-identifier-naming.VariableCase: lower_case
+    FastCheckFilter: Loose
+  UnusedIncludes: None
+  Includes:
+    AnalyzeAngledIncludes: No
+
+Completion:
+  AllScopes: No
+
+InlayHints:
+  Enabled: Yes
+  BlockEnd: No
+  DeducedTypes: Yes
+  Designators: Yes
+  ParameterNames: Yes
+  TypeNameLimit: 24
+
+Hover:
+  ShowAKA: Yes
+
+SemanticTokens:
+  DisabledKinds: []
+  DisabledModifiers: []
