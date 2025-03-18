@@ -3,10 +3,13 @@
 ## Common specifications
 
 - Language: Chinese
+- Allow for slower transition (animation) of elements.
 - For every class of algorithm, make simulations to them.
 - More detailed info should be displayed.
 - Information should be displayed explicitly. (Every event should be shown)
 - Interactive program, user can input as they want.
+- High performance, specifically, support x clients accessing simultaneounsly.
+- Support reading from file.
 
 ## Process scheduling
 
