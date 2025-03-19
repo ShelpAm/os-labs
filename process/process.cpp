@@ -56,13 +56,13 @@ std::size_t count_chinese_characters(std::string_view str)
     return chinese_count;
 }
 
-fast_io::vector<Process> input_processes()
+std::vector<Process> input_processes()
 {
     fast_io::print("Please input the number of processes: ");
     int num_processes{};
     fast_io::scan(num_processes);
 
-    fast_io::vector<Process> jobs;
+    std::vector<Process> jobs;
     for (int i{}; i != num_processes; ++i) {
         fast_io::println("Please input info of the ", i + 1,
                          "-th process (in an order of id, name, arriving time, "

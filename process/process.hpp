@@ -51,11 +51,11 @@ struct Process {
     std::string name;
     Time arrival_time;
     int total_execution_time{};
-    Scheduling_statistics runtime_info{};
+    Scheduling_statistics stats{};
     nlohmann::json extra;
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Process, id, name, arrival_time,
-                                   total_execution_time, runtime_info, extra)
+                                   total_execution_time, stats, extra)
 
     [[deprecated("Only for nlohmann/json, don't use it")]] constexpr Process() =
         default;
@@ -65,7 +65,7 @@ struct Process {
         : id(id), name(std::move(name)), arrival_time(arrival_time),
           total_execution_time(total_execution_time)
     {
-        runtime_info.remaining_time = total_execution_time;
+        stats.remaining_time = total_execution_time;
     }
 
     constexpr explicit Process(fast_io::c_io_observer in)
@@ -74,17 +74,17 @@ struct Process {
         fast_io::scan(in, id, name, arriving_time, total_execution_time);
         this->arrival_time =
             fast_io::string_view(std::from_range, arriving_time);
-        this->runtime_info.remaining_time = total_execution_time;
+        this->stats.remaining_time = total_execution_time;
     }
 
     [[nodiscard]] constexpr bool started() const noexcept
     {
-        return runtime_info.execution_time != 0;
+        return stats.execution_time != 0;
     }
 
     [[nodiscard]] constexpr bool finished() const noexcept
     {
-        return runtime_info.execution_time == total_execution_time;
+        return stats.execution_time == total_execution_time;
     }
 
     [[nodiscard]] int priority() const
@@ -109,21 +109,21 @@ struct Process {
         }
 
         if (!started()) { // Run for the first time
-            runtime_info.start_time = cpu.system_time();
-            runtime_info.status = Status::running;
+            stats.start_time = cpu.system_time();
+            stats.status = Status::running;
         }
 
         // Running time shouldn't exceed remaining execution time.
-        minutes = std::min(minutes, runtime_info.remaining_time);
+        minutes = std::min(minutes, stats.remaining_time);
 
-        runtime_info.execution_time += minutes;
-        runtime_info.remaining_time -= minutes;
-        assert(runtime_info.execution_time + runtime_info.remaining_time ==
+        stats.execution_time += minutes;
+        stats.remaining_time -= minutes;
+        assert(stats.execution_time + stats.remaining_time ==
                total_execution_time);
 
         if (finished()) {
-            runtime_info.finish_time = cpu.system_time() + minutes;
-            runtime_info.status = Status::finished;
+            stats.finish_time = cpu.system_time() + minutes;
+            stats.status = Status::finished;
             calculate_process_stats();
         }
 
@@ -133,16 +133,16 @@ struct Process {
   private:
     constexpr void calculate_process_stats()
     {
-        runtime_info.turnaround = runtime_info.finish_time - arrival_time;
-        runtime_info.weighted_turnaround =
-            static_cast<double>(runtime_info.turnaround.value()) /
+        stats.turnaround = stats.finish_time - arrival_time;
+        stats.weighted_turnaround =
+            static_cast<double>(stats.turnaround.value()) /
             total_execution_time;
     }
 };
 
 std::size_t count_chinese_characters(std::string_view s);
 
-fast_io::vector<Process> input_processes();
+std::vector<Process> input_processes();
 
 template <std::ranges::range Range,
           std::invocable<std::ranges::range_value_t<Range>> Projection =
@@ -214,14 +214,12 @@ void output_processes_info(Range &&_processes, Projection &&_proj = {})
             map["Arrival time"] = to_string(p.arrival_time);
             map["Total execution time"] = to_string(p.total_execution_time);
             map["Priority"] = to_string(p.priority());
-            map["Start time"] =
-                to_string(p.runtime_info.start_time, "Not started");
-            map["Finish time"] =
-                to_string(p.runtime_info.finish_time, "Not finished");
-            map["Turnaround time"] = to_string(*p.runtime_info.turnaround);
+            map["Start time"] = to_string(p.stats.start_time, "Not started");
+            map["Finish time"] = to_string(p.stats.finish_time, "Not finished");
+            map["Turnaround time"] = to_string(*p.stats.turnaround);
             map["Weighted turnaround time"] =
-                std::format("{:.2f}", *p.runtime_info.weighted_turnaround);
-            map["Execution time"] = to_string(p.runtime_info.execution_time);
+                std::format("{:.2f}", *p.stats.weighted_turnaround);
+            map["Execution time"] = to_string(p.stats.execution_time);
         }
 
         // Build the line
@@ -240,8 +238,8 @@ void output_processes_info(Range &&_processes, Projection &&_proj = {})
     double average_turnaround{};
     double average_weighted_turnaround{};
     for (auto const &p : processes) {
-        average_turnaround += *p.runtime_info.turnaround;
-        average_weighted_turnaround += *p.runtime_info.weighted_turnaround;
+        average_turnaround += *p.stats.turnaround;
+        average_weighted_turnaround += *p.stats.weighted_turnaround;
     }
     average_turnaround /= static_cast<double>(processes.size());
     average_weighted_turnaround /= static_cast<double>(processes.size());

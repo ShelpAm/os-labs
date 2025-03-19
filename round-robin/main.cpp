@@ -5,7 +5,7 @@
 #include <process/process.hpp>
 #include <queue>
 
-void solve_round_robin(CPU &cpu, fast_io::vector<Process> &jobs, int quantum)
+void solve_round_robin(CPU &cpu, std::vector<Process> &jobs, int quantum)
 {
     auto jobs_it{jobs.begin()};
     std::deque<Process *> ready; // Use std::deque for easier output of info
@@ -21,7 +21,7 @@ void solve_round_robin(CPU &cpu, fast_io::vector<Process> &jobs, int quantum)
         // Check if any job is sent in current time.
         while (jobs_it != jobs.end() &&
                cpu.system_time() >= jobs_it->arrival_time) {
-            ready.push_back(jobs_it);
+            ready.push_back(&*jobs_it);
             // ready.push(jobs_it);
             ++jobs_it;
         }
@@ -67,8 +67,8 @@ void solve_round_robin(CPU &cpu, fast_io::vector<Process> &jobs, int quantum)
     fast_io::println("Simulation result:");
     // The result is asked for being sorted by finish time.
     // Note that after sorting, all pointers to the jobs will be invalid.
-    std::ranges::sort(
-        jobs, {}, [](auto const &job) { return job.runtime_info.finish_time; });
+    std::ranges::sort(jobs, {},
+                      [](auto const &job) { return job.stats.finish_time; });
     output_processes_info(jobs);
 }
 

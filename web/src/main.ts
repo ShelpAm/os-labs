@@ -1,5 +1,6 @@
 import { Process } from "./interfaces.js";
 import { Process_table_row } from './components.js';
+import { render_processes_list } from "./script.js";
 
 const new_row_btn = document.getElementById('new-row') as HTMLButtonElement;
 const initialTableBody = document.querySelector('#initial-table tbody') as HTMLTableElement;
@@ -10,7 +11,7 @@ const example_processes: Array<Process> = [
         name: 'Love in the Dark',
         arrival_time: 2,
         total_execution_time: 3,
-        runtime_info: {},
+        stats: {},
         extra: { priority: 2, },
     },
     {
@@ -18,7 +19,7 @@ const example_processes: Array<Process> = [
         name: 'zyx',
         arrival_time: 3,
         total_execution_time: 5,
-        runtime_info: {},
+        stats: {},
         extra: { priority: 1, },
     },
     {
@@ -26,14 +27,16 @@ const example_processes: Array<Process> = [
         name: 'yyx',
         arrival_time: 5,
         total_execution_time: 1,
-        runtime_info: {},
+        stats: {},
         extra: { priority: 3, },
     },
 ];
 
-example_processes.forEach(p => {
-    initialTableBody.appendChild(Process_table_row(p)); // Add examples to the list
-});
+// example_processes.forEach(p => {
+//     initialTableBody.appendChild(Process_table_row(p)); // Add examples to the list
+// });
+
+render_processes_list(example_processes);
 
 new_row_btn.addEventListener('click', () => {
     const item = example_processes[0];

@@ -69,11 +69,10 @@ function getQueueChanges(prevQueue: Array<number>, nextQueue: Array<number>) {
     return { entering, living, exiting };
 }
 
-function render_processes_list(processes: Array<Process>) {
+export function render_processes_list(processes: Array<Process>) {
     initialTableBody.innerHTML = '';
     processes.forEach(p => {
-        const row = Process_table_row(p)
-        initialTableBody.appendChild(row);
+        initialTableBody.appendChild(Process_table_row(p));
     });
 }
 
@@ -172,6 +171,35 @@ function start_animation(frames: Array<Frame>) {
                 } else {
                     render_frame(frames[i], frames[i - 1]);
                 }
+                if (i == frames.length - 1) {
+                    // Add an line of average values
+                    const average_map = { turnaround: 0, weighted_turnaround: 0 };
+                    const list = get_processes_from_list(initialTableBody);
+                    list.forEach((p) => {
+                        for (const key in average_map) {
+                            const value = p.stats[key as keyof typeof p.stats] as number;
+                            average_map[key as keyof typeof average_map] += value;
+                        }
+                    });
+                    for (const key in average_map) {
+                        average_map[key as keyof typeof average_map] /= list.length;
+                    }
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="width: 60px;"></td>
+                        <td style="width: 100px;"><span>Average</span></td>
+                        <td style="width: 80px;"></td>
+                        <td style="width: 80px;"></td>
+                        <td style="width: 60px;"></td>
+                        <td style="width: 80px;"></td>
+                        <td style="width: 80px;"></td>
+                        <td style="width: 80px;"></td>
+                        <td style="width: 80px;"></td>
+                        <td style="width: 80px;">${average_map.turnaround.toFixed(2)}</td>
+                        <td style="width: 100px;">${average_map.weighted_turnaround.toFixed(2)}</td>
+                    `;
+                    initialTableBody.appendChild(row);
+                }
             } catch (error: any) {
                 console.log('Error:', error);
                 clearInterval(intervalId);
@@ -184,21 +212,21 @@ function start_animation(frames: Array<Frame>) {
     }, intervalDuration);
 }
 
-function get_processes_from_list(table: HTMLTableElement) {
+function get_processes_from_list(table: HTMLTableElement): Array<Process> {
     return Array.from(table.querySelectorAll("tbody tr")).map(row => {
         let cells = row.children;
 
         const p: Process = {
-            id: parseInt((cells[0].querySelector("input") as HTMLInputElement).value, 10),
+            id: Number((cells[0].querySelector("input") as HTMLInputElement).value),
             name: (cells[1].querySelector("input") as HTMLInputElement).value,
-            arrival_time: parseInt((cells[2].querySelector("input") as HTMLInputElement).value, 10),
-            total_execution_time: parseInt((cells[3].querySelector("input") as HTMLInputElement).value, 10),
-            runtime_info: {}, // Empty runtime_info as per your example
-            extra: { priority: parseInt((cells[4].querySelector("input") as HTMLInputElement).value, 10) },
+            arrival_time: Number((cells[2].querySelector("input") as HTMLInputElement).value),
+            total_execution_time: Number((cells[3].querySelector("input") as HTMLInputElement).value),
+            stats: {},
+            extra: { priority: Number((cells[4].querySelector("input") as HTMLInputElement).value) },
         };
 
         return p;
-    });
+    }).filter(p => p.id !== -1);
 }
 
 // Initialize simulation (fetch data and render first frame)

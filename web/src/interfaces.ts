@@ -10,7 +10,7 @@ export interface Process {
     name: string,
     arrival_time: number,
     total_execution_time: number,
-    runtime_info: {
+    stats: {
         start_time?: number,
         finish_time?: number,
         execution_time?: number,
