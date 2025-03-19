@@ -1,4 +1,4 @@
-#include <server/algorithms/process-scheduling.hpp>
+#include <algorithms/process-scheduling.hpp>
 
 std::vector<Process::Id> to_vector(
     std::priority_queue<Process *, std::vector<Process *>, By_priority> ready)

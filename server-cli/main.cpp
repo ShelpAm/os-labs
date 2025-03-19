@@ -1,6 +1,6 @@
+#include <algorithms/process-scheduling.hpp>
 #include <httplib.h>
 #include <process/process.hpp>
-#include <server/algorithms/process-scheduling.hpp>
 
 int main()
 {

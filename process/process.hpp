@@ -27,7 +27,7 @@ struct Process {
     using Id = int;
 
     // Non-intrinsic properties
-    struct Runtime_info {
+    struct Scheduling_statistics {
         Time start_time;
         Time finish_time;
         // executed_time + remaining_time == execution_time
@@ -37,11 +37,13 @@ struct Process {
         std::optional<double> weighted_turnaround; // 带权周转时间
         Status status;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Runtime_info, start_time, finish_time,
-                                       execution_time, remaining_time,
-                                       turnaround, weighted_turnaround, status)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scheduling_statistics, start_time,
+                                       finish_time, execution_time,
+                                       remaining_time, turnaround,
+                                       weighted_turnaround, status)
 
-        constexpr auto operator<=>(Runtime_info const &) const = default;
+        // constexpr auto
+        // operator<=>(Scheduling_statistics const &) const = default;
     };
 
     // Intrinsic properties
@@ -49,7 +51,7 @@ struct Process {
     std::string name;
     Time arrival_time;
     int total_execution_time{};
-    Runtime_info runtime_info{};
+    Scheduling_statistics runtime_info{};
     nlohmann::json extra;
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Process, id, name, arrival_time,
