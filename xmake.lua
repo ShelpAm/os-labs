@@ -56,6 +56,12 @@ add_deps("process")
 -- add_files("./tests/fast_io.test.cpp")
 -- add_deps("fast-io-ext")
 
+target("json.test")
+set_kind("binary")
+add_tests("default")
+add_files("./tests/json.test.cpp")
+add_packages("nlohmann_json")
+
 target("algorithms")
 set_kind("static")
 add_files("./algorithms/proces-scheduling.cpp")

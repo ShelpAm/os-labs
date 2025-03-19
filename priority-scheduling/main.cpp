@@ -1,7 +1,6 @@
 // Priority scheduling
 
 #include <fast_io.h>
-#include <fast_io_dsal/vector.h>
 #include <process/process.hpp>
 #include <queue>
 
@@ -12,7 +11,7 @@ struct By_priority {
     }
 };
 
-void solve_priority_scheduling(CPU &cpu, fast_io::vector<Process> &jobs)
+void solve_priority_scheduling(CPU &cpu, std::vector<Process> &jobs)
 {
     auto jobs_it{jobs.begin()};
     std::priority_queue<Process *, fast_io::vector<Process *>, By_priority>
@@ -28,7 +27,7 @@ void solve_priority_scheduling(CPU &cpu, fast_io::vector<Process> &jobs)
         // Check if any job is sent in current time.
         while (jobs_it != jobs.end() &&
                cpu.system_time() >= jobs_it->arrival_time) {
-            ready.push(jobs_it);
+            ready.push(&*jobs_it);
             ++jobs_it;
         }
 

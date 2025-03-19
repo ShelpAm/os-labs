@@ -1,12 +1,20 @@
 {
     "compilerOptions": {
         "lib": ["dom", "esnext"], // DOM APIs and Map
-        "module": "esnext",        // ES Modules for <script type="module">
+        "module": "esnext",
         "outDir": "./dist/",      // Output in public/
         "rootDir": "./src/",
         "strict": true,           // Type safety
-        "target": "esnext"          // Modern browsers
+        "target": "esnext",          // Modern browsers
+
+
+        // Module settings
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "noEmit": true,
     },
-    "include": ["src/**/*"],
-    "exclude": []
+    "include": ["src"],
+    // "exclude": []
 }

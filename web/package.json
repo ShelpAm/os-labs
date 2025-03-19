@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "description": "Process scheduling simulator",
     "devDependencies": {
-        "@types/axios": "^0.9.36"
+        "@types/axios": "^0.9.36",
+        "typescript": "^5.8.2",
+        "vite": "^6.2.2"
     }
 }
