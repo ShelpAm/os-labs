@@ -11,6 +11,7 @@
 - High performance, specifically, support x clients accessing simultaneounsly.
 - Support reading from file.
 - Time should be displayed as HH:MM format.
+- Show average value of stats.
 
 ## Process scheduling
 
@@ -25,7 +26,7 @@
         "name": "string",
         "arrival_time": "minutes",
         "total_execution_time": "int",
-        "runtime_info": {
+        "stats": {
             "start_time": "minutes",
             "finish_time": "minutes",
             "execution_time": "minutes",
