@@ -10,6 +10,7 @@
 - Interactive program, user can input as they want.
 - High performance, specifically, support x clients accessing simultaneounsly.
 - Support reading from file.
+- Time should be displayed as HH:MM format.
 
 ## Process scheduling
 
