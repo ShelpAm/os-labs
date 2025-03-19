@@ -1,0 +1,95 @@
+{
+  "algorithm": "frist_come_first_serve",
+  "processes": [
+    {
+      "id": 1001,
+      "name": "刘俊豪0",
+      "arrival_time": 580,
+      "total_execution_time": 20,
+      "runtime_info": {
+        "start_time": 580,
+        "finish_time": 600,
+        "execution_time": 20,
+        "remaining_time": 0,
+        "turnaround": 20,
+        "weighted_turnaround": 1,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 1003,
+      "name": "刘俊豪2",
+      "arrival_time": 585,
+      "total_execution_time": 25,
+      "runtime_info": {
+        "start_time": 600,
+        "finish_time": 625,
+        "execution_time": 25,
+        "remaining_time": 0,
+        "turnaround": 40,
+        "weighted_turnaround": 1.6,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 1002,
+      "name": "刘俊豪1",
+      "arrival_time": 595,
+      "total_execution_time": 15,
+      "runtime_info": {
+        "start_time": 625,
+        "finish_time": 640,
+        "execution_time": 15,
+        "remaining_time": 0,
+        "turnaround": 45,
+        "weighted_turnaround": 3,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 1005,
+      "name": "刘俊豪4",
+      "arrival_time": 605,
+      "total_execution_time": 30,
+      "runtime_info": {
+        "start_time": 640,
+        "finish_time": 670,
+        "execution_time": 30,
+        "remaining_time": 0,
+        "turnaround": 65,
+        "weighted_turnaround": 2.16667,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 1004,
+      "name": "刘俊豪3",
+      "arrival_time": 610,
+      "total_execution_time": 10,
+      "runtime_info": {
+        "start_time": 670,
+        "finish_time": 680,
+        "execution_time": 10,
+        "remaining_time": 0,
+        "turnaround": 70,
+        "weighted_turnaround": 7,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    }
+  ]
+}
