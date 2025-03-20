@@ -11,9 +11,8 @@
 int main()
 {
     using namespace std::string_literals;
-    for (int k = 1; k <= 3; k++) {
-        std::string filename =
-            "tests/test"s + std::to_string(k) + "_fcfs.json"s;
+    for (int k = 1; k <= 2; k++) {
+        std::string filename = "tests/test"s + std::to_string(k) + "_spf.json"s;
         fast_io::native_file_loader f(filename);
         std::string s(f.begin(), f.end());
         auto data = nlohmann::json::parse(s); // gai zi fu chua
@@ -30,8 +29,7 @@ int main()
         }
 
         CPU cpu;
-        auto const result{
-            solve_first_come_fisrt_serve(cpu, jobs)}; // yanzheng res
+        auto const result{solve_short_process_first(cpu, jobs)}; // yanzheng res
         // std::cout<<result.size()<<'\n';
         // result.set_content(result, "application/json");
         nlohmann::json res = nlohmann::json::parse(result);
@@ -47,9 +45,8 @@ int main()
 
         bool equal = 1;
         double const eps = 0.01;
-        // int p1 = ps1[0]["runtime_info"]["start_time"];
         for (int i = 0; i < ps1.size(); i++) {
-            auto p1 = ps1[i]["runtime_info"], p2 = ps2[i]["runtime_info"];
+            auto p1 = ps1[i]["stats"], p2 = ps2[i]["stats"];
             auto Relativ_error = [&](double v1, double v2) {
                 return std::abs(v1 - v2) / v2;
             };

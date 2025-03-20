@@ -1,0 +1,95 @@
+{
+  "algorithm": "frist_come_first_serve",
+  "processes": [
+    {
+      "id": 5001,
+      "name": "刘俊豪1",
+      "arrival_time": 580,
+      "total_execution_time": 20,
+      "stats": {
+        "start_time": 620,
+        "finish_time": 624,
+        "execution_time": 20,
+        "remaining_time": 0,
+        "turnaround": 44,
+        "weighted_turnaround": 2.2,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 5002,
+      "name": "刘俊豪2",
+      "arrival_time": 595,
+      "total_execution_time": 15,
+      "stats": {
+        "start_time": 640,
+        "finish_time": 647,
+        "execution_time": 15,
+        "remaining_time": 0,
+        "turnaround": 52,
+        "weighted_turnaround": 3.46667,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 5003,
+      "name": "刘俊豪3",
+      "arrival_time": 585,
+      "total_execution_time": 25,
+      "stats": {
+        "start_time": 665,
+        "finish_time": 666,
+        "execution_time": 25,
+        "remaining_time": 0,
+        "turnaround": 81,
+        "weighted_turnaround": 3.24,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 5004,
+      "name": "刘俊豪4",
+      "arrival_time": 610,
+      "total_execution_time": 10,
+      "stats": {
+        "start_time": 663,
+        "finish_time": 665,
+        "execution_time": 10,
+        "remaining_time": 0,
+        "turnaround": 55,
+        "weighted_turnaround": 5.5,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 5005,
+      "name": "刘俊豪5",
+      "arrival_time": 605,
+      "total_execution_time": 30,
+      "stats": {
+        "start_time": 674,
+        "finish_time": 680,
+        "execution_time": 30,
+        "remaining_time": 0,
+        "turnaround": 75,
+        "weighted_turnaround": 2.5,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    }
+  ]
+}

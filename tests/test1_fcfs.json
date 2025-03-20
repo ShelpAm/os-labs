@@ -6,7 +6,7 @@
             "name": "ljh",
             "arrival_time": 40,
             "total_execution_time": 20,
-            "runtime_info": {
+            "stats": {
                 "start_time": 40,
                 "finish_time": 60,
                 "execution_time": 20,
@@ -24,7 +24,7 @@
             "name": "wxy",
             "arrival_time": 70,
             "total_execution_time": 10,
-            "runtime_info": {
+            "stats": {
                 "start_time": 130,
                 "finish_time": 140,
                 "execution_time": 10,
@@ -42,7 +42,7 @@
             "name": "wxy1",
             "arrival_time": 65,
             "total_execution_time": 30,
-            "runtime_info": {
+            "stats": {
                 "start_time": 100,
                 "finish_time": 130,
                 "execution_time": 30,
@@ -60,7 +60,7 @@
             "name": "wxy2",
             "arrival_time": 55,
             "total_execution_time": 15,
-            "runtime_info": {
+            "stats": {
                 "start_time": 85,
                 "finish_time": 100,
                 "execution_time": 15,
@@ -78,7 +78,7 @@
             "name": "wxy1",
             "arrival_time": 45,
             "total_execution_time": 25,
-            "runtime_info": {
+            "stats": {
                 "start_time": 60,
                 "finish_time": 85,
                 "execution_time": 25,

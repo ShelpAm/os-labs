@@ -6,7 +6,7 @@
       "name": "刘俊豪6",
       "arrival_time": 435,
       "total_execution_time": 15,
-      "runtime_info": {
+      "stats": {
         "start_time": 435,
         "finish_time": 450,
         "execution_time": 15,
@@ -24,7 +24,7 @@
       "name": "刘俊豪2",
       "arrival_time": 585,
       "total_execution_time": 25,
-      "runtime_info": {
+      "stats": {
         "start_time": 585,
         "finish_time": 610,
         "execution_time": 25,
@@ -42,7 +42,7 @@
       "name": "刘俊豪1",
       "arrival_time": 595,
       "total_execution_time": 15,
-      "runtime_info": {
+      "stats": {
         "start_time": 610,
         "finish_time": 625,
         "execution_time": 15,
@@ -60,7 +60,7 @@
       "name": "刘俊豪4",
       "arrival_time": 605,
       "total_execution_time": 30,
-      "runtime_info": {
+      "stats": {
         "start_time": 625,
         "finish_time": 655,
         "execution_time": 30,
@@ -78,7 +78,7 @@
       "name": "刘俊豪3",
       "arrival_time": 610,
       "total_execution_time": 10,
-      "runtime_info": {
+      "stats": {
         "start_time": 685,
         "finish_time": 695,
         "execution_time": 10,
@@ -96,7 +96,7 @@
       "name": "刘俊豪5",
       "arrival_time": 640,
       "total_execution_time": 20,
-      "runtime_info": {
+      "stats": {
         "start_time": 655,
         "finish_time": 675,
         "execution_time": 20,
@@ -114,7 +114,7 @@
       "name": "刘俊豪7",
       "arrival_time": 670,
       "total_execution_time": 10,
-      "runtime_info": {
+      "stats": {
         "start_time": 675,
         "finish_time": 685,
         "execution_time": 10,
@@ -132,7 +132,7 @@
       "name": "刘俊豪8",
       "arrival_time": 725,
       "total_execution_time": 30,
-      "runtime_info": {
+      "stats": {
         "start_time": 725,
         "finish_time": 755,
         "execution_time": 30,
@@ -150,7 +150,7 @@
       "name": "刘俊豪9",
       "arrival_time": 835,
       "total_execution_time": 15,
-      "runtime_info": {
+      "stats": {
         "start_time": 835,
         "finish_time": 850,
         "execution_time": 15,
@@ -168,7 +168,7 @@
       "name": "刘俊豪0",
       "arrival_time": 880,
       "total_execution_time": 20,
-      "runtime_info": {
+      "stats": {
         "start_time": 880,
         "finish_time": 900,
         "execution_time": 20,

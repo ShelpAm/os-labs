@@ -6,7 +6,7 @@
       "name": "刘俊豪0",
       "arrival_time": 580,
       "total_execution_time": 20,
-      "runtime_info": {
+      "stats": {
         "start_time": 580,
         "finish_time": 600,
         "execution_time": 20,
@@ -24,7 +24,7 @@
       "name": "刘俊豪2",
       "arrival_time": 585,
       "total_execution_time": 25,
-      "runtime_info": {
+      "stats": {
         "start_time": 655,
         "finish_time": 680,
         "execution_time": 25,
@@ -42,7 +42,7 @@
       "name": "刘俊豪1",
       "arrival_time": 595,
       "total_execution_time": 15,
-      "runtime_info": {
+      "stats": {
         "start_time": 600,
         "finish_time": 615,
         "execution_time": 15,
@@ -60,7 +60,7 @@
       "name": "刘俊豪4",
       "arrival_time": 605,
       "total_execution_time": 30,
-      "runtime_info": {
+      "stats": {
         "start_time": 625,
         "finish_time": 655,
         "execution_time": 30,
@@ -78,7 +78,7 @@
       "name": "刘俊豪3",
       "arrival_time": 610,
       "total_execution_time": 10,
-      "runtime_info": {
+      "stats": {
         "start_time": 615,
         "finish_time": 625,
         "execution_time": 10,
