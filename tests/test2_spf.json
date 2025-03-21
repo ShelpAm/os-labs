@@ -2,8 +2,8 @@
   "algorithm": "frist_come_first_serve",
   "processes": [
     {
-      "id": 5001,
-      "name": "刘俊豪0",
+      "id": 5010,
+      "name": "刘俊豪6",
       "arrival_time": 435,
       "total_execution_time": 15,
       "stats": {
@@ -20,8 +20,8 @@
       }
     },
     {
-      "id": 5002,
-      "name": "刘俊豪1",
+      "id": 5005,
+      "name": "刘俊豪2",
       "arrival_time": 585,
       "total_execution_time": 25,
       "stats": {
@@ -38,16 +38,34 @@
       }
     },
     {
-      "id": 5003,
-      "name": "刘俊豪2",
+      "id": 5004,
+      "name": "刘俊豪1",
       "arrival_time": 595,
       "total_execution_time": 15,
       "stats": {
-        "start_time": 610,
-        "finish_time": 625,
+        "start_time": 620,
+        "finish_time": 635,
         "execution_time": 15,
         "remaining_time": 0,
-        "turnaround": 30,
+        "turnaround": 40,
+        "weighted_turnaround": 2.66667,
+        "status": "finished"
+      },
+      "extra": {
+        "priority": 1
+      }
+    },
+    {
+      "id": 5003,
+      "name": "刘俊豪4",
+      "arrival_time": 605,
+      "total_execution_time": 30,
+      "stats": {
+        "start_time": 635,
+        "finish_time": 665,
+        "execution_time": 30,
+        "remaining_time": 0,
+        "turnaround": 60,
         "weighted_turnaround": 2,
         "status": "finished"
       },
@@ -56,35 +74,17 @@
       }
     },
     {
-      "id": 5004,
+      "id": 5002,
       "name": "刘俊豪3",
-      "arrival_time": 605,
-      "total_execution_time": 30,
-      "stats": {
-        "start_time": 625,
-        "finish_time": 655,
-        "execution_time": 30,
-        "remaining_time": 0,
-        "turnaround": 50,
-        "weighted_turnaround": 1.66667,
-        "status": "finished"
-      },
-      "extra": {
-        "priority": 1
-      }
-    },
-    {
-      "id": 5005,
-      "name": "刘俊豪4",
       "arrival_time": 610,
       "total_execution_time": 10,
       "stats": {
-        "start_time": 655,
-        "finish_time": 665,
+        "start_time": 610,
+        "finish_time": 620,
         "execution_time": 10,
         "remaining_time": 0,
-        "turnaround": 55,
-        "weighted_turnaround": 5.5,
+        "turnaround": 10,
+        "weighted_turnaround": 1,
         "status": "finished"
       },
       "extra": {
@@ -111,7 +111,7 @@
     },
     {
       "id": 5007,
-      "name": "刘俊豪6",
+      "name": "刘俊豪7",
       "arrival_time": 730,
       "total_execution_time": 10,
       "stats": {
@@ -129,7 +129,7 @@
     },
     {
       "id": 5008,
-      "name": "刘俊豪7",
+      "name": "刘俊豪8",
       "arrival_time": 785,
       "total_execution_time": 30,
       "stats": {
@@ -146,8 +146,8 @@
       }
     },
     {
-      "id": 5009,
-      "name": "刘俊豪8",
+      "id": 5001,
+      "name": "刘俊豪0",
       "arrival_time": 1180,
       "total_execution_time": 20,
       "stats": {
@@ -164,7 +164,7 @@
       }
     },
     {
-      "id": 5010,
+      "id": 5009,
       "name": "刘俊豪9",
       "arrival_time": 1195,
       "total_execution_time": 15,
