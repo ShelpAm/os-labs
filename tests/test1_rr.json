@@ -1,5 +1,5 @@
 {
-  "algorithm": "frist_come_first_serve",
+  "algorithm": "round_robin",
   "processes": [
     {
       "id": 5001,
@@ -7,7 +7,7 @@
       "arrival_time": 580,
       "total_execution_time": 20,
       "stats": {
-        "start_time": 620,
+        "start_time": 580,
         "finish_time": 624,
         "execution_time": 20,
         "remaining_time": 0,
@@ -25,7 +25,7 @@
       "arrival_time": 595,
       "total_execution_time": 15,
       "stats": {
-        "start_time": 640,
+        "start_time": 604,
         "finish_time": 647,
         "execution_time": 15,
         "remaining_time": 0,
@@ -43,7 +43,7 @@
       "arrival_time": 585,
       "total_execution_time": 25,
       "stats": {
-        "start_time": 665,
+        "start_time": 588,
         "finish_time": 666,
         "execution_time": 25,
         "remaining_time": 0,
@@ -61,7 +61,7 @@
       "arrival_time": 610,
       "total_execution_time": 10,
       "stats": {
-        "start_time": 663,
+        "start_time": 632,
         "finish_time": 665,
         "execution_time": 10,
         "remaining_time": 0,
@@ -79,7 +79,7 @@
       "arrival_time": 605,
       "total_execution_time": 30,
       "stats": {
-        "start_time": 674,
+        "start_time": 624,
         "finish_time": 680,
         "execution_time": 30,
         "remaining_time": 0,

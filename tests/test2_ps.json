@@ -1,5 +1,5 @@
 {
-  "algorithm": "frist_come_first_serve",
+  "algorithm": "priority_scheduling",
   "processes": [
     {
       "id": 5010,
@@ -43,12 +43,12 @@
       "arrival_time": 595,
       "total_execution_time": 15,
       "stats": {
-        "start_time": 610,
-        "finish_time": 625,
+        "start_time": 650,
+        "finish_time": 665,
         "execution_time": 15,
         "remaining_time": 0,
-        "turnaround": 30,
-        "weighted_turnaround": 2,
+        "turnaround": 70,
+        "weighted_turnaround": 4.66667,
         "status": "finished"
       },
       "extra": {
@@ -61,12 +61,12 @@
       "arrival_time": 605,
       "total_execution_time": 30,
       "stats": {
-        "start_time": 625,
-        "finish_time": 655,
+        "start_time": 620,
+        "finish_time": 650,
         "execution_time": 30,
         "remaining_time": 0,
-        "turnaround": 50,
-        "weighted_turnaround": 1.66667,
+        "turnaround": 45,
+        "weighted_turnaround": 1.5,
         "status": "finished"
       },
       "extra": {
@@ -79,12 +79,12 @@
       "arrival_time": 610,
       "total_execution_time": 10,
       "stats": {
-        "start_time": 685,
-        "finish_time": 695,
+        "start_time": 610,
+        "finish_time": 620,
         "execution_time": 10,
         "remaining_time": 0,
-        "turnaround": 85,
-        "weighted_turnaround": 8.5,
+        "turnaround": 10,
+        "weighted_turnaround": 1,
         "status": "finished"
       },
       "extra": {
@@ -97,12 +97,12 @@
       "arrival_time": 640,
       "total_execution_time": 20,
       "stats": {
-        "start_time": 655,
-        "finish_time": 675,
+        "start_time": 665,
+        "finish_time": 685,
         "execution_time": 20,
         "remaining_time": 0,
-        "turnaround": 35,
-        "weighted_turnaround": 1.75,
+        "turnaround": 45,
+        "weighted_turnaround": 2.25,
         "status": "finished"
       },
       "extra": {
@@ -115,12 +115,12 @@
       "arrival_time": 670,
       "total_execution_time": 10,
       "stats": {
-        "start_time": 675,
-        "finish_time": 685,
+        "start_time": 685,
+        "finish_time": 695,
         "execution_time": 10,
         "remaining_time": 0,
-        "turnaround": 15,
-        "weighted_turnaround": 1.5,
+        "turnaround": 25,
+        "weighted_turnaround": 2.5,
         "status": "finished"
       },
       "extra": {

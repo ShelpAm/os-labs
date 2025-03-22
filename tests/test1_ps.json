@@ -1,5 +1,5 @@
 {
-  "algorithm": "frist_come_first_serve",
+  "algorithm": "priority_scheduling",
   "processes": [
     {
       "id": 5001,
@@ -25,12 +25,12 @@
       "arrival_time": 585,
       "total_execution_time": 25,
       "stats": {
-        "start_time": 655,
-        "finish_time": 680,
+        "start_time": 600,
+        "finish_time": 625,
         "execution_time": 25,
         "remaining_time": 0,
-        "turnaround": 95,
-        "weighted_turnaround": 3.8,
+        "turnaround": 40,
+        "weighted_turnaround": 1.6,
         "status": "finished"
       },
       "extra": {
@@ -43,12 +43,12 @@
       "arrival_time": 595,
       "total_execution_time": 15,
       "stats": {
-        "start_time": 600,
-        "finish_time": 615,
+        "start_time": 625,
+        "finish_time": 640,
         "execution_time": 15,
         "remaining_time": 0,
-        "turnaround": 20,
-        "weighted_turnaround": 1.33333,
+        "turnaround": 45,
+        "weighted_turnaround": 3,
         "status": "finished"
       },
       "extra": {
@@ -61,12 +61,12 @@
       "arrival_time": 605,
       "total_execution_time": 30,
       "stats": {
-        "start_time": 625,
-        "finish_time": 655,
+        "start_time": 640,
+        "finish_time": 670,
         "execution_time": 30,
         "remaining_time": 0,
-        "turnaround": 50,
-        "weighted_turnaround": 1.66667,
+        "turnaround": 65,
+        "weighted_turnaround": 2.16667,
         "status": "finished"
       },
       "extra": {
@@ -79,12 +79,12 @@
       "arrival_time": 610,
       "total_execution_time": 10,
       "stats": {
-        "start_time": 615,
-        "finish_time": 625,
+        "start_time": 670,
+        "finish_time": 680,
         "execution_time": 10,
         "remaining_time": 0,
-        "turnaround": 15,
-        "weighted_turnaround": 1.5,
+        "turnaround": 70,
+        "weighted_turnaround": 7,
         "status": "finished"
       },
       "extra": {
