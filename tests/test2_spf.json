@@ -1,5 +1,5 @@
 {
-  "algorithm": "frist_come_first_serve",
+  "algorithm": "short_process_first",
   "processes": [
     {
       "id": 5010,

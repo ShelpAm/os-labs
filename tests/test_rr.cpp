@@ -58,16 +58,17 @@ int main()
                    f5 = Relativ_error(p1["weighted_turnaround"],
                                       p2["weighted_turnaround"]);
 
-            std::cout << f1 << ' ' << f2 << ' ' << f3 << ' ' << f4 << ' ' << f5
-                      << '\n';
+            // std::cout << f1 << ' ' << f2 << ' ' << f3 << ' ' << f4 << ' ' <<
+            // f5
+            //           << '\n';
             if (f1 > eps || f2 > eps || f3 > eps || f4 > eps || f5 > eps) {
                 equal = 0;
             }
         }
 
         if (!equal) {
-            std::cout << "true vaule = " << ps1 << '\n' << '\n';
-            std::cout << "calcuate value = " << ps2 << '\n';
+            std::cout << "calcuate value = " << ps1 << '\n' << '\n';
+            std::cout << "true vaule = " << ps2 << '\n';
             return EXIT_FAILURE;
         }
     }

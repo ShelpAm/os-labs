@@ -69,8 +69,8 @@ int main()
         }
 
         if (!equal) {
-            std::cout << "true vaule = " << ps1 << '\n' << '\n';
-            std::cout << "calcuate value = " << ps2 << '\n';
+            std::cout << "calcuate value = " << ps1 << '\n' << '\n';
+            std::cout << "true vaule = " << ps2 << '\n';
             return EXIT_FAILURE;
         }
     }
