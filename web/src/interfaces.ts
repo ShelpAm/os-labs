@@ -2,34 +2,34 @@ function raw(strings: TemplateStringsArray, ...values: any[]): string {
     return strings.raw[0]; // Access the raw string content
 }
 
-// export class Time_point {
-//     private minutes: number;
-//
-//     private constructor(t: number) {
-//         this.minutes = t;
-//     }
-//
-//     static from_string(s: string): Time_point {
-//         const r = s.match(raw`(\d+):(\d+)`);
-//         const hours = Number(r?.at(1) as string)
-//         const minutes = Number(r?.at(2) as string)
-//         return new Time_point(hours * 60 + minutes);
-//     }
-//
-//     static from_time(minutes: number): Time_point {
-//         return new Time_point(minutes);
-//     }
-//
-//     toString(): string {
-//         const hours = Math.floor(this.minutes / 60);
-//         const minutes = this.minutes % 60;
-//         return `${hours}:${minutes}`;
-//     }
-//
-//     getMinutes(): number {
-//         return this.minutes;
-//     }
-// }
+export class FUCK {
+    private minutes: number;
+
+    private constructor(t: number) {
+        this.minutes = t;
+    }
+
+    static from_string(s: string): FUCK {
+        const r = s.match(raw`(\d+):(\d+)`);
+        const hours = Number(r?.at(1) as string)
+        const minutes = Number(r?.at(2) as string)
+        return new FUCK(hours * 60 + minutes);
+    }
+
+    static from_time(minutes: number): FUCK {
+        return new FUCK(minutes);
+    }
+
+    toString(): string {
+        const hours = Math.floor(this.minutes / 60);
+        const minutes = this.minutes % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+
+    getMinutes(): number {
+        return this.minutes;
+    }
+}
 
 export type Time_point = number;
 

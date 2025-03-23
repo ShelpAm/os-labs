@@ -1,4 +1,4 @@
-import { Process, Time_point } from './interfaces';
+import { FUCK, Process, Time_point } from './interfaces';
 
 export function Process_table_row(p: Process): HTMLTableRowElement {
     console.log(p);
@@ -8,13 +8,13 @@ export function Process_table_row(p: Process): HTMLTableRowElement {
     row.innerHTML = `
             <td style="width: 60px;"><input for="id" type="number" value="${p.id}" class="process-column" /></td>
             <td style="width: 100px;"><input for="name" type="text" value="${p.name}" class="process-column" /></td>
-            <td style="width: 80px;"><input for="arrival_time" type="text" value="${p.arrival_time}" class="process-column" /></td>
+            <td style="width: 80px;"><input for="arrival_time" type="text" value="${FUCK.from_time(p.arrival_time).toString()}" class="process-column" /></td>
             <!-- <td style="width: 80px;"><input for="arrival_time" type="text" value="${p.arrival_time.toString()}" class="process-column" /></td> -->
             <td style="width: 80px;"><input for="total_execution_time" type="number" value="${p.total_execution_time}" class="process-column" /></td>
             <td style="width: 60px;"><input for="priority" type="number" value="${p.extra.priority ?? '-'}" class="process-column" /></td>
-            <td style="width: 80px;">${p.stats.start_time ?? '-'}</td>
+            <td style="width: 80px;">${p.stats.start_time ? FUCK.from_time(p.stats.start_time as number).toString() : '-'}</td>
             <!-- <td style="width: 80px;">${p.stats.start_time?.toString() ?? '-'}</td> -->
-            <td style="width: 80px;">${p.stats.finish_time ?? '-'}</td>
+            <td style="width: 80px;">${p.stats?.finish_time ? FUCK.from_time(p.stats.finish_time).toString() : '-'}</td>
             <!-- <td style="width: 80px;">${p.stats.finish_time?.toString() ?? '-'}</td> -->
             <td style="width: 80px;">${p.stats.execution_time ?? '-'}</td>
             <td style="width: 80px;">${p.stats.remaining_time ?? '-'}</td>

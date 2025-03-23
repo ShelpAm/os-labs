@@ -1,4 +1,4 @@
-import { Frame, Time_point, Process } from './interfaces';
+import { Frame, Time_point, Process, FUCK } from './interfaces';
 import { Process_table_row, Process_div } from './components';
 
 const axios = globalThis.axios;
@@ -230,7 +230,7 @@ function get_processes_from_list(table: HTMLTableElement): Array<Process> {
         const p: Process = {
             id: Number((cells[0].querySelector("input") as HTMLInputElement).value),
             name: (cells[1].querySelector("input") as HTMLInputElement).value,
-            arrival_time: Number((cells[2].querySelector("input") as HTMLInputElement).value),
+            arrival_time: FUCK.from_string((cells[2].querySelector("input") as HTMLInputElement).value).getMinutes(),
             // arrival_time: Time_point.from_string((cells[2].querySelector("input") as HTMLInputElement).value),
             total_execution_time: Number((cells[3].querySelector("input") as HTMLInputElement).value),
             stats: {},
