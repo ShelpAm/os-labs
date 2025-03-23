@@ -36,6 +36,8 @@ int main()
         nlohmann::json ps1 = res["frames"].back()["processes"];
         // nlohmann::json p1 = ps1.back();
 
+        // output_processes_info(ps1.get<std::vector<Process>>());
+
         nlohmann::json ps2 = data["processes"];
         std::sort(ps2.begin(), ps2.end());
         // nlohmann::json p2 = ps2.back();
@@ -47,7 +49,7 @@ int main()
         double const eps = 0.01;
         for (int i = 0; i < ps1.size(); i++) {
             auto p1 = ps1[i]["stats"], p2 = ps2[i]["stats"];
-            auto Relativ_error = [&](double v1, double v2) {
+            auto Relativ_error = [](double v1, double v2) {
                 return std::abs(v1 - v2) / v2;
             };
             double f1 = Relativ_error(p1["start_time"], p2["start_time"]),

@@ -1,6 +1,7 @@
 import { Process, Time_point } from './interfaces';
 
 export function Process_table_row(p: Process): HTMLTableRowElement {
+    console.log(p);
     // console.log(typeof p.arrival_time);
     // console.log("arrival_time", p.arrival_time.toString());
     const row = document.createElement('tr');

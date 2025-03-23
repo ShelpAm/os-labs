@@ -34,11 +34,14 @@ int main()
     svr.Post("/api/solve", [](Request const &req, Response &res) {
         auto data = nlohmann::json::parse(req.body);
 
+        fast_io::println("request: ", data.dump());
+
         std::string const algorithm{data["algorithm"]};
         std::vector<Process> jobs;
         for (auto const &j : data["processes"]) {
             Process p(j["id"].get<int>(), j["name"],
                       Time(j["arrival_time"].get<int>()),
+                      // Time(j["arrival_time"]["minutes"].get<int>()),
                       j["total_execution_time"].get<int>());
             p.extra = j["extra"];
             jobs.push_back(p);
