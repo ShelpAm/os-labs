@@ -10,43 +10,64 @@
 
 <body>
     <div class="container">
-        <h1>Process Scheduling Simulator</h1>
+        <h1>进程调度模拟</h1>
+        <!-- <h1>Process Scheduling Simulator</h1> -->
 
         <div class="menu">
-            <label for="algorithm">Select Algorithm:</label>
+            <label for="algorithm">选择算法:</label>
+            <!-- <label for="algorithm">Select Algorithm:</label> -->
             <select id="algorithm">
-                <option value="first_come_first_serve">First-Come, First-Served (FCFS)</option>
-                <option value="short_process_first">Shortest Process First (SPF)</option>
-                <option value="round_robin">Round Robin (RR)</option>
-                <option value="priority_scheduding">Priority Scheduling</option>
+                <option value="first_come_first_serve">先来先服务 (FCFS)</option>
+                <option value="short_process_first">短进程优先 (SPF)</option>
+                <option value="round_robin">时间片轮转 (RR)</option>
+                <option value="priority_scheduding">优先级调度</option>
+                <!-- <option value="first_come_first_serve">First-Come, First-Served (FCFS)</option> -->
+                <!-- <option value="short_process_first">Shortest Process First (SPF)</option> -->
+                <!-- <option value="round_robin">Round Robin (RR)</option> -->
+                <!-- <option value="priority_scheduding">Priority Scheduling</option> -->
             </select>
-            <label for="speed">Speed Rate (0.5x - 2x): <span id="speed-value">1x</span></label>
+            <label for="speed">演示速率 (0.5x - 2x): <span id="speed-value">1x</span></label>
+            <!-- <label for="speed">Speed Rate (0.5x - 2x): <span id="speed-value">1x</span></label> -->
             <input type="range" id="speed" min="5" max="20" value="10" step="1">
-            <button id="start-btn">Start Simulation</button>
+            <button id="start-btn">开始模拟</button>
+            <!-- <button id="start-btn">Start Simulation</button> -->
         </div>
 
         <div class="process-list">
             <div style="display: flex; justify-content: space-between;">
                 <div style="display: flex; align-items: center;">
-                    <button id="new-row">New</button>
+                    <button id="new-row">新建进程</button>
+                    <!-- <button id="new-row">New</button> -->
                 </div>
-                <h2>Initial Processes</h2>
+                <h2>进程信息</h2>
+                <!-- <h2>Initial Processes</h2> -->
                 <button id="new-row" style="visibility: hidden;">New</button>
             </div>
             <table id="initial-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Arrival</th>
-                        <th>Total Time</th>
-                        <th>Priority</th>
-                        <th>Start Time</th>
-                        <th>Finish Time</th>
-                        <th>Execution Time</th>
-                        <th>Remaining Time</th>
-                        <th>Turnaround</th>
-                        <th>Weighted Turnaround</th>
+                        <th>进程ID</th>
+                        <th>进程名</th>
+                        <th>到达时间</th>
+                        <th>总运行时间</th>
+                        <th>优先级</th>
+                        <th>开始运行时间</th>
+                        <th>结束运行时间</th>
+                        <th>已运行时间</th>
+                        <th>剩余运行时间</th>
+                        <th>周转时间</th>
+                        <th>带权周转时间</th>
+                        <!-- <th>ID</th> -->
+                        <!-- <th>Name</th> -->
+                        <!-- <th>Arrival</th> -->
+                        <!-- <th>Total Time</th> -->
+                        <!-- <th>Priority</th> -->
+                        <!-- <th>Start Time</th> -->
+                        <!-- <th>Finish Time</th> -->
+                        <!-- <th>Execution Time</th> -->
+                        <!-- <th>Remaining Time</th> -->
+                        <!-- <th>Turnaround</th> -->
+                        <!-- <th>Weighted Turnaround</th> -->
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -99,17 +120,21 @@
         <!-- </div> -->
 
         <div class="simulation">
-            <h2>Simulation State</h2>
-            <p>Current Time: <span id="current-time">0</span></p>
+            <h2>模拟系统状态</h2>
+            <!-- <h2>Simulation State</h2> -->
+            <p>当前时间: <span id="current-time">0</span></p>
+            <!-- <p>Current Time: <span id="current-time">0</span></p> -->
 
             <div class="queue-section" id="not-ready-section">
-                <h3>Not Yet Ready</h3>
+                <h3>等待队列</h3>
+                <!-- <h3>Not Yet Ready</h3> -->
                 <div id="not-ready-queue" class="queue"></div>
             </div>
 
             <div class="queue-section inliner" id="ready-section">
                 <div style="align-self: flex-start;">
-                    <h3>Running Process</h3>
+                    <h3>运行进程</h3>
+                    <!-- <h3>Running Process</h3> -->
                     <div id="running-process" class="queue"></div>
                 </div>
                 <div style="display: flex;
@@ -117,13 +142,15 @@
                 left: 50%;
                 transform: translateX(-50%); /* Centers it horizontally */
                 flex-direction: column; align-content: start; margin: auto;">
-                    <h3>Ready Queue</h3>
+                    <h3>就绪队列</h3>
+                    <!-- <h3>Ready Queue</h3> -->
                     <div id="ready-queue" class="queue"></div>
                 </div>
             </div>
 
             <div class="queue-section" id="finished-section">
-                <h3>Finished</h3>
+                <h3>结束队列</h3>
+                <!-- <h3>Finished</h3> -->
                 <div id="finished-queue" class="queue"></div>
             </div>
         </div>

@@ -144,16 +144,19 @@ std::size_t count_chinese_characters(std::string_view s);
 
 std::vector<Process> input_processes();
 
-template <std::ranges::range Range,
-          std::invocable<std::ranges::range_value_t<Range>> Projection =
-              std::identity>
-    requires std::same_as<std::remove_cvref_t<std::invoke_result_t<
-                              Projection, std::ranges::range_value_t<Range>>>,
-                          Process>
-void output_processes_info(Range &&_processes, Projection &&_proj = {})
+template <std::ranges::range Range, typename Projection = std::identity>
+void output_processes_info(Range const &range, Projection &&proj = {})
 {
-    auto processes{std::forward<Range>(_processes) |
-                   std::views::transform(std::forward<Projection>(_proj))};
+    using Value = std::ranges::range_value_t<Range>;
+    using Projected =
+        std::remove_cvref_t<std::invoke_result_t<Projection, Value>>;
+    static_assert(std::invocable<Projection, Value>,
+                  "Projection should be invocable with value_type of Range");
+    static_assert(std::same_as<Projected, Process>,
+                  "Projection result should be type Process");
+
+    auto processes =
+        range | std::views::transform(std::forward<Projection>(proj));
 
     static std::vector<std::string_view> const items{"ID",
                                                      "Name",
@@ -186,7 +189,8 @@ void output_processes_info(Range &&_processes, Projection &&_proj = {})
     }
 
     std::vector<std::string> lines(processes.size());
-    for (auto [p, buffer] : std::views::zip(processes, lines)) {
+    auto builder_view = std::views::zip(processes, lines);
+    for (auto [p, buffer] : builder_view) {
         int items_i{};
         int offset_for_chinese{};
 
