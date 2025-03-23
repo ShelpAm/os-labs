@@ -32,7 +32,7 @@ std::string solve_first_come_fisrt_serve(CPU cpu, std::vector<Process> jobs)
 
     drive_time_events();
     while (any_job_unfinished()) { // If no any tasks left, ends the simulation.
-        check_cpu_run_next();
+        check_cpu_set_next();
         cpu.run_for(1);
         drive_time_events();
         check_cpu_remove_finished();
@@ -54,7 +54,7 @@ std::string solve_short_process_first(CPU cpu, std::vector<Process> jobs)
 
     drive_time_events();
     while (any_job_unfinished()) { // If no any tasks left, ends the simulation.
-        check_cpu_run_next();
+        check_cpu_set_next();
         cpu.run_for(1);
         drive_time_events();
         check_cpu_remove_finished();
@@ -76,8 +76,13 @@ std::string solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
 
     drive_time_events();           // Drive initial events
     while (any_job_unfinished()) { // If no any tasks left, ends the simulation.
-        check_cpu_run_next();
+        auto extra = nlohmann::json(
+            {{"cpu.slice_execution_time", cpu.slice_execution_time()}});
+        check_cpu_set_next_extra(extra);
         cpu.run_for(1);
+        extra = nlohmann::json(
+            {{"cpu.slice_execution_time", cpu.slice_execution_time()}});
+        push_frame_extra(extra);
         drive_time_events();
         if (cpu.running_process() != nullptr) {
             if (cpu.running_process()->finished() ||
@@ -85,13 +90,15 @@ std::string solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
                 if (!cpu.running_process()->finished()) {
                     ready.push(cpu.running_process());
                 }
-                else {
+                else { // Next
                     finish_queue.push_back(cpu.running_process()->id);
                 }
                 cpu.set_running(nullptr);
             }
         }
-        push_frame();
+        extra = nlohmann::json(
+            {{"cpu.slice_execution_time", cpu.slice_execution_time()}});
+        push_frame_extra(extra);
     }
 
     return nlohmann::json({{"frames", frames}}).dump();
@@ -109,7 +116,7 @@ std::string solve_priority_scheduling(CPU cpu, std::vector<Process> jobs)
 
     drive_time_events();           // Drive initial events
     while (any_job_unfinished()) { // If no any tasks left, ends the simulation.
-        check_cpu_run_next();
+        check_cpu_set_next();
         cpu.run_for(1);
         drive_time_events();
         check_cpu_remove_finished();

@@ -115,12 +115,39 @@ class Priority_scheduling_queue {
                           .finish_queue = finish_queue});                      \
     }()
 
-#define check_cpu_run_next()                                                   \
+#define push_frame_extra(extra)                                                \
+    [&]() {                                                                    \
+        auto const not_ready_queue{                                            \
+            std::vector(jobs_it, jobs.end()) |                                 \
+            std::views::transform([](auto const &e) { return e.id; }) |        \
+            std::ranges::to<std::vector>()};                                   \
+        frames.push_back({.system_time = cpu.system_time().minutes(),          \
+                          .processes = jobs,                                   \
+                          .running_process = cpu.running_process() != nullptr  \
+                                                 ? std::optional<Process>(     \
+                                                       *cpu.running_process()) \
+                                                 : std::nullopt,               \
+                          .not_ready_queue = not_ready_queue,                  \
+                          .ready_queue = to_vector(ready),                     \
+                          .finish_queue = finish_queue,                        \
+                          .extra = (extra)});                                  \
+    }()
+
+#define check_cpu_set_next()                                                   \
     [&]() {                                                                    \
         if (cpu.running_process() == nullptr && !ready.empty()) {              \
             cpu.set_running(ready.front());                                    \
             ready.pop();                                                       \
             push_frame();                                                      \
+        }                                                                      \
+    }()
+
+#define check_cpu_set_next_extra(extra)                                        \
+    [&]() {                                                                    \
+        if (cpu.running_process() == nullptr && !ready.empty()) {              \
+            cpu.set_running(ready.front());                                    \
+            ready.pop();                                                       \
+            push_frame_extra(extra);                                           \
         }                                                                      \
     }()
 

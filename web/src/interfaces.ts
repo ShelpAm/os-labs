@@ -66,4 +66,7 @@ export interface Frame {
     not_ready_queue: Array<number>,
     ready_queue: Array<number>,
     finish_queue: Array<number>,
+    extra: {
+        "cpu.slice_execution_time": number,
+    },
 }

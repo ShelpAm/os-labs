@@ -32,6 +32,7 @@ const readyQueueDiv = document.getElementById('ready-queue') as HTMLDivElement;
 const running_process_div = document.getElementById('running-process') as HTMLDivElement;
 const finishedQueueDiv = document.getElementById('finished-queue') as HTMLDivElement;
 const currentTimeSpan = document.getElementById('current-time') as HTMLSpanElement;
+const time_in_quantum_span = document.getElementById('time-in-quantum') as HTMLSpanElement;
 
 
 // Simulation state
@@ -146,6 +147,7 @@ function render_frame(cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], 
     console.log("Rendering frame: ", cur)
     render_processes_list(cur.processes)
     currentTimeSpan.textContent = cur.system_time.toString();
+    time_in_quantum_span.textContent = '当前时间片时间: ' + cur.extra["cpu.slice_execution_time"] + '/' + 8;
     renderQueue(notReadyQueueDiv, cur.not_ready_queue, prev.not_ready_queue ?? []);
     renderQueue(readyQueueDiv, cur.ready_queue, prev.ready_queue ?? [], true);
     renderQueue(finishedQueueDiv, cur.finish_queue, prev.finish_queue ?? []);
