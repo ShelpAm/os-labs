@@ -12,6 +12,10 @@
 - [ ] Support reading from file.
 - [ ] Time should be displayed as HH:MM format.
 - [ ] Show average value of stats.
+- [ ] Start when the first process enter into the ready queue.
+- [ ] If there is no process in ready queue or being executed, skip it.  
+- [ ] Enables the user to enter time slice size.
+
 
 ## Process scheduling
 
