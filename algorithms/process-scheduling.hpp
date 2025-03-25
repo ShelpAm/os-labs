@@ -7,6 +7,51 @@
 #include <ranges>
 #include <spf/spf-queue.hpp>
 
+struct Frame {
+    int system_time;
+    std::vector<Process> processes;
+    std::optional<Process> running_process;
+    std::vector<Process::Id> not_ready_queue;
+    std::vector<Process::Id> ready_queue;
+    std::vector<Process::Id> finish_queue;
+    nlohmann::json extra;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Frame, system_time, processes,
+                                   running_process, not_ready_queue,
+                                   ready_queue, finish_queue, extra)
+};
+
+enum class Algorithm : std::uint8_t {
+    first_come_first_served,
+    shortest_process_first,
+    round_robin,
+    priority_scheduling,
+};
+std::string_view to_string(Algorithm algorithm);
+NLOHMANN_JSON_SERIALIZE_ENUM(
+    Algorithm, {
+                   {Algorithm::first_come_first_served,
+                    to_string(Algorithm::first_come_first_served)},
+                   {Algorithm::shortest_process_first,
+                    to_string(Algorithm::shortest_process_first)},
+                   {Algorithm::round_robin, to_string(Algorithm::round_robin)},
+                   {Algorithm::priority_scheduling,
+                    to_string(Algorithm::priority_scheduling)},
+               });
+
+namespace shelpam::os_labs {
+struct Request {
+    Algorithm algorithm;
+    std::vector<Process> processes;
+};
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Request, algorithm, processes);
+
+struct Response {
+    std::vector<Frame> frames;
+};
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Response, frames);
+} // namespace shelpam::os_labs
+
 struct By_priority {
     bool operator()(Process const *lhs, Process const *rhs) const
     {
@@ -24,20 +69,6 @@ struct By_arrival_time {
 std::vector<Process::Id> to_vector(
     std::priority_queue<Process *, std::vector<Process *>, By_priority> ready);
 std::vector<Process::Id> to_vector(std::queue<Process *> ready);
-
-struct Frame {
-    int system_time;
-    std::vector<Process> processes;
-    std::optional<Process> running_process;
-    std::vector<Process::Id> not_ready_queue;
-    std::vector<Process::Id> ready_queue;
-    std::vector<Process::Id> finish_queue;
-    nlohmann::json extra;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Frame, system_time, processes,
-                                   running_process, not_ready_queue,
-                                   ready_queue, finish_queue, extra)
-};
 
 class Priority_scheduling_queue {
     friend std::vector<Process::Id> to_vector(Priority_scheduling_queue ready)
@@ -160,10 +191,11 @@ class Priority_scheduling_queue {
         }                                                                      \
     }()
 
-std::string solve_first_come_fisrt_serve(CPU cpu, std::vector<Process> jobs);
-std::string solve_short_process_first(CPU cpu, std::vector<Process> jobs);
-std::string solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum);
-std::string solve_priority_scheduling(CPU cpu, std::vector<Process> jobs);
+using Frame_list = std::vector<Frame>;
+Frame_list solve_first_come_fisrt_served(CPU cpu, std::vector<Process> jobs);
+Frame_list solve_shortest_process_first(CPU cpu, std::vector<Process> jobs);
+Frame_list solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum);
+Frame_list solve_priority_scheduling(CPU cpu, std::vector<Process> jobs);
 
-std::string route_algorithm(std::string_view algorithm,
-                            std::vector<Process> jobs);
+shelpam::os_labs::Response route_algorithm(Algorithm algorithm,
+                                           std::vector<Process> jobs);

@@ -17,9 +17,13 @@
 
 ### Communication JSON structures
 
-- Algorithms
-    - **priority-scheduling**: 
-- Process (for example):
+-   Algorithms
+    -   **first-come-first-served**: 
+    -   **shortest-process-first**: 
+    -   **round-robin**: 
+    -   **priority-scheduling**: 
+
+-   Process (for example):
     ```json
     {
         "id": "int",
@@ -41,7 +45,7 @@
         }
     }
     ```
-- A state frame:
+-   A state frame:
     ```json
     {
         "system_time": "minutes",
@@ -52,14 +56,14 @@
         "finish_queue": "Array of processes id"
     }
     ```
-- Query (initial processes states):
+-   Request (initial processes states):
     ```json
     {
-        "algorithm": "algorithm_name",
+        "algorithm": "Algorithm",
         "processes": [Process_1_without_runtime_info, Process_2_without_runtime_info, ..., Process_n_without_runtime_info]
     }
     ```
-- Response (State frames):
+-   Response (State frames):
     ```json
     {
         "frames": [frame_1, frame_2, ..., frame_n]

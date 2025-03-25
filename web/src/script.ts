@@ -1,4 +1,4 @@
-import { Frame, Time_point, Process, FUCK } from './interfaces';
+import { Frame, Time_point, Process, FUCK, Algorithm, Response, Request } from './interfaces';
 import { Process_table_row, Process_div } from './components';
 
 const axios = globalThis.axios;
@@ -46,20 +46,19 @@ function updateSpeedDisplay() {
 }
 
 // Fetch simulation data from API
-async function fetch_frames(processesData: Array<Process>, algorithm: string): Promise<Array<Frame>> {
+async function request(processesData: Array<Process>, algorithm: Algorithm): Promise<Response> {
     try {
-        const request = { algorithm: algorithm, processes: processesData };
+        const request: Request = { algorithm: algorithm, processes: processesData };
         console.log("request: ", request);
         const response = await axios.post(API_URL,
             request,
             { headers: { 'Content-Type': 'application/json' } });
-        const data: any = response.data; // Axios auto-parses JSON
-        const frames = data.frames as Array<Frame>;
+        const data = response.data as Response; // Axios auto-parses JSON
         // TODO
         // frames.forEach(frame => {
         //     frame.system_time = frames.system_time
         // });
-        return frames;
+        return data;
     } catch (error: any) {
         if (!error.response || !error.response.data) {
             console.log('Error: Cannot find axios');
@@ -67,7 +66,7 @@ async function fetch_frames(processesData: Array<Process>, algorithm: string): P
             console.error('Error fetching simulation data:', error.response.data);
         }
         alert('Failed to load simulation data. Check console for details.');
-        return [];
+        throw error;
     }
 }
 
@@ -143,11 +142,13 @@ function renderQueue(queueDiv: HTMLDivElement, currentQueue: Array<number>, prev
 }
 
 // Render a single frame
-function render_frame(cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], ready_queue: [], finish_queue: [] }) {
+function render_frame(algorithm: Algorithm, cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], ready_queue: [], finish_queue: [] }) {
     console.log("Rendering frame: ", cur)
     render_processes_list(cur.processes)
     currentTimeSpan.textContent = cur.system_time.toString();
-    time_in_quantum_span.textContent = '当前时间片时间: ' + cur.extra["cpu.slice_execution_time"] + '/' + 8;
+    if (algorithm === 'round-robin') {
+        time_in_quantum_span.textContent = '当前时间片时间: ' + cur.extra["cpu.slice_execution_time"] + '/' + 8;
+    }
     renderQueue(notReadyQueueDiv, cur.not_ready_queue, prev.not_ready_queue ?? []);
     renderQueue(readyQueueDiv, cur.ready_queue, prev.ready_queue ?? [], true);
     renderQueue(finishedQueueDiv, cur.finish_queue, prev.finish_queue ?? []);
@@ -156,8 +157,9 @@ function render_frame(cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], 
 
 let intervalId: number;
 // Start the animation loop with the current speed
-function start_animation(frames: Array<Frame>) {
+function start_animation(algorithm: Algorithm, frames: Array<Frame>) {
     console.log("Starting animation.")
+    console.log("Algorithm: ", algorithm);
     console.log("Frames: ", frames);
 
     if (intervalId) clearInterval(intervalId);
@@ -178,9 +180,9 @@ function start_animation(frames: Array<Frame>) {
 
                 console.log("Current frame: ", i);
                 if (i == 0) {
-                    render_frame(frames[i]);
+                    render_frame(algorithm, frames[i]);
                 } else {
-                    render_frame(frames[i], frames[i - 1]);
+                    render_frame(algorithm, frames[i], frames[i - 1]);
                 }
                 // Draw average values
                 if (false)
@@ -235,7 +237,15 @@ function get_processes_from_list(table: HTMLTableElement): Array<Process> {
             arrival_time: FUCK.from_string((cells[2].querySelector("input") as HTMLInputElement).value).getMinutes(),
             // arrival_time: Time_point.from_string((cells[2].querySelector("input") as HTMLInputElement).value),
             total_execution_time: Number((cells[3].querySelector("input") as HTMLInputElement).value),
-            stats: {},
+            stats: {
+                start_time: undefined,
+                finish_time: undefined,
+                execution_time: undefined,
+                remaining_time: undefined,
+                turnaround: undefined,
+                weighted_turnaround: undefined,
+                status: undefined
+            },
             extra: { priority: Number((cells[4].querySelector("input") as HTMLInputElement).value) },
         };
 
@@ -245,8 +255,8 @@ function get_processes_from_list(table: HTMLTableElement): Array<Process> {
 
 // Initialize simulation (fetch data and render first frame)
 async function start_simulation() {
-    console.log("Initializing simulation data.")
-    const algorithm = algorithmSelect.value;
+    console.log("Initializing simulation data.");
+    const algorithm = algorithmSelect.value as Algorithm; // TODO(shelpam): values in algorithmSelect should be dynamically set.
     console.log("Requesting", algorithm, "algorithm");
 
     function has_duplicate_ids(processes: Array<Process>) {
@@ -263,9 +273,9 @@ async function start_simulation() {
         return;
     }
 
-    const frames = await fetch_frames(processes_data, algorithm);
-    console.log("Frames: ", frames);
-    if (frames.length === 0) return;
+    const response = await request(processes_data, algorithm);
+    console.log("Frames: ", response.frames);
+    if (response.frames.length === 0) return;
 
     // Initialize global variables
     currentTimeSpan.innerHTML = '0';
@@ -273,7 +283,7 @@ async function start_simulation() {
     readyQueueDiv.innerHTML = '';
     running_process_div.innerHTML = '';
     finishedQueueDiv.innerHTML = '';
-    start_animation(frames); // Start the animation after initialization
+    start_animation(algorithm, response.frames); // Start the animation after initialization
 }
 
 // Update speed without restarting the sequence

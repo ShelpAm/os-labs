@@ -28,14 +28,14 @@ struct Process {
 
     // Non-intrinsic properties
     struct Scheduling_statistics {
-        Time start_time;
-        Time finish_time;
+        std::optional<Time> start_time;
+        std::optional<Time> finish_time;
         // executed_time + remaining_time == execution_time
-        int execution_time{};
-        int remaining_time;
+        std::optional<int> execution_time;
+        std::optional<int> remaining_time;
         std::optional<int> turnaround;             // 周转时间
         std::optional<double> weighted_turnaround; // 带权周转时间
-        Status status;
+        std::optional<Status> status;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scheduling_statistics, start_time,
                                        finish_time, execution_time,
@@ -65,6 +65,7 @@ struct Process {
         : id(id), name(std::move(name)), arrival_time(arrival_time),
           total_execution_time(total_execution_time)
     {
+        stats.execution_time = 0;
         stats.remaining_time = total_execution_time;
     }
 
@@ -114,11 +115,11 @@ struct Process {
         }
 
         // Running time shouldn't exceed remaining execution time.
-        minutes = std::min(minutes, stats.remaining_time);
+        minutes = std::min(minutes, *stats.remaining_time);
 
-        stats.execution_time += minutes;
-        stats.remaining_time -= minutes;
-        assert(stats.execution_time + stats.remaining_time ==
+        stats.execution_time = *stats.execution_time + minutes;
+        stats.remaining_time = *stats.remaining_time - minutes;
+        assert(*stats.execution_time + *stats.remaining_time ==
                total_execution_time);
 
         if (finished()) {
@@ -133,7 +134,7 @@ struct Process {
   private:
     constexpr void calculate_process_stats()
     {
-        stats.turnaround = stats.finish_time - arrival_time;
+        stats.turnaround = *stats.finish_time - arrival_time;
         stats.weighted_turnaround =
             static_cast<double>(stats.turnaround.value()) /
             total_execution_time;
@@ -218,12 +219,13 @@ void output_processes_info(Range const &range, Projection &&proj = {})
             map["Arrival time"] = to_string(p.arrival_time);
             map["Total execution time"] = to_string(p.total_execution_time);
             map["Priority"] = to_string(p.priority());
-            map["Start time"] = to_string(p.stats.start_time, "Not started");
-            map["Finish time"] = to_string(p.stats.finish_time, "Not finished");
+            map["Start time"] = to_string(*p.stats.start_time, "Not started");
+            map["Finish time"] =
+                to_string(*p.stats.finish_time, "Not finished");
             map["Turnaround time"] = to_string(*p.stats.turnaround);
             map["Weighted turnaround time"] =
                 std::format("{:.2f}", *p.stats.weighted_turnaround);
-            map["Execution time"] = to_string(p.stats.execution_time);
+            map["Execution time"] = to_string(*p.stats.execution_time);
         }
 
         // Build the line

@@ -31,10 +31,10 @@ int main()
 
         CPU cpu;
         auto const result{
-            solve_first_come_fisrt_serve(cpu, jobs)}; // yanzheng res
+            solve_first_come_fisrt_served(cpu, jobs)}; // yanzheng res
         // std::cout<<result.size()<<'\n';
         // result.set_content(result, "application/json");
-        nlohmann::json res = nlohmann::json::parse(result);
+        nlohmann::json res = nlohmann::json(result);
         nlohmann::json ps1 = res["frames"].back()["processes"];
         // nlohmann::json p1 = ps1.back();
 

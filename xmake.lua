@@ -73,7 +73,6 @@ add_files("./server-cli/main.cpp", "./spf/spf-queue.cpp")
 add_packages("nlohmann_json")
 add_packages("cpp-httplib")
 add_deps("algorithms")
-add_deps("process")
 
 target("tests.test_fcfs.test")
 set_kind("binary")

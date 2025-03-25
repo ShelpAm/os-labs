@@ -31,6 +31,8 @@ export class FUCK {
     }
 }
 
+export type Algorithm = 'first-come-first-served' | 'shortest-process-first' | 'round-robin' | 'priority-scheduling';
+
 export type Time_point = number;
 
 export enum Status {
@@ -70,3 +72,12 @@ export interface Frame {
         "cpu.slice_execution_time": number,
     },
 }
+
+export interface Request {
+    algorithm: Algorithm,
+    processes: Array<Process>,
+};
+
+export interface Response {
+    frames: Array<Frame>;
+};

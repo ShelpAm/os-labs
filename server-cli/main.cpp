@@ -36,7 +36,15 @@ int main()
 
         fast_io::println("request: ", data.dump());
 
-        std::string const algorithm{data["algorithm"]};
+        // auto request = data.get<shelpam::os_labs::Request>();
+        // std::vector<Process> jobs;
+        // for (auto const &p : request.processes) {
+        //     Process neo(p.id, p.name, p.arrival_time,
+        //     p.total_execution_time); neo.extra = p.extra; jobs.push_back(p);
+        // }
+        // auto const response = route_algorithm(request.algorithm, jobs);
+        // res.set_content(nlohmann::json(response).dump(), "application/json");
+
         std::vector<Process> jobs;
         for (auto const &j : data["processes"]) {
             Process p(j["id"].get<int>(), j["name"],
@@ -47,8 +55,10 @@ int main()
             jobs.push_back(p);
         }
 
-        auto const result{route_algorithm(algorithm, jobs)};
-        res.set_content(result, "application/json");
+        auto const response = route_algorithm(data["algorithm"], jobs);
+        auto json_result = nlohmann::json(response).dump();
+        fast_io::println("response: ", json_result);
+        res.set_content(std::move(json_result), "application/json");
     });
 
     fast_io::println("Starting server on ", host, ":", port);

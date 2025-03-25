@@ -20,9 +20,9 @@ std::vector<Process::Id> to_vector(std::queue<Process *> ready)
     }
     return ready_queue;
 }
-std::string solve_first_come_fisrt_serve(CPU cpu, std::vector<Process> jobs)
+Frame_list solve_first_come_fisrt_served(CPU cpu, std::vector<Process> jobs)
 {
-    std::vector<Frame> frames;
+    Frame_list frames;
 
     std::ranges::sort(jobs, {}, &Process::arrival_time);
 
@@ -39,10 +39,10 @@ std::string solve_first_come_fisrt_serve(CPU cpu, std::vector<Process> jobs)
         push_frame();
     }
 
-    return nlohmann::json({{"frames", frames}}).dump();
+    return frames;
 }
 
-std::string solve_short_process_first(CPU cpu, std::vector<Process> jobs)
+Frame_list solve_shortest_process_first(CPU cpu, std::vector<Process> jobs)
 {
     std::vector<Frame> frames;
 
@@ -61,10 +61,10 @@ std::string solve_short_process_first(CPU cpu, std::vector<Process> jobs)
         push_frame();
     }
 
-    return nlohmann::json({{"frames", frames}}).dump();
+    return frames;
 }
 
-std::string solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
+Frame_list solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
 {
     std::vector<Frame> frames;
 
@@ -101,10 +101,10 @@ std::string solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
         push_frame_extra(extra);
     }
 
-    return nlohmann::json({{"frames", frames}}).dump();
+    return frames;
 }
 
-std::string solve_priority_scheduling(CPU cpu, std::vector<Process> jobs)
+Frame_list solve_priority_scheduling(CPU cpu, std::vector<Process> jobs)
 {
     std::vector<Frame> frames;
 
@@ -123,27 +123,43 @@ std::string solve_priority_scheduling(CPU cpu, std::vector<Process> jobs)
         push_frame();
     }
 
-    return nlohmann::json({{"frames", frames}}).dump();
+    return frames;
 }
 
-std::string route_algorithm(std::string_view algorithm,
-                            std::vector<Process> jobs)
+shelpam::os_labs::Response route_algorithm(Algorithm algorithm,
+                                           std::vector<Process> jobs)
 {
-    fast_io::println("Requested algorithm: ", algorithm);
+    shelpam::os_labs::Response response;
     CPU cpu;
-    if (algorithm == "first_come_first_serve") {
-        return solve_first_come_fisrt_serve(cpu, jobs);
+    if (algorithm == Algorithm::first_come_first_served) {
+        response.frames = solve_first_come_fisrt_served(cpu, std::move(jobs));
+        return response;
     }
-    if (algorithm == "short_process_first") {
-        return solve_short_process_first(cpu, std::move(jobs));
+    if (algorithm == Algorithm::shortest_process_first) {
+        response.frames = solve_shortest_process_first(cpu, std::move(jobs));
+        return response;
     }
-    if (algorithm == "round_robin") {
-        return solve_round_robin(cpu, std::move(jobs), 8); // TODO: user should
-        // be able to specific any but 8
+    if (algorithm == Algorithm::round_robin) {
+        // TODO(shelpam): user should be able to specific any besides 8
+        response.frames = solve_round_robin(cpu, std::move(jobs), 8);
+        return response;
     }
-    if (algorithm == "priority_scheduding") {
-        return solve_priority_scheduling(cpu, std::move(jobs));
+    if (algorithm == Algorithm::priority_scheduling) {
+        response.frames = solve_priority_scheduling(cpu, std::move(jobs));
+        return response;
     }
+
     throw std::runtime_error(
-        std::format("{} hasn't been implemented", algorithm));
+        std::format("{} hasn't been implemented", to_string(algorithm)));
+}
+
+std::string_view to_string(Algorithm algorithm)
+{
+    static std::unordered_map<Algorithm, std::string_view> const map{
+        {Algorithm::first_come_first_served, "first_come_first_served"},
+        {Algorithm::shortest_process_first, "shortest_process_first"},
+        {Algorithm::round_robin, "round_robin"},
+        {Algorithm::priority_scheduling, "priority_scheduling"},
+    };
+    return map.at(algorithm);
 }
