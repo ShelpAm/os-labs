@@ -11,6 +11,7 @@
 int main()
 {
     using namespace std::string_literals;
+    using namespace shelpam::scheduling;
     for (int k = 1; k <= 2; k++) {
         std::string filename = "tests/test"s + std::to_string(k) + "_spf.json"s;
         fast_io::native_file_loader f(filename);

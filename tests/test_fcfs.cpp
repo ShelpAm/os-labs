@@ -1,16 +1,22 @@
+// #include <algorithms/process-scheduling.hpp>
+// #include <cstdlib>
+// #include <fast_io.h>
+// #include <iostream>
+// #include <nlohmann/json.hpp>
+// #include <queue>
+// #include <ranges>
+// #include <string>
+
+#include "process/process.hpp"
 #include <algorithms/process-scheduling.hpp>
-#include <cstdlib>
 #include <fast_io.h>
 #include <iostream>
-#include <nlohmann/json.hpp>
-#include <process/process.hpp>
-#include <queue>
-#include <ranges>
 #include <string>
 
 int main()
 {
     using namespace std::string_literals;
+    using namespace shelpam::scheduling;
     for (int k = 1; k <= 3; k++) {
         std::string filename =
             "tests/test"s + std::to_string(k) + "_fcfs.json"s;

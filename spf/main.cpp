@@ -6,6 +6,8 @@
 #include <memory>
 #include <process/process.hpp>
 
+using namespace shelpam::scheduling;
+
 void solve_spf(CPU &cpu, std::vector<Process> &jobs)
 {
     auto jobs_it{jobs.begin()};

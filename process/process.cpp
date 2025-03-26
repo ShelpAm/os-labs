@@ -2,9 +2,11 @@
 
 #include <nlohmann/json.hpp>
 
+using namespace shelpam;
+
 // FROM AI, because I'm lack of UTF-8 knowledges...
 // Function to count Chinese characters in a UTF-8 encoded std::string
-std::size_t count_chinese_characters(std::string_view str)
+std::size_t scheduling::count_chinese_characters(std::string_view str)
 {
     size_t chinese_count = 0;
     size_t i = 0;
@@ -56,7 +58,7 @@ std::size_t count_chinese_characters(std::string_view str)
     return chinese_count;
 }
 
-std::vector<Process> input_processes()
+std::vector<scheduling::Process> scheduling::input_processes()
 {
     fast_io::print("Please input the number of processes: ");
     int num_processes{};

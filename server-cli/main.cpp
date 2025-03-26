@@ -1,4 +1,6 @@
+#include <algorithms/bankers-algo.hpp>
 #include <algorithms/process-scheduling.hpp>
+#include <array>
 #include <httplib.h>
 #include <process/process.hpp>
 
@@ -33,10 +35,14 @@ int main()
     });
     svr.Post("/api/solve", [](Request const &req, Response &res) {
         auto data = nlohmann::json::parse(req.body);
-
         fast_io::println("request: ", data.dump());
 
-        // auto request = data.get<shelpam::os_labs::Request>();
+        if (data.at("algorithm") == "bankers-algorithm") {
+            throw std::runtime_error("bankers-algorithm is not implemented");
+            return;
+        }
+
+        // auto request = data.get<os_labs::Request>();
         // std::vector<Process> jobs;
         // for (auto const &p : request.processes) {
         //     Process neo(p.id, p.name, p.arrival_time,
@@ -45,6 +51,8 @@ int main()
         // auto const response = route_algorithm(request.algorithm, jobs);
         // res.set_content(nlohmann::json(response).dump(), "application/json");
 
+        using Process = shelpam::scheduling::Process;
+        using Time = shelpam::scheduling::Time;
         std::vector<Process> jobs;
         for (auto const &j : data["processes"]) {
             Process p(j["id"].get<int>(), j["name"],
@@ -57,7 +65,7 @@ int main()
 
         auto const response = route_algorithm(data["algorithm"], jobs);
         auto json_result = nlohmann::json(response).dump();
-        fast_io::println("response: ", json_result);
+        // fast_io::println("response: ", json_result);
         res.set_content(std::move(json_result), "application/json");
     });
 

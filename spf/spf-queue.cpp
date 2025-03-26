@@ -1,6 +1,8 @@
 #include <spf/spf-queue.hpp>
 
-void SPF_queue::push(Process *job)
+using namespace shelpam;
+
+void scheduling::SPF_queue::push(Process *job)
 {
     auto it{list_.begin()};
     while (it != list_.end() &&
@@ -11,22 +13,22 @@ void SPF_queue::push(Process *job)
     list_.insert(it, job);
 }
 
-void SPF_queue::pop()
+void scheduling::SPF_queue::pop()
 {
     list_.pop_front();
 }
 
-bool SPF_queue::empty() const
+bool scheduling::SPF_queue::empty() const
 {
     return list_.empty();
 }
 
-Process *SPF_queue::front()
+scheduling::Process *scheduling::SPF_queue::front()
 {
     return list_.front();
 }
 
-std::vector<Process::Id> to_vector(SPF_queue q)
+std::vector<scheduling::Process::Id> scheduling::to_vector(SPF_queue q)
 {
     std::vector<Process::Id> result;
 

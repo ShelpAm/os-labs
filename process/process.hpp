@@ -14,6 +14,8 @@
 #include <stdexcept>
 #include <utility>
 
+namespace shelpam::scheduling {
+
 enum Status : std::uint8_t { not_started, ready, running, finished };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(Status, {
@@ -53,9 +55,6 @@ struct Process {
     int total_execution_time{};
     Scheduling_statistics stats{};
     nlohmann::json extra;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Process, id, name, arrival_time,
-                                   total_execution_time, stats, extra)
 
     [[deprecated("Only for nlohmann/json, don't use it")]] constexpr Process() =
         default;
@@ -140,6 +139,8 @@ struct Process {
             total_execution_time;
     }
 };
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Process, id, name, arrival_time,
+                                   total_execution_time, stats, extra)
 
 std::size_t count_chinese_characters(std::string_view s);
 
@@ -267,3 +268,5 @@ void output_processes_info(Range const &range, Projection &&proj = {})
             std::format("{:.2f}", average_weighted_turnaround, 2));
     }
 }
+
+} // namespace shelpam::scheduling

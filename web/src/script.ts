@@ -50,9 +50,7 @@ async function request(processesData: Array<Process>, algorithm: Algorithm): Pro
     try {
         const request: Request = { algorithm: algorithm, processes: processesData };
         console.log("request: ", request);
-        const response = await axios.post(API_URL,
-            request,
-            { headers: { 'Content-Type': 'application/json' } });
+        const response = await axios.post(API_URL, request, { headers: { 'Content-Type': 'application/json' } });
         const data = response.data as Response; // Axios auto-parses JSON
         // TODO
         // frames.forEach(frame => {
@@ -65,7 +63,7 @@ async function request(processesData: Array<Process>, algorithm: Algorithm): Pro
         } else {
             console.error('Error fetching simulation data:', error.response.data);
         }
-        alert('Failed to load simulation data. Check console for details.');
+        alert('Failed to load simulation data. Check console for details. ' + error.response.data);
         throw error;
     }
 }
@@ -273,6 +271,7 @@ async function start_simulation() {
         return;
     }
 
+    console.log("requesting frames with processes:", processes_data);
     const response = await request(processes_data, algorithm);
     console.log("Frames: ", response.frames);
     if (response.frames.length === 0) return;

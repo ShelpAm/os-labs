@@ -7,6 +7,8 @@
 #include <ranges>
 #include <spf/spf-queue.hpp>
 
+namespace shelpam::scheduling {
+
 struct Frame {
     int system_time;
     std::vector<Process> processes;
@@ -22,6 +24,7 @@ struct Frame {
 };
 
 enum class Algorithm : std::uint8_t {
+    // Process scheduling
     first_come_first_served,
     shortest_process_first,
     round_robin,
@@ -39,7 +42,6 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
                     to_string(Algorithm::priority_scheduling)},
                });
 
-namespace shelpam::os_labs {
 struct Request {
     Algorithm algorithm;
     std::vector<Process> processes;
@@ -50,7 +52,6 @@ struct Response {
     std::vector<Frame> frames;
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Response, frames);
-} // namespace shelpam::os_labs
 
 struct By_priority {
     bool operator()(Process const *lhs, Process const *rhs) const
@@ -197,5 +198,6 @@ Frame_list solve_shortest_process_first(CPU cpu, std::vector<Process> jobs);
 Frame_list solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum);
 Frame_list solve_priority_scheduling(CPU cpu, std::vector<Process> jobs);
 
-shelpam::os_labs::Response route_algorithm(Algorithm algorithm,
-                                           std::vector<Process> jobs);
+Response route_algorithm(Algorithm algorithm, std::vector<Process> jobs);
+
+} // namespace shelpam::scheduling

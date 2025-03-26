@@ -1,7 +1,9 @@
 #include <process/cpu.hpp>
 #include <process/process.hpp>
 
-void CPU::run_for(int minutes)
+using namespace shelpam;
+
+void scheduling::CPU::run_for(int minutes)
 {
     if (running_process_ != nullptr) {
         auto const actual_runtime{running_process_->run_for(minutes, *this)};
@@ -14,23 +16,23 @@ void CPU::run_for(int minutes)
     system_time_.minutes_ += minutes;
 }
 
-void CPU::set_running(Process *process) noexcept
+void scheduling::CPU::set_running(Process *process) noexcept
 {
     running_process_ = process;
     slice_execution_time_ = 0; // Reset for new process
 }
 
-Process *CPU::running_process() const noexcept
+scheduling::Process *scheduling::CPU::running_process() const noexcept
 {
     return running_process_;
 }
 
-int CPU::slice_execution_time() const noexcept
+int scheduling::CPU::slice_execution_time() const noexcept
 {
     return slice_execution_time_;
 }
 
-Time CPU::system_time() const noexcept
+scheduling::Time scheduling::CPU::system_time() const noexcept
 {
     return system_time_;
 }

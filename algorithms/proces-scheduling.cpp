@@ -1,7 +1,14 @@
 #include <algorithms/process-scheduling.hpp>
 
-std::vector<Process::Id> to_vector(
-    std::priority_queue<Process *, std::vector<Process *>, By_priority> ready)
+using namespace shelpam;
+using Process = scheduling::Process;
+using Frame_list = scheduling::Frame_list;
+using Response = scheduling::Response;
+
+std::vector<scheduling::Process::Id>
+scheduling::to_vector(std::priority_queue<Process *, std::vector<Process *>,
+                                          scheduling::By_priority>
+                          ready)
 {
     std::vector<Process::Id> ready_queue;
     while (!ready.empty()) {
@@ -11,7 +18,7 @@ std::vector<Process::Id> to_vector(
     return ready_queue;
 }
 
-std::vector<Process::Id> to_vector(std::queue<Process *> ready)
+std::vector<Process::Id> scheduling::to_vector(std::queue<Process *> ready)
 {
     std::vector<Process::Id> ready_queue;
     while (!ready.empty()) {
@@ -20,7 +27,8 @@ std::vector<Process::Id> to_vector(std::queue<Process *> ready)
     }
     return ready_queue;
 }
-Frame_list solve_first_come_fisrt_served(CPU cpu, std::vector<Process> jobs)
+Frame_list scheduling::solve_first_come_fisrt_served(CPU cpu,
+                                                     std::vector<Process> jobs)
 {
     Frame_list frames;
 
@@ -42,7 +50,8 @@ Frame_list solve_first_come_fisrt_served(CPU cpu, std::vector<Process> jobs)
     return frames;
 }
 
-Frame_list solve_shortest_process_first(CPU cpu, std::vector<Process> jobs)
+Frame_list scheduling::solve_shortest_process_first(CPU cpu,
+                                                    std::vector<Process> jobs)
 {
     std::vector<Frame> frames;
 
@@ -64,7 +73,8 @@ Frame_list solve_shortest_process_first(CPU cpu, std::vector<Process> jobs)
     return frames;
 }
 
-Frame_list solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
+Frame_list scheduling::solve_round_robin(CPU cpu, std::vector<Process> jobs,
+                                         int quantum)
 {
     std::vector<Frame> frames;
 
@@ -104,7 +114,8 @@ Frame_list solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum)
     return frames;
 }
 
-Frame_list solve_priority_scheduling(CPU cpu, std::vector<Process> jobs)
+Frame_list scheduling::solve_priority_scheduling(CPU cpu,
+                                                 std::vector<Process> jobs)
 {
     std::vector<Frame> frames;
 
@@ -126,25 +137,28 @@ Frame_list solve_priority_scheduling(CPU cpu, std::vector<Process> jobs)
     return frames;
 }
 
-shelpam::os_labs::Response route_algorithm(Algorithm algorithm,
-                                           std::vector<Process> jobs)
+Response scheduling::route_algorithm(Algorithm algorithm,
+                                     std::vector<Process> jobs)
 {
-    shelpam::os_labs::Response response;
-    CPU cpu;
+    Response response;
     if (algorithm == Algorithm::first_come_first_served) {
+        CPU cpu;
         response.frames = solve_first_come_fisrt_served(cpu, std::move(jobs));
         return response;
     }
     if (algorithm == Algorithm::shortest_process_first) {
+        CPU cpu;
         response.frames = solve_shortest_process_first(cpu, std::move(jobs));
         return response;
     }
     if (algorithm == Algorithm::round_robin) {
         // TODO(shelpam): user should be able to specific any besides 8
+        CPU cpu;
         response.frames = solve_round_robin(cpu, std::move(jobs), 8);
         return response;
     }
     if (algorithm == Algorithm::priority_scheduling) {
+        CPU cpu;
         response.frames = solve_priority_scheduling(cpu, std::move(jobs));
         return response;
     }
@@ -153,7 +167,7 @@ shelpam::os_labs::Response route_algorithm(Algorithm algorithm,
         std::format("{} hasn't been implemented", to_string(algorithm)));
 }
 
-std::string_view to_string(Algorithm algorithm)
+std::string_view scheduling::to_string(Algorithm algorithm)
 {
     static std::unordered_map<Algorithm, std::string_view> const map{
         {Algorithm::first_come_first_served, "first_come_first_served"},

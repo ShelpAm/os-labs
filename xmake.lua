@@ -27,34 +27,37 @@ add_files("./process/detail/std-optional-to-json.test.cpp")
 add_tests("default")
 add_deps("process")
 
-target("queue-cli")
-set_kind("binary")
-add_files("./queue-cli/main.cpp")
-
-target("fcfs")
-set_kind("binary")
-add_files("./fcfs/main.cpp")
-add_deps("fast-io-ext")
-
-target("spf")
-set_kind("binary")
-add_files("./spf/main.cpp", "./spf/spf-queue.cpp")
-add_deps("process")
-
-target("round-robin")
-set_kind("binary")
-add_files("./round-robin/main.cpp")
-add_deps("process")
-
-target("priority-scheduling")
-set_kind("binary")
-add_files("./priority-scheduling/main.cpp")
-add_deps("process")
+-- target("queue-cli")
+-- set_kind("binary")
+-- add_files("./queue-cli/main.cpp")
+--
+-- target("fcfs")
+-- set_kind("binary")
+-- add_files("./fcfs/main.cpp")
+-- add_deps("fast-io-ext")
+--
+-- target("spf")
+-- set_kind("binary")
+-- add_files("./spf/main.cpp", "./spf/spf-queue.cpp")
+-- add_deps("process")
+--
+-- target("round-robin")
+-- set_kind("binary")
+-- add_files("./round-robin/main.cpp")
+-- add_deps("process")
+--
+-- target("priority-scheduling")
+-- set_kind("binary")
+-- add_files("./priority-scheduling/main.cpp")
+-- add_deps("process")
 
 -- target("fast_io.test")
 -- set_kind("binary")
 -- add_files("./tests/fast_io.test.cpp")
 -- add_deps("fast-io-ext")
+
+
+-- Above are lagacies. Below are new code.
 
 target("json.test")
 set_kind("binary")
@@ -64,8 +67,14 @@ add_packages("nlohmann_json")
 
 target("algorithms")
 set_kind("static")
-add_files("./algorithms/proces-scheduling.cpp")
+add_files("./algorithms/proces-scheduling.cpp", "./algorithms/bankers-algo.cpp")
 add_deps("process", { public = true })
+
+target("algorithms.bankers-algo.test")
+set_kind("binary")
+add_files("./algorithms/bankers-algo.test.cpp")
+add_tests("default")
+add_deps("algorithms")
 
 target("server-cli")
 set_kind("binary")
@@ -73,6 +82,11 @@ add_files("./server-cli/main.cpp", "./spf/spf-queue.cpp")
 add_packages("nlohmann_json")
 add_packages("cpp-httplib")
 add_deps("algorithms")
+
+
+
+
+-- Tests
 
 target("tests.test_fcfs.test")
 set_kind("binary")

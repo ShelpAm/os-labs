@@ -6,6 +6,8 @@
 #include <process/process.hpp>
 #include <vector>
 
+namespace shelpam::scheduling {
+
 class SPF_queue {
   public:
     void push(Process *job);
@@ -18,3 +20,5 @@ class SPF_queue {
 };
 
 std::vector<Process::Id> to_vector(SPF_queue q);
+
+} // namespace shelpam::scheduling

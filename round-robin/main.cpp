@@ -5,6 +5,8 @@
 #include <process/process.hpp>
 #include <queue>
 
+using namespace shelpam::scheduling;
+
 void solve_round_robin(CPU &cpu, std::vector<Process> &jobs, int quantum)
 {
     auto jobs_it{jobs.begin()};

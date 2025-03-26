@@ -7,6 +7,8 @@
 #include <fast_io_dsal/string_view.h>
 #include <nlohmann/json.hpp>
 
+namespace shelpam::scheduling {
+
 // params:
 // s: string-like
 constexpr int to_int(auto const &s)
@@ -105,3 +107,5 @@ constexpr std::string to_string(Time const &t, std::string_view fallback = "")
 
 void to_json(nlohmann::json &j, Time const &t);
 void from_json(nlohmann::json const &j, Time &t);
+
+} // namespace shelpam::scheduling

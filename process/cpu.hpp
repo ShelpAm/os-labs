@@ -2,6 +2,8 @@
 
 #include <process/time.hpp>
 
+namespace shelpam::scheduling {
+
 struct Process;
 
 class CPU {
@@ -19,3 +21,5 @@ class CPU {
     Process *running_process_{};
     int slice_execution_time_{};
 };
+
+} // namespace shelpam::scheduling
