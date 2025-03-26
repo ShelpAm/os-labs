@@ -2,15 +2,15 @@
 
 ## Common specifications
 
-- [ ] Language: Chinese
+- [x] Language: Chinese
 - [ ] Allow for slower transition (animation) of elements.
 - [ ] For every class of algorithm, make simulations to them.
-- [ ] More detailed info should be displayed.
+- [ ] More detailed info should be displayed; can be printed to some message list.
 - [ ] Information should be displayed explicitly. (Every event should be shown)
 - [ ] Interactive program, user can input as they want.
-- [ ] High performance, specifically, support x clients accessing simultaneounsly.
+- [ ] High performance, specifically, support at least 100 clients accessing simultaneounsly.
 - [ ] Support reading from file.
-- [ ] Time should be displayed as HH:MM format.
+- [x] Time should be displayed as HH:MM format.
 - [ ] Show average value of stats.
 - [ ] Start when the first process enter into the ready queue.
 - [ ] If there is no process in ready queue or being executed, skip it.  
