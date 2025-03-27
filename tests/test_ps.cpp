@@ -33,7 +33,7 @@ int main()
         auto const result{solve_priority_scheduling(cpu, jobs)}; // yanzheng res
         // std::cout<<result.size()<<'\n';
         // result.set_content(result, "application/json");
-        nlohmann::json res = nlohmann::json(result);
+        nlohmann::json res = nlohmann::json({{"frames", result}});
         nlohmann::json ps1 = res["frames"].back()["processes"];
         // nlohmann::json p1 = ps1.back();
 

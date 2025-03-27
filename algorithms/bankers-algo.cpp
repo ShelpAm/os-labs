@@ -20,18 +20,19 @@ bankers_algo::Process::Process(std::string name, Resources maximum,
 {
 }
 
-bool bankers_algo::Process::try_request(Resources const &req)
+bankers_algo::Request_result
+bankers_algo::Process::try_request(Resources const &req)
 {
     assert(system != nullptr);
     std::println("Process {} trying requesting resources below:\n{}\n", name,
                  to_string(req));
-    auto successful = system->try_allocate(*this, req);
+    auto result = system->try_allocate(*this, req);
 
     if (all_greater_equal({}, need())) { // if no further need,
         finish();                        // return requested resources
     }
 
-    return successful;
+    return result;
 }
 
 bankers_algo::System::System(Resources const &total)
@@ -39,14 +40,15 @@ bankers_algo::System::System(Resources const &total)
 {
 }
 
-bool bankers_algo::System::try_allocate(Process &p, Resources const &req)
+bankers_algo::Request_result
+bankers_algo::System::try_allocate(Process &p, Resources const &req)
 {
     // Assume that req won't outsize p.need()
     if (!can_grant(req)) {
         std::println("Failed to allocate given request. system "
                      "available not enough.\n{}\n",
                      to_string(available_));
-        return false;
+        return Request_result::no_enough_resources;
     }
 
     p.current_allocated += req;
@@ -58,7 +60,7 @@ bool bankers_algo::System::try_allocate(Process &p, Resources const &req)
         p.current_allocated -= req;
         available_ += req;
         std::println("Failed to allocate given request, no safe sequence.");
-        return false;
+        return Request_result::no_safe_sequence;
     }
 
     std::print("Allocation successful, one of the safe sequence(s): {}",
@@ -69,12 +71,11 @@ bool bankers_algo::System::try_allocate(Process &p, Resources const &req)
     std::println("");
     std::println("System available resources:\n{}", to_string(available_));
     std::println("");
-    return true;
+    return Request_result::success;
 }
 
 // TODO(shelpam): Please optimize this to O(N log N)
-bankers_algo::Check_safe_state_result
-bankers_algo::System::check_safe_state() const
+bankers_algo::Safe_state bankers_algo::System::check_safe_state() const
 {
     std::vector<std::string> safe_seq;
     std::unordered_set<Process const *> safe_seq_set;

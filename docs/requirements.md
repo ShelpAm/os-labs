@@ -7,7 +7,7 @@
 - [ ] For every class of algorithm, make simulations to them.
 - [ ] More detailed info should be displayed; can be printed to some message list.
 - [ ] Information should be displayed explicitly. (Every event should be shown)
-- [ ] Interactive program, user can input as they want.
+- [x] Interactive program, user can input as they want.
 - [ ] High performance, specifically, support at least 100 clients accessing simultaneounsly.
 - [ ] Support reading from file.
 - [x] Time should be displayed as HH:MM format.

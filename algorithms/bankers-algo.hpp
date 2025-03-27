@@ -26,6 +26,12 @@ struct Resources {
 std::string to_string(Resources const &r);
 bool all_greater_equal(Resources const &lhs, Resources const &rhs);
 
+enum class Request_result : std::uint8_t {
+    success,
+    no_enough_resources,
+    no_safe_sequence,
+};
+
 struct System;
 class Process {
     friend class System;
@@ -33,7 +39,7 @@ class Process {
 
   public:
     using Id = std::uint32_t;
-    bool try_request(Resources const &req);
+    Request_result try_request(Resources const &req);
 
   private:
     std::string name;
@@ -59,7 +65,7 @@ class Process {
 };
 void output_process_info(Process const &p);
 
-struct Check_safe_state_result {
+struct Safe_state {
     bool is_safe;
     std::vector<std::string> safe_sequence;
 };
@@ -78,8 +84,8 @@ class System {
     std::list<Process> processes_;
 
     [[nodiscard]] bool can_grant(Resources const &request) const;
-    bool try_allocate(Process &p, Resources const &req);
-    [[nodiscard]] Check_safe_state_result check_safe_state() const;
+    Request_result try_allocate(Process &p, Resources const &req);
+    [[nodiscard]] Safe_state check_safe_state() const;
 };
 
 } // namespace shelpam::bankers_algo

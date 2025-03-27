@@ -1,12 +1,3 @@
-// #include <algorithms/process-scheduling.hpp>
-// #include <cstdlib>
-// #include <fast_io.h>
-// #include <iostream>
-// #include <nlohmann/json.hpp>
-// #include <queue>
-// #include <ranges>
-// #include <string>
-
 #include "process/process.hpp"
 #include <algorithms/process-scheduling.hpp>
 #include <fast_io.h>
@@ -40,7 +31,7 @@ int main()
             solve_first_come_fisrt_served(cpu, jobs)}; // yanzheng res
         // std::cout<<result.size()<<'\n';
         // result.set_content(result, "application/json");
-        nlohmann::json res = nlohmann::json(result);
+        nlohmann::json res = nlohmann::json({{"frames", result}});
         nlohmann::json ps1 = res["frames"].back()["processes"];
         // nlohmann::json p1 = ps1.back();
 
