@@ -67,7 +67,7 @@
         "processes": [Process_1_without_runtime_info, Process_2_without_runtime_info, ..., Process_n_without_runtime_info]
     }
     ```
--   Response (State frames):
+-   Result (State frames):
     ```json
     {
         "frames": [frame_1, frame_2, ..., frame_n]

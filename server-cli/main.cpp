@@ -42,31 +42,34 @@ int main()
             return;
         }
 
-        // auto request = data.get<os_labs::Request>();
-        // std::vector<Process> jobs;
-        // for (auto const &p : request.processes) {
-        //     Process neo(p.id, p.name, p.arrival_time,
-        //     p.total_execution_time); neo.extra = p.extra; jobs.push_back(p);
-        // }
-        // auto const response = route_algorithm(request.algorithm, jobs);
-        // res.set_content(nlohmann::json(response).dump(), "application/json");
-
         using Process = shelpam::scheduling::Process;
+        using Request = shelpam::scheduling::Request;
         using Time = shelpam::scheduling::Time;
-        std::vector<Process> jobs;
-        for (auto const &j : data["processes"]) {
-            Process p(j["id"].get<int>(), j["name"],
-                      Time(j["arrival_time"].get<int>()),
-                      // Time(j["arrival_time"]["minutes"].get<int>()),
-                      j["total_execution_time"].get<int>());
-            p.extra = j["extra"];
-            jobs.push_back(p);
-        }
 
-        auto const response = route_algorithm(data["algorithm"], jobs);
-        auto json_result = nlohmann::json(response).dump();
-        // fast_io::println("response: ", json_result);
-        res.set_content(std::move(json_result), "application/json");
+        auto request = data.get<Request>();
+        std::vector<Process> jobs;
+        for (auto const &p : request.processes) {
+            Process neo(p.id, p.name, p.arrival_time, p.total_execution_time);
+            neo.extra = p.extra;
+            jobs.push_back(neo);
+        }
+        auto const result = route_algorithm(request.algorithm, jobs);
+        res.set_content(nlohmann::json(result).dump(), "application/json");
+
+        // std::vector<Process> jobs;
+        // for (auto const &j : data["processes"]) {
+        //     Process p(j["id"].get<int>(), j["name"],
+        //               Time(j["arrival_time"].get<int>()),
+        //               // Time(j["arrival_time"]["minutes"].get<int>()),
+        //               j["total_execution_time"].get<int>());
+        //     p.extra = j["extra"];
+        //     jobs.push_back(p);
+        // }
+        //
+        // auto const response = route_algorithm(data["algorithm"], jobs);
+        // auto json_result = nlohmann::json(response).dump();
+        // // fast_io::println("response: ", json_result);
+        // res.set_content(std::move(json_result), "application/json");
     });
 
     fast_io::println("Starting server on ", host, ":", port);

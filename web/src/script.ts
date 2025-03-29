@@ -1,4 +1,4 @@
-import { Frame, Time_point, Process, FUCK, Algorithm, Response, Request } from './interfaces';
+import { Frame, Time_point, Process, FUCK, Algorithm, Response as Result, Request } from './interfaces';
 import { Process_table_row, Process_div } from './components';
 
 const axios = globalThis.axios;
@@ -46,12 +46,13 @@ function updateSpeedDisplay() {
 }
 
 // Fetch simulation data from API
-async function request(processesData: Array<Process>, algorithm: Algorithm): Promise<Response> {
+async function request(processesData: Array<Process>, algorithm: Algorithm): Promise<Result> {
     try {
         const request: Request = { algorithm: algorithm, processes: processesData };
-        console.log("request: ", request);
-        const response = await axios.post(API_URL, request, { headers: { 'Content-Type': 'application/json' } });
-        const data = response.data as Response; // Axios auto-parses JSON
+        const json = JSON.stringify(request, (_, v) => v === undefined ? null : v);
+        console.log("request:", request, ", whose json is", json);
+        const response = await axios.post(API_URL, json, { headers: { 'Content-Type': 'application/json' } });
+        const data = response.data as Result; // Axios auto-parses JSON
         // TODO
         // frames.forEach(frame => {
         //     frame.system_time = frames.system_time

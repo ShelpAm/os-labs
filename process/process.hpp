@@ -92,7 +92,7 @@ struct Process {
         if (!extra.contains("priority")) {
             throw std::runtime_error("priority is missing in \"extra\" table");
         }
-        return extra["priority"];
+        return extra.at("priority");
     }
 
     void set_priority(int priority)
@@ -116,6 +116,8 @@ struct Process {
         // Running time shouldn't exceed remaining execution time.
         minutes = std::min(minutes, *stats.remaining_time);
 
+        assert(stats.execution_time.has_value());
+        assert(stats.remaining_time.has_value());
         stats.execution_time = *stats.execution_time + minutes;
         stats.remaining_time = *stats.remaining_time - minutes;
         assert(*stats.execution_time + *stats.remaining_time ==

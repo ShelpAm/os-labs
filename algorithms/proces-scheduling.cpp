@@ -3,7 +3,7 @@
 using namespace shelpam;
 using Process = scheduling::Process;
 using Frame_list = scheduling::Frame_list;
-using Response = scheduling::Response;
+using Result = scheduling::Result;
 
 std::vector<scheduling::Process::Id>
 scheduling::to_vector(std::priority_queue<Process *, std::vector<Process *>,
@@ -137,10 +137,10 @@ Frame_list scheduling::solve_priority_scheduling(CPU cpu,
     return frames;
 }
 
-Response scheduling::route_algorithm(Algorithm algorithm,
-                                     std::vector<Process> jobs)
+Result scheduling::route_algorithm(Algorithm algorithm,
+                                   std::vector<Process> jobs)
 {
-    Response response;
+    Result response;
     if (algorithm == Algorithm::first_come_first_served) {
         CPU cpu;
         response.frames = solve_first_come_fisrt_served(cpu, std::move(jobs));
@@ -172,6 +172,8 @@ std::string_view scheduling::to_string(Algorithm algorithm)
     static std::unordered_map<Algorithm, std::string_view> const map{
         {Algorithm::first_come_first_served, "first_come_first_served"},
         {Algorithm::shortest_process_first, "shortest_process_first"},
+        {Algorithm::shortest_time_to_complete_first,
+         "shortest_time_to_complete_first"},
         {Algorithm::round_robin, "round_robin"},
         {Algorithm::priority_scheduling, "priority_scheduling"},
     };
