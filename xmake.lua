@@ -9,6 +9,7 @@ set_runtimes("c++_static")
 
 add_requires("nlohmann_json")
 add_requires("cpp-httplib")
+add_requires("gtest")
 
 
 target("fast-io-ext")
@@ -59,15 +60,13 @@ add_deps("process")
 
 -- Above are lagacies. Below are new code.
 
-target("json.test")
-set_kind("binary")
-add_tests("default")
-add_files("./tests/json.test.cpp")
-add_packages("nlohmann_json")
-
 target("algorithms")
 set_kind("static")
-add_files("./algorithms/proces-scheduling.cpp", "./algorithms/bankers-algo.cpp")
+add_files(
+    "./algorithms/proces-scheduling.cpp",
+    "./algorithms/bankers-algo.cpp"
+-- "./algorithms/memory/fixed-size-allocator.cpp"
+)
 add_deps("process", { public = true })
 
 target("algorithms.bankers-algo.test")
@@ -75,6 +74,14 @@ set_kind("binary")
 add_files("./algorithms/bankers-algo.test.cpp")
 add_tests("default")
 add_deps("algorithms")
+
+target("algorithms.memory.fixed-size-allocator.test")
+set_kind("binary")
+add_files("./algorithms/memory/fixed-size-allocator.test.cpp")
+add_tests("default")
+add_deps("algorithms")
+add_packages("gtest")
+
 
 target("server-cli")
 set_kind("binary")
@@ -123,3 +130,9 @@ add_tests("default")
 add_deps("algorithms")
 add_deps("process")
 add_deps("algorithms")
+
+target("json.test")
+set_kind("binary")
+add_tests("default")
+add_files("./tests/json.test.cpp")
+add_packages("nlohmann_json")

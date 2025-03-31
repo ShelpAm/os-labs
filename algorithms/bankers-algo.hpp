@@ -32,13 +32,12 @@ enum class Request_result : std::uint8_t {
     no_safe_sequence,
 };
 
-struct System;
+class System;
 class Process {
     friend class System;
     friend void output_process_info(Process const &p);
 
   public:
-    using Id = std::uint32_t;
     Request_result try_request(Resources const &req);
 
   private:
