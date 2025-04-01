@@ -33,6 +33,9 @@ const running_process_div = document.getElementById('running-process') as HTMLDi
 const finishedQueueDiv = document.getElementById('finished-queue') as HTMLDivElement;
 const currentTimeSpan = document.getElementById('current-time') as HTMLSpanElement;
 const time_in_quantum_span = document.getElementById('time-in-quantum') as HTMLSpanElement;
+const timeQuantumLabel = document.getElementById("time-quantum-label") as HTMLLabelElement;
+const timeQuantumInput = document.getElementById("time-quantum") as HTMLInputElement;
+
 
 
 // Simulation state
@@ -48,7 +51,10 @@ function updateSpeedDisplay() {
 // Fetch simulation data from API
 async function request(processesData: Array<Process>, algorithm: Algorithm): Promise<Result> {
     try {
-        const request: Request = { algorithm: algorithm, processes: processesData };
+        const request: Request = { algorithm: algorithm, processes: processesData, extra: {} };
+        if (algorithm == 'round_robin') {
+            request.extra.time_quantum = parseInt(timeQuantumInput.value);
+        }
         const json = JSON.stringify(request, (_, v) => v === undefined ? null : v);
         console.log("request:", request, ", whose json is", json);
         const response = await axios.post(API_URL, json, { headers: { 'Content-Type': 'application/json' } });
@@ -145,8 +151,8 @@ function render_frame(algorithm: Algorithm, cur: Frame, prev: Partial<Frame> = {
     console.log("Rendering frame: ", cur)
     render_processes_list(cur.processes)
     currentTimeSpan.textContent = cur.system_time.toString();
-    if (algorithm === 'round-robin') {
-        time_in_quantum_span.textContent = '当前时间片时间: ' + cur.extra["cpu.slice_execution_time"] + '/' + 8;
+    if (algorithm === 'round_robin') {
+        time_in_quantum_span.textContent = '当前时间片时间: ' + cur.extra["cpu.slice_execution_time"] + '/' + timeQuantumInput.value;
     }
     renderQueue(notReadyQueueDiv, cur.not_ready_queue, prev.not_ready_queue ?? []);
     renderQueue(readyQueueDiv, cur.ready_queue, prev.ready_queue ?? [], true);
@@ -303,4 +309,15 @@ startButton.addEventListener('click', start_simulation);
 speedInput.addEventListener('input', () => {
     updateSpeedDisplay();
     updateSpeed(); // Adjust speed without resetting
+});
+
+
+algorithmSelect.addEventListener("change", function() {
+    if (this.value === "round_robin") {
+        timeQuantumLabel.style.display = "inline";
+        timeQuantumInput.style.display = "inline";
+    } else {
+        timeQuantumLabel.style.display = "none";
+        timeQuantumInput.style.display = "none";
+    }
 });

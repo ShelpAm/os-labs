@@ -13,7 +13,7 @@
 - [x] Time should be displayed as HH:MM format.
 - [ ] Show average value of stats.
 - [ ] Start when the first process enter into the ready queue.
-- [ ] If there is no process in ready queue or being executed, skip it.  
+- [x] If there is no process in ready queue or being executed, skip it.  
 - [ ] Enables the user to enter time slice size.
 
 
@@ -64,7 +64,10 @@
     ```json
     {
         "algorithm": "Algorithm",
-        "processes": [Process_1_without_runtime_info, Process_2_without_runtime_info, ..., Process_n_without_runtime_info]
+        "processes": [Process_1_without_runtime_info, Process_2_without_runtime_info, ..., Process_n_without_runtime_info],
+        "extra": {
+            "xxx": "...",
+        }
     }
     ```
 -   Result (State frames):

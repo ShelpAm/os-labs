@@ -36,3 +36,12 @@ scheduling::Time scheduling::CPU::system_time() const noexcept
 {
     return system_time_;
 }
+
+void scheduling::CPU::skip_to(Time t)
+{
+    if (t < system_time_) {
+        throw std::runtime_error(
+            std::format("can't skip to past ({})", to_string(t)));
+    }
+    system_time_ = t;
+}

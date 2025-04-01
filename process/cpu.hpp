@@ -15,6 +15,7 @@ class CPU {
     [[nodiscard]] Process *running_process() const noexcept;
 
     void set_running(Process *process) noexcept;
+    void skip_to(Time t);
 
   private:
     Time system_time_;

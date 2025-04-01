@@ -138,7 +138,8 @@ Frame_list scheduling::solve_priority_scheduling(CPU cpu,
 }
 
 Result scheduling::route_algorithm(Algorithm algorithm,
-                                   std::vector<Process> jobs)
+                                   std::vector<Process> jobs,
+                                   nlohmann::json const &extra)
 {
     Result response;
     if (algorithm == Algorithm::first_come_first_served) {
@@ -154,7 +155,8 @@ Result scheduling::route_algorithm(Algorithm algorithm,
     if (algorithm == Algorithm::round_robin) {
         // TODO(shelpam): user should be able to specific any besides 8
         CPU cpu;
-        response.frames = solve_round_robin(cpu, std::move(jobs), 8);
+        response.frames =
+            solve_round_robin(cpu, std::move(jobs), extra.at("time_quantum"));
         return response;
     }
     if (algorithm == Algorithm::priority_scheduling) {
