@@ -170,7 +170,7 @@ void bankers_algo::output_process_info(Process const &p)
     std::println("    maximum:\n{}:", to_string(p.maximum));
     std::println("    allocated:\n{}:", to_string(p.current_allocated));
     std::println("    need:\n{}:", to_string(p.need()));
-    std::println();
+    std::println("");
 }
 bool bankers_algo::System::can_grant(Resources const &request) const
 {
