@@ -41,8 +41,8 @@ const API_URL = '/api/solve';
 
 // Update displayed speed value
 function updateSpeedDisplay() {
-    const speedValue = parseInt(speedInput.value) / 10; // Convert 1-50 to 0.1x-5x
-    speedValueSpan.textContent = `${speedValue.toFixed(1)}x`;
+    const speedValue = parseInt(speedInput.value) / 10; // 将 1-500 转换为 0.01x-5x
+    speedValueSpan.textContent = `${speedValue.toFixed(1)}x`; // 显示两位小数
 }
 
 // Fetch simulation data from API
@@ -164,8 +164,8 @@ function start_animation(algorithm: Algorithm, frames: Array<Frame>) {
     if (intervalId) clearInterval(intervalId);
 
     const base_interval = 1000; // Base interval in milliseconds (1 second)
-    const speedValue = parseInt(speedInput.value) / 10; // 1-50 maps to 0.1x-5x
-    const intervalDuration = base_interval / speedValue; // Higher speed = shorter interval
+    const speedValue = parseInt(speedInput.value) / 10; // 0.1x-5x
+    const intervalDuration = base_interval / speedValue; // 正确计算动画帧间隔
 
     // Mimics a for-loop
     let i = 0;
