@@ -31,7 +31,7 @@ export class FUCK {
     }
 }
 
-export type Algorithm = 'first-come-first-served' | 'shortest-process-first' | 'round-robin' | 'priority-scheduling';
+export type Algorithm = 'first_come_first_served' | 'shortest_process_first' | 'round_robin' | 'priority_scheduling';
 
 export type Time_point = number;
 
@@ -76,6 +76,9 @@ export interface Frame {
 export interface Request {
     algorithm: Algorithm,
     processes: Array<Process>,
+    extra: {
+        time_quantum?: number,
+    },
 };
 
 export interface Response {

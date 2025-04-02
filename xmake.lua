@@ -63,7 +63,7 @@ add_deps("process")
 target("algorithms")
 set_kind("static")
 add_files(
-    "./algorithms/proces-scheduling.cpp",
+    "./algorithms/process-scheduling.cpp",
     "./algorithms/bankers-algo.cpp"
 -- "./algorithms/memory/fixed-size-allocator.cpp"
 )

@@ -17,7 +17,7 @@ class Scheduler {
     Scheduler &operator=(Scheduler const &) = default;
     Scheduler &operator=(Scheduler &&) = delete;
     virtual ~Scheduler() = default;
-    virtual void schedule();
+    virtual void schedule() = 0;
 
   protected:
     // ?? workload_;
@@ -78,8 +78,9 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
 struct Request {
     Algorithm algorithm;
     std::vector<Process> processes;
+    nlohmann::json extra;
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Request, algorithm, processes, extra);
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Request, algorithm, processes);
 
 struct Result {
     std::vector<Frame> frames;
@@ -200,6 +201,8 @@ class Priority_scheduling_queue {
 
 #define check_cpu_set_next()                                                   \
     [&]() {                                                                    \
+        if (cpu.running_process() == nullptr && ready.empty())                 \
+            cpu.skip_to(jobs_it->arrival_time - 1);                            \
         if (cpu.running_process() == nullptr && !ready.empty()) {              \
             cpu.set_running(ready.front());                                    \
             ready.pop();                                                       \
@@ -209,6 +212,9 @@ class Priority_scheduling_queue {
 
 #define check_cpu_set_next_extra(extra)                                        \
     [&]() {                                                                    \
+        /* If there is no running process, skip to the nearest. */             \
+        if (cpu.running_process() == nullptr && ready.empty())                 \
+            cpu.skip_to(jobs_it->arrival_time - 1);                            \
         if (cpu.running_process() == nullptr && !ready.empty()) {              \
             cpu.set_running(ready.front());                                    \
             ready.pop();                                                       \
@@ -231,6 +237,7 @@ Frame_list solve_shortest_process_first(CPU cpu, std::vector<Process> jobs);
 Frame_list solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum);
 Frame_list solve_priority_scheduling(CPU cpu, std::vector<Process> jobs);
 
-Result route_algorithm(Algorithm algorithm, std::vector<Process> jobs);
+Result route_algorithm(Algorithm algorithm, std::vector<Process> jobs,
+                       nlohmann::json const &extra);
 
 } // namespace shelpam::scheduling

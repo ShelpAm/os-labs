@@ -53,7 +53,8 @@ int main()
             neo.extra = p.extra;
             jobs.push_back(neo);
         }
-        auto const result = route_algorithm(request.algorithm, jobs);
+        auto const result =
+            route_algorithm(request.algorithm, jobs, request.extra);
         res.set_content(nlohmann::json(result).dump(), "application/json");
 
         // std::vector<Process> jobs;
