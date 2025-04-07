@@ -97,11 +97,11 @@ struct Result {
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Result, frames);
 
-// The greater, the better
+// The lower, the better
 struct By_priority {
     bool operator()(Process const *lhs, Process const *rhs) const
     {
-        return lhs->priority() < rhs->priority();
+        return lhs->priority() > rhs->priority();
     }
 };
 
