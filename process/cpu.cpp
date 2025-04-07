@@ -10,6 +10,7 @@ void scheduling::CPU::run_for(int minutes)
         slice_execution_time_ += actual_runtime;
     }
     else {
+        // std::println("{} CPU idle", to_string(system_time_));
         // fast_io::debug_println("CPU is running nothing for ", minutes,
         //                        " minutes");
     }
