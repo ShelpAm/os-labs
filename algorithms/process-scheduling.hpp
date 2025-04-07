@@ -55,25 +55,35 @@ struct Frame {
 
 enum class Algorithm : std::uint8_t {
     // Process scheduling
+    unknown,
     first_come_first_served,
     shortest_process_first,
     shortest_time_to_complete_first,
     round_robin,
     priority_scheduling,
+    priority_scheduling_preemptive,
 };
 std::string_view to_string(Algorithm algorithm);
 NLOHMANN_JSON_SERIALIZE_ENUM(
-    Algorithm, {
-                   {Algorithm::first_come_first_served,
-                    to_string(Algorithm::first_come_first_served)},
-                   {Algorithm::shortest_process_first,
-                    to_string(Algorithm::shortest_process_first)},
-                   {Algorithm::shortest_time_to_complete_first,
-                    to_string(Algorithm::shortest_time_to_complete_first)},
-                   {Algorithm::round_robin, to_string(Algorithm::round_robin)},
-                   {Algorithm::priority_scheduling,
-                    to_string(Algorithm::priority_scheduling)},
-               });
+    Algorithm,
+    {
+        // We explicitly set `unknown` here, though we intentionally
+        // don't want it to show up. To set it as the first entry in
+        // the mapping, it's the fallback of undefined enum. And if it shows, it
+        // indicates that some unknown algorithm has been specified.
+        {Algorithm::unknown, "unknown"},
+        {Algorithm::first_come_first_served,
+         to_string(Algorithm::first_come_first_served)},
+        {Algorithm::shortest_process_first,
+         to_string(Algorithm::shortest_process_first)},
+        {Algorithm::shortest_time_to_complete_first,
+         to_string(Algorithm::shortest_time_to_complete_first)},
+        {Algorithm::round_robin, to_string(Algorithm::round_robin)},
+        {Algorithm::priority_scheduling,
+         to_string(Algorithm::priority_scheduling)},
+        {Algorithm::priority_scheduling_preemptive,
+         to_string(Algorithm::priority_scheduling_preemptive)},
+    });
 
 struct Request {
     Algorithm algorithm;
@@ -87,10 +97,11 @@ struct Result {
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Result, frames);
 
+// The greater, the better
 struct By_priority {
     bool operator()(Process const *lhs, Process const *rhs) const
     {
-        return lhs->priority() > rhs->priority();
+        return lhs->priority() < rhs->priority();
     }
 };
 
@@ -201,6 +212,7 @@ class Priority_scheduling_queue {
 
 #define check_cpu_set_next()                                                   \
     [&]() {                                                                    \
+        /* If there is no running process, skip to the nearest. */             \
         if (cpu.running_process() == nullptr && ready.empty())                 \
             cpu.skip_to(jobs_it->arrival_time - 1);                            \
         if (cpu.running_process() == nullptr && !ready.empty()) {              \
@@ -222,6 +234,26 @@ class Priority_scheduling_queue {
         }                                                                      \
     }()
 
+#define check_cpu_set_next_preemptive()                                        \
+    [&]() {                                                                    \
+        /* If there is no running process, skip to the nearest. */             \
+        if (cpu.running_process() == nullptr && ready.empty())                 \
+            cpu.skip_to(jobs_it->arrival_time - 1);                            \
+        if (!ready.empty()) {                                                  \
+            if (cpu.running_process() == nullptr || /* Should switch now */    \
+                cpu.running_process()->priority() <                            \
+                    ready.front()->priority()) {                               \
+                if (cpu.running_process() != nullptr) {                        \
+                    /* If exists, put it back to the priority queue */         \
+                    ready.push(cpu.running_process());                         \
+                }                                                              \
+                cpu.set_running(ready.front());                                \
+                ready.pop();                                                   \
+                push_frame();                                                  \
+            }                                                                  \
+        }                                                                      \
+    }()
+
 #define check_cpu_remove_finished()                                            \
     [&]() {                                                                    \
         if (cpu.running_process() != nullptr &&                                \
@@ -236,6 +268,8 @@ Frame_list solve_first_come_fisrt_served(CPU cpu, std::vector<Process> jobs);
 Frame_list solve_shortest_process_first(CPU cpu, std::vector<Process> jobs);
 Frame_list solve_round_robin(CPU cpu, std::vector<Process> jobs, int quantum);
 Frame_list solve_priority_scheduling(CPU cpu, std::vector<Process> jobs);
+Frame_list solve_priority_scheduling_preemptive(CPU cpu,
+                                                std::vector<Process> jobs);
 
 Result route_algorithm(Algorithm algorithm, std::vector<Process> jobs,
                        nlohmann::json const &extra);

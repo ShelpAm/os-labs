@@ -1,4 +1,4 @@
-import { Frame, Time_point, Process, FUCK, Algorithm, Response as Result, Request } from './interfaces';
+import { Frame, Time_point, Process, FUCK, Algorithm_type, Response as Result, Request, is_algorithm_type } from './interfaces';
 import { Process_table_row, Process_div } from './components';
 
 const axios = globalThis.axios;
@@ -49,7 +49,7 @@ function updateSpeedDisplay() {
 }
 
 // Fetch simulation data from API
-async function request(processesData: Array<Process>, algorithm: Algorithm): Promise<Result> {
+async function request(processesData: Array<Process>, algorithm: Algorithm_type): Promise<Result> {
     try {
         const request: Request = { algorithm: algorithm, processes: processesData, extra: {} };
         if (algorithm == 'round_robin') {
@@ -147,7 +147,7 @@ function renderQueue(queueDiv: HTMLDivElement, currentQueue: Array<number>, prev
 }
 
 // Render a single frame
-function render_frame(algorithm: Algorithm, cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], ready_queue: [], finish_queue: [] }) {
+function render_frame(algorithm: Algorithm_type, cur: Frame, prev: Partial<Frame> = { not_ready_queue: [], ready_queue: [], finish_queue: [] }) {
     console.log("Rendering frame: ", cur)
     render_processes_list(cur.processes)
     currentTimeSpan.textContent = cur.system_time.toString();
@@ -162,7 +162,7 @@ function render_frame(algorithm: Algorithm, cur: Frame, prev: Partial<Frame> = {
 
 let intervalId: number;
 // Start the animation loop with the current speed
-function start_animation(algorithm: Algorithm, frames: Array<Frame>) {
+function start_animation(algorithm: Algorithm_type, frames: Array<Frame>) {
     console.log("Starting animation.")
     console.log("Algorithm: ", algorithm);
     console.log("Frames: ", frames);
@@ -261,7 +261,10 @@ function get_processes_from_list(table: HTMLTableElement): Array<Process> {
 // Initialize simulation (fetch data and render first frame)
 async function start_simulation() {
     console.log("Initializing simulation data.");
-    const algorithm = algorithmSelect.value as Algorithm; // TODO(shelpam): values in algorithmSelect should be dynamically set.
+    if (!is_algorithm_type(algorithmSelect.value)) {
+        throw new Error(algorithmSelect.value + ' is not an algorithm type');
+    }
+    const algorithm: Algorithm_type = algorithmSelect.value; // TODO(shelpam): values in algorithmSelect should be dynamically set.
     console.log("Requesting", algorithm, "algorithm");
 
     function has_duplicate_ids(processes: Array<Process>) {

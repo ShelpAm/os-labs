@@ -27,6 +27,7 @@ std::vector<Process::Id> scheduling::to_vector(std::queue<Process *> ready)
     }
     return ready_queue;
 }
+
 Frame_list scheduling::solve_first_come_fisrt_served(CPU cpu,
                                                      std::vector<Process> jobs)
 {
@@ -137,36 +138,70 @@ Frame_list scheduling::solve_priority_scheduling(CPU cpu,
     return frames;
 }
 
+Frame_list
+scheduling::solve_priority_scheduling_preemptive(CPU cpu,
+                                                 std::vector<Process> jobs)
+{
+    std::vector<Frame> frames;
+
+    std::ranges::sort(jobs, {}, &Process::arrival_time);
+
+    auto jobs_it{jobs.begin()};
+    Priority_scheduling_queue ready;
+    std::vector<Process::Id> finish_queue;
+
+    drive_time_events();           // Drive initial events
+    while (any_job_unfinished()) { // If no any tasks left, ends the simulation.
+        check_cpu_set_next_preemptive();
+        cpu.run_for(1);
+        drive_time_events();
+        check_cpu_remove_finished();
+        push_frame();
+    }
+
+    return frames;
+}
+
 Result scheduling::route_algorithm(Algorithm algorithm,
                                    std::vector<Process> jobs,
                                    nlohmann::json const &extra)
 {
+    std::println("routing to {}", to_string(algorithm));
     Result response;
-    if (algorithm == Algorithm::first_come_first_served) {
+    switch (algorithm) {
+    case Algorithm::unknown:
+        throw std::runtime_error(
+            std::format("{} hasn't been implemented", to_string(algorithm)));
+    case Algorithm::first_come_first_served: {
         CPU cpu;
         response.frames = solve_first_come_fisrt_served(cpu, std::move(jobs));
         return response;
     }
-    if (algorithm == Algorithm::shortest_process_first) {
+    case Algorithm::shortest_process_first: {
         CPU cpu;
         response.frames = solve_shortest_process_first(cpu, std::move(jobs));
         return response;
     }
-    if (algorithm == Algorithm::round_robin) {
-        // TODO(shelpam): user should be able to specific any besides 8
+    case Algorithm::shortest_time_to_complete_first:
+        throw std::runtime_error(
+            std::format("{} hasn't been implemented", to_string(algorithm)));
+    case Algorithm::round_robin: {
         CPU cpu;
         response.frames =
             solve_round_robin(cpu, std::move(jobs), extra.at("time_quantum"));
         return response;
     }
-    if (algorithm == Algorithm::priority_scheduling) {
+    case Algorithm::priority_scheduling: {
         CPU cpu;
         response.frames = solve_priority_scheduling(cpu, std::move(jobs));
         return response;
     }
-
-    throw std::runtime_error(
-        std::format("{} hasn't been implemented", to_string(algorithm)));
+    case Algorithm::priority_scheduling_preemptive:
+        CPU cpu;
+        response.frames =
+            solve_priority_scheduling_preemptive(cpu, std::move(jobs));
+        return response;
+    }
 }
 
 std::string_view scheduling::to_string(Algorithm algorithm)
@@ -178,6 +213,8 @@ std::string_view scheduling::to_string(Algorithm algorithm)
          "shortest_time_to_complete_first"},
         {Algorithm::round_robin, "round_robin"},
         {Algorithm::priority_scheduling, "priority_scheduling"},
+        {Algorithm::priority_scheduling_preemptive,
+         "priority_scheduling_preemptive"},
     };
     return map.at(algorithm);
 }

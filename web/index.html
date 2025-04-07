@@ -21,9 +21,10 @@
             <!-- <label for="algorithm">Select Algorithm:</label> -->
             <select id="algorithm">
                 <option value="first_come_first_serve">先来先服务 (FCFS)</option>
-                <option value="short_process_first">短进程优先 (SPF)</option>
+                <option value="shortest_process_first">短进程优先 (SPF)</option>
                 <option value="round_robin">时间片轮转 (RR)</option>
-                <option value="priority_scheduding">优先级调度 (PS)</option>
+                <option value="priority_scheduling">优先级调度 (PS)</option>
+                <option value="priority_scheduling_preemptive">抢占式优先级调度 (PS preemptive)</option>
                 <!-- <option value="first_come_first_serve">First-Come, First-Served (FCFS)</option> -->
                 <!-- <option value="short_process_first">Shortest Process First (SPF)</option> -->
                 <!-- <option value="round_robin">Round Robin (RR)</option> -->
@@ -160,6 +161,8 @@
     </div>
 
     <div class="root"></div>
+    <!-- Just for functionality test -->
+    <!-- <canvas id="canvas" /> -->
 </body>
 
 </html>

@@ -31,7 +31,17 @@ export class FUCK {
     }
 }
 
-export type Algorithm = 'first_come_first_served' | 'shortest_process_first' | 'round_robin' | 'priority_scheduling';
+export type Algorithm_type = 'first_come_first_served' | 'shortest_process_first' | 'round_robin' | 'priority_scheduling' | 'priority_scheduling_preemptive';
+
+export function is_algorithm_type(value: string): value is Algorithm_type {
+    const validTypes = ['first_come_first_served', 'shortest_process_first', 'round_robin', 'priority_scheduling', 'priority_scheduling_preemptive'] as const;
+    return validTypes.includes(value as any);
+}
+
+// export class Algorithm {
+//     algorithm_type: Algorithm_type,
+//
+// }
 
 export type Time_point = number;
 
@@ -74,7 +84,7 @@ export interface Frame {
 }
 
 export interface Request {
-    algorithm: Algorithm,
+    algorithm: Algorithm_type,
     processes: Array<Process>,
     extra: {
         time_quantum?: number,
