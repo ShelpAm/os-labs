@@ -1,16 +1,16 @@
 #include <algorithms/memory/fixed-size-allocator.hpp>
 #include <gtest/gtest.h>
 
-namespace shelpam::allocators {
+namespace shelpam::memory {
 
 TEST(FixedSizeAllocator, Basics)
 {
-    std::vector<Fixed_size_allocator::Block> const blocks{
-        {.id = 1, .size = 12, .address = reinterpret_cast<void *>(20)},
-        {.id = 2, .size = 32, .address = reinterpret_cast<void *>(32)},
-        {.id = 3, .size = 64, .address = reinterpret_cast<void *>(64)},
-        {.id = 4, .size = 128, .address = reinterpret_cast<void *>(128)},
-        {.id = 5, .size = 100, .address = reinterpret_cast<void *>(256)},
+    std::vector<Block> const blocks{
+        {.address = reinterpret_cast<void *>(20), .size = 12},
+        {.address = reinterpret_cast<void *>(32), .size = 32},
+        {.address = reinterpret_cast<void *>(64), .size = 64},
+        {.address = reinterpret_cast<void *>(128), .size = 128},
+        {.address = reinterpret_cast<void *>(256), .size = 100},
     };
 
     Fixed_size_allocator allocator(blocks);
@@ -27,7 +27,7 @@ TEST(FixedSizeAllocator, Basics)
     }
 }
 
-} // namespace shelpam::allocators
+} // namespace shelpam::memory
 
 int main(int argc, char **argv)
 {

@@ -82,6 +82,27 @@ add_tests("default")
 add_deps("algorithms")
 add_packages("gtest")
 
+target("algorithms.memory.variable-partition-allocator.test")
+set_kind("binary")
+add_files("./algorithms/memory/variable-partition-allocator.test.cpp")
+add_tests("default")
+add_deps("algorithms")
+add_packages("gtest")
+
+target("algorithms.memory.page-allocator.test")
+set_kind("binary")
+add_files("./algorithms/memory/page-allocator.test.cpp")
+add_tests("default")
+add_deps("algorithms")
+add_packages("gtest")
+
+target("algorithms.memory.segmentation.test")
+set_kind("binary")
+add_files("./algorithms/memory/segmentation.test.cpp")
+add_tests("default")
+add_deps("algorithms")
+add_packages("gtest")
+
 
 target("server-cli")
 set_kind("binary")

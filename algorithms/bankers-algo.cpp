@@ -178,6 +178,7 @@ bool bankers_algo::System::can_grant(Resources const &request) const
 }
 bool bankers_algo::all_greater_equal(Resources const &lhs, Resources const &rhs)
 {
+
     std::set<Resource_kind> keys;
     keys.insert_range(lhs.count | std::views::keys);
     keys.insert_range(rhs.count | std::views::keys);
