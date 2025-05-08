@@ -85,7 +85,7 @@ class Page_allocator {
     {
         std::println(os, "Bit map:");
         for (auto word : allotment_) {
-            for (int i{}; i != word_bit; ++i) {
+            for (std::size_t i{}; i != word_bit; ++i) {
                 std::print(os, "{}", word >> i & 1);
             }
             std::println(os);

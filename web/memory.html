@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分页式内存分配可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.2/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const {useState} = React;
+
+        const MemoryVisualization = () => {
+            const [totalMemory, setTotalMemory] = useState('');
+            const [wordLength, setWordLength] = useState('');
+            const [blockSize, setBlockSize] = useState('');
+            const [isInitialized, setIsInitialized] = useState(false);
+            const [memory, setMemory] = useState([]);
+            const [jobs, setJobs] = useState([]);
+            const [jobName, setJobName] = useState('');
+            const [jobSize, setJobSize] = useState('');
+            const [selectedJob, setSelectedJob] = useState(null);
+            const [error, setError] = useState('');
+
+            // 初始化内存
+            const initializeMemory = () => {
+                if (!totalMemory || !wordLength || !blockSize || isNaN(totalMemory) || isNaN(wordLength) || isNaN(blockSize)) {
+                    setError('请输入有效的内存大小、字长和物理块大小！');
+                    return;
+                }
+                const total = parseInt(totalMemory);
+                const block = parseInt(blockSize);
+                if (total <= 0 || block <= 0 || parseInt(wordLength) <= 0) {
+                    setError('输入值必须大于0！');
+                    return;
+                }
+                if (total % block !== 0) {
+                    setError('内存大小必须是物理块大小的整数倍！');
+                    return;
+                }
+                const totalPages = total / block;
+                setMemory(Array(totalPages).fill(0));
+                setIsInitialized(true);
+                setError('');
+            };
+
+            // 添加作业
+            const addJob = () => {
+                if (!jobName || !jobSize || isNaN(jobSize) || jobSize <= 0) {
+                    setError('请输入有效的作业名称和大小！');
+                    return;
+                }
+                setError('');
+                const size = parseInt(jobSize);
+                const pagesNeeded = Math.ceil(size / parseInt(blockSize));
+                let startPage = -1;
+                let freeCount = 0;
+
+                // 寻找连续空闲页面
+                for (let i = 0; i < memory.length; i++) {
+                    if (memory[i] === 0) {
+                        freeCount++;
+                        if (freeCount === pagesNeeded) {
+                            startPage = i - pagesNeeded + 1;
+                            break;
+                        }
+                    } else {
+                        freeCount = 0;
+                    }
+                }
+
+                if (startPage === -1) {
+                    setError('内存不足，无法分配！');
+                    return;
+                }
+
+                // 更新内存和作业
+                const newMemory = [...memory];
+                for (let i = startPage; i < startPage + pagesNeeded; i++) {
+                    newMemory[i] = 1;
+                }
+                setMemory(newMemory);
+                setJobs([...jobs, {id: Date.now(), name: jobName, size, pages: pagesNeeded, startPage}]);
+                setJobName('');
+                setJobSize('');
+            };
+
+            // 删除作业
+            const deleteJob = (jobId) => {
+                const job = jobs.find((j) => j.id === jobId);
+                if (!job) {
+                    setError('作业不存在！');
+                    return;
+                }
+                setError('');
+                const newMemory = [...memory];
+                for (let i = job.startPage; i < job.startPage + job.pages; i++) {
+                    newMemory[i] = 0;
+                }
+                setMemory(newMemory);
+                setJobs(jobs.filter((j) => j.id !== jobId));
+                setSelectedJob(null);
+            };
+
+            // 查看作业信息
+            const viewJob = (jobId) => {
+                const job = jobs.find((j) => j.id === jobId);
+                if (job) {
+                    setSelectedJob(job);
+                    setError('');
+                } else {
+                    setError('作业不存在！');
+                }
+            };
+
+            return (
+                <div className="container mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4">分页式内存分配可视化</h1>
+                    {error && (
+                        <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>
+                    )}
+
+                    {!isInitialized ? (
+                        <div className="mb-4">
+                            <h2 className="text-lg font-semibold">初始化内存参数</h2>
+                            <div className="flex space-x-2 mb-2">
+                                <input
+                                    type="number"
+                                    placeholder="系统内存大小 (KB)"
+                                    value={totalMemory}
+                                    onChange={(e) => setTotalMemory(e.target.value)}
+                                    className="border p-2 rounded"
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="字长 (位)"
+                                    value={wordLength}
+                                    onChange={(e) => setWordLength(e.target.value)}
+                                    className="border p-2 rounded"
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="物理块大小 (KB)"
+                                    value={blockSize}
+                                    onChange={(e) => setBlockSize(e.target.value)}
+                                    className="border p-2 rounded"
+                                />
+                                <button
+                                    onClick={initializeMemory}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                >
+                                    初始化
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="mb-4">
+                                <h2 className="text-lg font-semibold">系统参数</h2>
+                                <p>总内存: {totalMemory} KB</p>
+                                <p>字长: {wordLength} 位</p>
+                                <p>物理块大小: {blockSize} KB</p>
+                                <p>总页面数: {memory.length}</p>
+                            </div>
+
+                            <div className="mb-4">
+                                <h2 className="text-lg font-semibold">内存状态 (0: 空闲, 1: 占用)</h2>
+                                <div className="grid grid-cols-8 gap-2 mt-2">
+                                    {memory.map((page, index) => (
+                                        <div
+                                            key={index}
+                                            className={`w-12 h-12 flex items-center justify-center border ${page === 0 ? 'bg-green-200' : 'bg-red-200'
+                                                }`}
+                                            title={`页面 ${index}`}
+                                        >
+                                            {page}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="mb-4">
+                                <h2 className="text-lg font-semibold">添加作业</h2>
+                                <div className="flex space-x-2">
+                                    <input
+                                        type="text"
+                                        placeholder="作业名称"
+                                        value={jobName}
+                                        onChange={(e) => setJobName(e.target.value)}
+                                        className="border p-2 rounded"
+                                    />
+                                    <input
+                                        type="number"
+                                        placeholder="内存大小 (KB)"
+                                        value={jobSize}
+                                        onChange={(e) => setJobSize(e.target.value)}
+                                        className="border p-2 rounded"
+                                    />
+                                    <button
+                                        onClick={addJob}
+                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                    >
+                                        添加
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="mb-4">
+                                <h2 className="text-lg font-semibold">作业列表</h2>
+                                {jobs.length === 0 ? (
+                                    <p className="text-gray-500">暂无作业</p>
+                                ) : (
+                                    <table className="w-full border-collapse border">
+                                        <thead>
+                                            <tr className="bg-gray-200">
+                                                <th className="border p-2">作业ID</th>
+                                                <th className="border p-2">名称</th>
+                                                <th className="border p-2">大小 (KB)</th>
+                                                <th className="border p-2">页面数</th>
+                                                <th className="border p-2">起始页面</th>
+                                                <th className="border p-2">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {jobs.map((job) => (
+                                                <tr key={job.id}>
+                                                    <td className="border p-2">{job.id}</td>
+                                                    <td className="border p-2">{job.name}</td>
+                                                    <td className="border p-2">{job.size}</td>
+                                                    <td className="border p-2">{job.pages}</td>
+                                                    <td className="border p-2">{job.startPage}</td>
+                                                    <td className="border p-2">
+                                                        <button
+                                                            onClick={() => viewJob(job.id)}
+                                                            className="bg-green-500 text-white px-2 py-1 rounded mr-2 hover:bg-green-600"
+                                                        >
+                                                            查看
+                                                        </button>
+                                                        <button
+                                                            onClick={() => deleteJob(job.id)}
+                                                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                                                        >
+                                                            删除
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
+
+                            {selectedJob && (
+                                <div className="mb-4">
+                                    <h2 className="text-lg font-semibold">作业信息</h2>
+                                    <p>作业ID: {selectedJob.id}</p>
+                                    <p>名称: {selectedJob.name}</p>
+                                    <p>大小: {selectedJob.size} KB</p>
+                                    <p>占用页面数: {selectedJob.pages}</p>
+                                    <p>起始页面: {selectedJob.startPage}</p>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            );
+        };
+
+        try {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(<MemoryVisualization />);
+        } catch (e) {
+            document.getElementById('root').innerHTML = '<div style="color: red; padding: 20px;">错误：无法加载应用，请检查网络连接或刷新页面。</div>';
+            console.error(e);
+        }
+    </script>
+</body>
+
+</html>

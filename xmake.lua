@@ -103,6 +103,13 @@ add_tests("default")
 add_deps("algorithms")
 add_packages("gtest")
 
+target("algorithms.memory.page-replacement.test")
+set_kind("binary")
+add_files("./algorithms/memory/page-replacement.test.cpp")
+add_tests("default")
+add_deps("algorithms")
+add_packages("gtest")
+
 
 target("server-cli")
 set_kind("binary")
