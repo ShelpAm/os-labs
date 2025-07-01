@@ -60,7 +60,7 @@ class Segmentation {
                 "\t\t" + std::string(std::string_view(line)) + '\n';
         }
         std::println(os, "\tAllocator summary\n{}", patched_allocator_summary);
-        std::println(os);
+        std::println(os, "");
     }
 
   private:

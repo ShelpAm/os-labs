@@ -125,7 +125,7 @@ class FIFO : public Page_replacement_policy {
         for (auto page : pages_queue_) {
             std::print("{} ", page);
         }
-        std::println();
+        std::println("");
     }
 
     [[nodiscard]] bool is_in_memory(Page page) const override

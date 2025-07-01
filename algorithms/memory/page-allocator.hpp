@@ -88,7 +88,7 @@ class Page_allocator {
             for (std::size_t i{}; i != word_bit; ++i) {
                 std::print(os, "{}", word >> i & 1);
             }
-            std::println(os);
+            std::println(os, "");
         }
         std::println(os, "Page tables:");
         for (auto const &[job, table] : page_tables_) {
