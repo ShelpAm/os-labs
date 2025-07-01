@@ -73,10 +73,17 @@ int main()
         // res.set_content(std::move(json_result), "application/json");
     });
 
-    fast_io::println("Starting server on ", host, ":", port);
-    if (!svr.listen(host, port)) {
-        fast_io::println("Failed to bind to ", host, ":", port, ", exiting.");
+    // fast_io::out() here for flushing
+    fast_io::print(fast_io::out(), "Trying to listen on ", host, ":", port,
+                   "...");
+    for (auto i = port;; ++i) {
+        if (svr.listen(host, port)) {
+            fast_io::println("OK");
+            return 0;
+        }
     }
+    fast_io::println("\nFailed to bind to ", host, ":", port,
+                     " to 65535 tried, exiting.");
 
     return 0;
 }
