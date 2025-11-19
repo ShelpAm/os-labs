@@ -9,6 +9,7 @@
 #include <list>
 #include <print>
 #include <ranges>
+#include <vector>
 
 namespace shelpam::memory {
 
